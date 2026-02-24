@@ -33,9 +33,10 @@ All commands use `pnpm -r` (recursive) to execute across workspace packages simu
 
 ### Package Manager Notes
 - **Always use pnpm**, never npm or yarn (enforced by packageManager field)
-- Install dependencies: `pnpm install` or `pnpm i`
+- Install dependencies: `pnpm install` or `pnpm i` (run from root only)
 - Add dependencies to a specific app: `cd apps/<app-name> && pnpm add <package>`
 - Add workspace-level dev dependencies: `pnpm add -w <package>`
+- **Critical**: Only ONE `pnpm-lock.yaml` at root - never create per-app lockfiles
 
 ## Code Quality
 
@@ -61,6 +62,8 @@ team-pulse/
 │       └── package.json
 ├── packages/         # Shared libraries (currently empty)
 ├── biome.json        # Root Biome config for entire monorepo
+├── pnpm-workspace.yaml   # Defines workspace packages
+├── pnpm-lock.yaml    # Single lockfile for entire workspace
 └── package.json      # Root workspace config
 ```
 

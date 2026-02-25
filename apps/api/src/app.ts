@@ -1,13 +1,14 @@
 
 import express from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { authRoutes } from "./routes/auth.routes.js";
 
 export const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (_req, res) => {
+app.use("/auth", authRoutes)
+
+app.get("/health", (_req, res) => {
   res.json({ message: "API running 🚀" });
 });

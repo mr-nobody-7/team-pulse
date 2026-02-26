@@ -20,3 +20,9 @@ export interface RegisterResult {
   workspace: { id: string; name: string; createdAt: Date };
   user: SafeUser;
 }
+
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}

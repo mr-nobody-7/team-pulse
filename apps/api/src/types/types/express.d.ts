@@ -1,0 +1,16 @@
+declare global {
+  namespace Express {
+    interface Request {
+      user?:
+        | {
+            userId: string;
+            workspaceId: string;
+            role: string;
+            teamId: string | null;
+          }
+        | JwtPayload;
+    }
+  }
+}
+
+export {};

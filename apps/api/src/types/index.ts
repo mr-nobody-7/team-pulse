@@ -26,3 +26,10 @@ export interface LoginInput {
   email: string;
   password: string;
 }
+
+export interface TokenPayload {
+  userId: string;
+  workspaceId: string;
+  role: string;
+  teamId: string | null;
+}

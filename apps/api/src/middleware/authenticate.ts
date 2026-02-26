@@ -1,23 +1,21 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { verifyToken } from "../utils/jwt.js";
+import { UnauthorizedError } from "../utils/errors.js";
 
 export const authenticate = (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) => {
-  const token = req.cookies.token;
+  const token: string | undefined = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return next(new UnauthorizedError());
   }
 
   try {
-    const decoded = verifyToken(token);
-    req.user = decoded;
+    req.user = verifyToken(token);
     next();
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(401).json({ message: error.message });
-    }
+  } catch {
+    next(new UnauthorizedError("Invalid token"));
   }
 };

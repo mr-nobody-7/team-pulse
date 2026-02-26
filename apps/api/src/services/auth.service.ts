@@ -6,18 +6,17 @@ import type {
   LoginInput,
 } from "../types/index.js";
 import { generateToken } from "../utils/jwt.js";
+import { AppError } from "../utils/errors.js";
 
-export class EmailInUseError extends Error {
+export class EmailInUseError extends AppError {
   constructor() {
-    super("Email already in use");
-    this.name = "EmailInUseError";
+    super(409, "Email already in use");
   }
 }
 
-export class InvalidCredentialsError extends Error {
+export class InvalidCredentialsError extends AppError {
   constructor() {
-    super("Invalid credentials");
-    this.name = "InvalidCredentialsError";
+    super(401, "Invalid credentials");
   }
 }
 

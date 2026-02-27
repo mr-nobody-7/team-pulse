@@ -32,3 +32,8 @@ export type Team = Prisma.TeamModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model LeaveRequest
+ * 
+ */
+export type LeaveRequest = Prisma.LeaveRequestModel

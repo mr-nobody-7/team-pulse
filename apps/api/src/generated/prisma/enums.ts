@@ -16,3 +16,32 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const LeaveType = {
+  VACATION: 'VACATION',
+  SICK: 'SICK',
+  PERSONAL: 'PERSONAL',
+  CASUAL: 'CASUAL'
+} as const
+
+export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
+
+
+export const LeaveStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type LeaveStatus = (typeof LeaveStatus)[keyof typeof LeaveStatus]
+
+
+export const Session = {
+  FULL_DAY: 'FULL_DAY',
+  FIRST_HALF: 'FIRST_HALF',
+  SECOND_HALF: 'SECOND_HALF'
+} as const
+
+export type Session = (typeof Session)[keyof typeof Session]

@@ -83,6 +83,7 @@ model LeaveRequest {
   endSession   Session     @default(FULL_DAY)
   type         LeaveType
   status       LeaveStatus @default(PENDING)
+  reason       String?
   approver     User?       @relation("Approver", fields: [approverId], references: [id])
   approverId   String?
   comment      String?

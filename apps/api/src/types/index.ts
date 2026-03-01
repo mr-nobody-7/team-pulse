@@ -1,3 +1,31 @@
+
+export enum Role {
+  USER,
+  MANAGER,
+  ADMIN
+}
+
+export enum LeaveType {
+  VACATION,
+  SICK,
+  PERSONAL,
+  CASUAL
+}
+
+export enum LeaveStatus {
+  PENDING,
+  APPROVED,
+  REJECTED,
+  CANCELLED
+}
+
+export enum Session {
+  FULL_DAY,
+  FIRST_HALF,
+  SECOND_HALF
+}
+
+
 export interface RegisterInput {
   workspace_name: string;
   name: string;
@@ -33,3 +61,5 @@ export interface TokenPayload {
   role: string;
   teamId: string | null;
 }
+
+imp

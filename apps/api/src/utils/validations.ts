@@ -26,16 +26,16 @@ export const applyLeaveSchema = z.object({
   start_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: "Invalid start date",
   }),
-  start_session: z.enum(["FULL_DAY", "MORNING_HALF", "SECOND_HALF"], {
+  start_session: z.enum(["FULL_DAY", "FIRST_HALF", "SECOND_HALF"], {
     error: "Invalid start session",
   }),
   end_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: "Invalid end date",
   }),
-  end_session: z.enum(["FULL_DAY", "MORNING_HALF", "SECOND_HALF"], {
+  end_session: z.enum(["FULL_DAY", "FIRST_HALF", "SECOND_HALF"], {
     error: "Invalid end session",
   }),
-  type: z.enum(["sick", "vacation", "personal"], {
+  type: z.enum(["VACATION", "SICK", "PERSONAL", "CASUAL"], {
     error: "Invalid leave type",
   }),
   reason: z

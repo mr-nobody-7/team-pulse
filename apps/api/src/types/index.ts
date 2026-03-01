@@ -1,31 +1,4 @@
 
-export enum Role {
-  USER,
-  MANAGER,
-  ADMIN
-}
-
-export enum LeaveType {
-  VACATION,
-  SICK,
-  PERSONAL,
-  CASUAL
-}
-
-export enum LeaveStatus {
-  PENDING,
-  APPROVED,
-  REJECTED,
-  CANCELLED
-}
-
-export enum Session {
-  FULL_DAY,
-  FIRST_HALF,
-  SECOND_HALF
-}
-
-
 export interface RegisterInput {
   workspace_name: string;
   name: string;
@@ -49,7 +22,6 @@ export interface RegisterResult {
   user: SafeUser;
 }
 
-
 export interface LoginInput {
   email: string;
   password: string;
@@ -62,4 +34,11 @@ export interface TokenPayload {
   teamId: string | null;
 }
 
-imp
+export interface ApplyLeaveInput {
+  start_date: string;
+  start_session: "FULL_DAY" | "FIRST_HALF" | "SECOND_HALF";
+  end_date: string;
+  end_session: "FULL_DAY" | "FIRST_HALF" | "SECOND_HALF";
+  type: "VACATION" | "SICK" | "PERSONAL" | "CASUAL";
+  reason: string;
+}

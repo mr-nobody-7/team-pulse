@@ -167,6 +167,22 @@ const LEAVE_COMMENTS = [
   null,
 ];
 
+// Requestor reasons (always provided)
+const LEAVE_REASONS = [
+  "Family vacation planned months in advance.",
+  "Not feeling well, need to recover.",
+  "Personal errand that cannot be rescheduled.",
+  "Routine medical check-up.",
+  "Attending a close friend's wedding.",
+  "Taking care of a sick child.",
+  "Mental health day.",
+  "Home repair appointment requiring my presence.",
+  "Attending a relative's graduation ceremony.",
+  "Follow-up doctor appointment after recent illness.",
+  "Moving to a new apartment.",
+  "Bereavement — attending a funeral.",
+];
+
 // ── Seed ──────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -268,6 +284,7 @@ async function main() {
               endSession: randomItem(SESSIONS),
               type: randomItem(LEAVE_TYPES),
               status,
+              reason: randomItem(LEAVE_REASONS),
               approverId:
                 status === "APPROVED" || status === "REJECTED"
                   ? manager.id

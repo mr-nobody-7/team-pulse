@@ -786,6 +786,7 @@ export const LeaveRequestScalarFieldEnum = {
   endSession: 'endSession',
   type: 'type',
   status: 'status',
+  reason: 'reason',
   approverId: 'approverId',
   comment: 'comment',
   created_at: 'created_at'

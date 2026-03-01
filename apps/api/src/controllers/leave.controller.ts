@@ -8,8 +8,14 @@ export const applyLeaveController = async (
   next: NextFunction,
 ) => {
   try {
-    const result = await applyLeave(req.body);
-    sendSuccess(res, "Leave applied successfully");
+    const { userId, workspaceId, teamId } = req.user!;
+    const result = await applyLeave(req.body, userId, workspaceId, teamId);
+    sendSuccess(
+      res,
+      { leaveRequest: result.leaveRequest, warning: result.warning },
+      "Leave applied successfully",
+      201,
+    );
   } catch (error) {
     next(error);
   }

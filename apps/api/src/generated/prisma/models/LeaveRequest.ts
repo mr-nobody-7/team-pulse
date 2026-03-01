@@ -34,6 +34,7 @@ export type LeaveRequestMinAggregateOutputType = {
   endSession: $Enums.Session | null
   type: $Enums.LeaveType | null
   status: $Enums.LeaveStatus | null
+  reason: string | null
   approverId: string | null
   comment: string | null
   created_at: Date | null
@@ -49,6 +50,7 @@ export type LeaveRequestMaxAggregateOutputType = {
   endSession: $Enums.Session | null
   type: $Enums.LeaveType | null
   status: $Enums.LeaveStatus | null
+  reason: string | null
   approverId: string | null
   comment: string | null
   created_at: Date | null
@@ -64,6 +66,7 @@ export type LeaveRequestCountAggregateOutputType = {
   endSession: number
   type: number
   status: number
+  reason: number
   approverId: number
   comment: number
   created_at: number
@@ -81,6 +84,7 @@ export type LeaveRequestMinAggregateInputType = {
   endSession?: true
   type?: true
   status?: true
+  reason?: true
   approverId?: true
   comment?: true
   created_at?: true
@@ -96,6 +100,7 @@ export type LeaveRequestMaxAggregateInputType = {
   endSession?: true
   type?: true
   status?: true
+  reason?: true
   approverId?: true
   comment?: true
   created_at?: true
@@ -111,6 +116,7 @@ export type LeaveRequestCountAggregateInputType = {
   endSession?: true
   type?: true
   status?: true
+  reason?: true
   approverId?: true
   comment?: true
   created_at?: true
@@ -199,6 +205,7 @@ export type LeaveRequestGroupByOutputType = {
   endSession: $Enums.Session
   type: $Enums.LeaveType
   status: $Enums.LeaveStatus
+  reason: string | null
   approverId: string | null
   comment: string | null
   created_at: Date
@@ -235,6 +242,7 @@ export type LeaveRequestWhereInput = {
   endSession?: Prisma.EnumSessionFilter<"LeaveRequest"> | $Enums.Session
   type?: Prisma.EnumLeaveTypeFilter<"LeaveRequest"> | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFilter<"LeaveRequest"> | $Enums.LeaveStatus
+  reason?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   approverId?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   comment?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   created_at?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
@@ -252,6 +260,7 @@ export type LeaveRequestOrderByWithRelationInput = {
   endSession?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reason?: Prisma.SortOrderInput | Prisma.SortOrder
   approverId?: Prisma.SortOrderInput | Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -272,6 +281,7 @@ export type LeaveRequestWhereUniqueInput = Prisma.AtLeast<{
   endSession?: Prisma.EnumSessionFilter<"LeaveRequest"> | $Enums.Session
   type?: Prisma.EnumLeaveTypeFilter<"LeaveRequest"> | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFilter<"LeaveRequest"> | $Enums.LeaveStatus
+  reason?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   approverId?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   comment?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   created_at?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
@@ -289,6 +299,7 @@ export type LeaveRequestOrderByWithAggregationInput = {
   endSession?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reason?: Prisma.SortOrderInput | Prisma.SortOrder
   approverId?: Prisma.SortOrderInput | Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -310,6 +321,7 @@ export type LeaveRequestScalarWhereWithAggregatesInput = {
   endSession?: Prisma.EnumSessionWithAggregatesFilter<"LeaveRequest"> | $Enums.Session
   type?: Prisma.EnumLeaveTypeWithAggregatesFilter<"LeaveRequest"> | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusWithAggregatesFilter<"LeaveRequest"> | $Enums.LeaveStatus
+  reason?: Prisma.StringNullableWithAggregatesFilter<"LeaveRequest"> | string | null
   approverId?: Prisma.StringNullableWithAggregatesFilter<"LeaveRequest"> | string | null
   comment?: Prisma.StringNullableWithAggregatesFilter<"LeaveRequest"> | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"LeaveRequest"> | Date | string
@@ -324,6 +336,7 @@ export type LeaveRequestCreateInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   comment?: string | null
   created_at?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRequestedLeaveRequestsInput
@@ -340,6 +353,7 @@ export type LeaveRequestUncheckedCreateInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   approverId?: string | null
   comment?: string | null
   created_at?: Date | string
@@ -354,6 +368,7 @@ export type LeaveRequestUpdateInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRequestedLeaveRequestsNestedInput
@@ -370,6 +385,7 @@ export type LeaveRequestUncheckedUpdateInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -385,6 +401,7 @@ export type LeaveRequestCreateManyInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   approverId?: string | null
   comment?: string | null
   created_at?: Date | string
@@ -399,6 +416,7 @@ export type LeaveRequestUpdateManyMutationInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,6 +431,7 @@ export type LeaveRequestUncheckedUpdateManyInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,6 +457,7 @@ export type LeaveRequestCountOrderByAggregateInput = {
   endSession?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -453,6 +473,7 @@ export type LeaveRequestMaxOrderByAggregateInput = {
   endSession?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -468,6 +489,7 @@ export type LeaveRequestMinOrderByAggregateInput = {
   endSession?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   approverId?: Prisma.SortOrder
   comment?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
@@ -578,6 +600,7 @@ export type LeaveRequestCreateWithoutUserInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   comment?: string | null
   created_at?: Date | string
   approver?: Prisma.UserCreateNestedOneWithoutApprovedLeaveRequestsInput
@@ -592,6 +615,7 @@ export type LeaveRequestUncheckedCreateWithoutUserInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   approverId?: string | null
   comment?: string | null
   created_at?: Date | string
@@ -616,6 +640,7 @@ export type LeaveRequestCreateWithoutApproverInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   comment?: string | null
   created_at?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRequestedLeaveRequestsInput
@@ -631,6 +656,7 @@ export type LeaveRequestUncheckedCreateWithoutApproverInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   comment?: string | null
   created_at?: Date | string
 }
@@ -674,6 +700,7 @@ export type LeaveRequestScalarWhereInput = {
   endSession?: Prisma.EnumSessionFilter<"LeaveRequest"> | $Enums.Session
   type?: Prisma.EnumLeaveTypeFilter<"LeaveRequest"> | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFilter<"LeaveRequest"> | $Enums.LeaveStatus
+  reason?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   approverId?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   comment?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   created_at?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
@@ -704,6 +731,7 @@ export type LeaveRequestCreateManyUserInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   approverId?: string | null
   comment?: string | null
   created_at?: Date | string
@@ -719,6 +747,7 @@ export type LeaveRequestCreateManyApproverInput = {
   endSession?: $Enums.Session
   type: $Enums.LeaveType
   status?: $Enums.LeaveStatus
+  reason?: string | null
   comment?: string | null
   created_at?: Date | string
 }
@@ -732,6 +761,7 @@ export type LeaveRequestUpdateWithoutUserInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approver?: Prisma.UserUpdateOneWithoutApprovedLeaveRequestsNestedInput
@@ -746,6 +776,7 @@ export type LeaveRequestUncheckedUpdateWithoutUserInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -760,6 +791,7 @@ export type LeaveRequestUncheckedUpdateManyWithoutUserInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -774,6 +806,7 @@ export type LeaveRequestUpdateWithoutApproverInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRequestedLeaveRequestsNestedInput
@@ -789,6 +822,7 @@ export type LeaveRequestUncheckedUpdateWithoutApproverInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -803,6 +837,7 @@ export type LeaveRequestUncheckedUpdateManyWithoutApproverInput = {
   endSession?: Prisma.EnumSessionFieldUpdateOperationsInput | $Enums.Session
   type?: Prisma.EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -819,6 +854,7 @@ export type LeaveRequestSelect<ExtArgs extends runtime.Types.Extensions.Internal
   endSession?: boolean
   type?: boolean
   status?: boolean
+  reason?: boolean
   approverId?: boolean
   comment?: boolean
   created_at?: boolean
@@ -836,6 +872,7 @@ export type LeaveRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   endSession?: boolean
   type?: boolean
   status?: boolean
+  reason?: boolean
   approverId?: boolean
   comment?: boolean
   created_at?: boolean
@@ -853,6 +890,7 @@ export type LeaveRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   endSession?: boolean
   type?: boolean
   status?: boolean
+  reason?: boolean
   approverId?: boolean
   comment?: boolean
   created_at?: boolean
@@ -870,12 +908,13 @@ export type LeaveRequestSelectScalar = {
   endSession?: boolean
   type?: boolean
   status?: boolean
+  reason?: boolean
   approverId?: boolean
   comment?: boolean
   created_at?: boolean
 }
 
-export type LeaveRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "teamId" | "startDate" | "startSession" | "endDate" | "endSession" | "type" | "status" | "approverId" | "comment" | "created_at", ExtArgs["result"]["leaveRequest"]>
+export type LeaveRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "teamId" | "startDate" | "startSession" | "endDate" | "endSession" | "type" | "status" | "reason" | "approverId" | "comment" | "created_at", ExtArgs["result"]["leaveRequest"]>
 export type LeaveRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   approver?: boolean | Prisma.LeaveRequest$approverArgs<ExtArgs>
@@ -905,6 +944,7 @@ export type $LeaveRequestPayload<ExtArgs extends runtime.Types.Extensions.Intern
     endSession: $Enums.Session
     type: $Enums.LeaveType
     status: $Enums.LeaveStatus
+    reason: string | null
     approverId: string | null
     comment: string | null
     created_at: Date
@@ -1342,6 +1382,7 @@ export interface LeaveRequestFieldRefs {
   readonly endSession: Prisma.FieldRef<"LeaveRequest", 'Session'>
   readonly type: Prisma.FieldRef<"LeaveRequest", 'LeaveType'>
   readonly status: Prisma.FieldRef<"LeaveRequest", 'LeaveStatus'>
+  readonly reason: Prisma.FieldRef<"LeaveRequest", 'String'>
   readonly approverId: Prisma.FieldRef<"LeaveRequest", 'String'>
   readonly comment: Prisma.FieldRef<"LeaveRequest", 'String'>
   readonly created_at: Prisma.FieldRef<"LeaveRequest", 'DateTime'>

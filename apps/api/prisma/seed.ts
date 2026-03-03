@@ -2,10 +2,12 @@ import "dotenv/config";
 import bcrypt from "bcrypt";
 import { prisma } from "../src/lib/db.js";
 import type {
+  AuditAction,
   LeaveStatus,
   LeaveType,
   Session,
 } from "../src/generated/prisma/client.js";
+import { Prisma } from "../src/generated/prisma/client.js";
 
 // ── Data pools ────────────────────────────────────────────────────────────────
 
@@ -189,6 +191,7 @@ async function main() {
   console.log("🌱 Seeding database...\n");
 
   // Clear existing data (order matters — FK constraints)
+  await prisma.auditLog.deleteMany();
   await prisma.leaveRequest.deleteMany();
   await prisma.user.deleteMany();
   await prisma.team.deleteMany();
@@ -202,6 +205,16 @@ async function main() {
   let totalTeams = 0;
   let totalLeaveRequests = 0;
 
+  // Audit log entries — collected and bulk-inserted at the end
+  const auditLogs: {
+    action: AuditAction;
+    userId: string | null;
+    workspaceId: string | null;
+    targetId: string | null;
+    targetType: string | null;
+    metadata: Prisma.InputJsonValue;
+  }[] = [];
+
   for (const workspaceName of WORKSPACES) {
     // 1. Create workspace
     const workspace = await prisma.workspace.create({
@@ -210,13 +223,21 @@ async function main() {
 
     // 2. Create workspace ADMIN (not assigned to any team)
     const adminInfo = nextName();
-    await prisma.user.create({
+    const admin = await prisma.user.create({
       data: {
         ...adminInfo,
         passwordHash,
         role: "ADMIN",
         workspaceId: workspace.id,
       },
+    });
+    auditLogs.push({
+      action: "USER_REGISTERED",
+      userId: admin.id,
+      workspaceId: workspace.id,
+      targetId: admin.id,
+      targetType: "User",
+      metadata: { email: admin.email, name: admin.name, role: "ADMIN", workspaceName },
     });
     totalUsers++;
 
@@ -245,6 +266,14 @@ async function main() {
           teamId: team.id,
         },
       });
+      auditLogs.push({
+        action: "USER_REGISTERED",
+        userId: manager.id,
+        workspaceId: workspace.id,
+        targetId: manager.id,
+        targetType: "User",
+        metadata: { email: manager.email, name: manager.name, role: "MANAGER", teamName: team.name },
+      });
       totalUsers++;
 
       // 5 regular USERs per team
@@ -260,6 +289,14 @@ async function main() {
             teamId: team.id,
           },
         });
+        auditLogs.push({
+          action: "USER_REGISTERED",
+          userId: member.id,
+          workspaceId: workspace.id,
+          targetId: member.id,
+          targetType: "User",
+          metadata: { email: member.email, name: member.name, role: "USER", teamName: team.name },
+        });
         members.push(member);
         totalUsers++;
       }
@@ -274,7 +311,7 @@ async function main() {
           const endDate = addDays(startDate, duration);
           const status = randomItem(LEAVE_STATUSES);
 
-          await prisma.leaveRequest.create({
+          const leave = await prisma.leaveRequest.create({
             data: {
               userId: member.id,
               teamId: team.id,
@@ -292,6 +329,34 @@ async function main() {
               comment: randomItem(LEAVE_COMMENTS),
             },
           });
+
+          // LEAVE_APPLIED audit entry for every request
+          auditLogs.push({
+            action: "LEAVE_APPLIED",
+            userId: member.id,
+            workspaceId: workspace.id,
+            targetId: leave.id,
+            targetType: "LeaveRequest",
+            metadata: {
+              type: leave.type,
+              startDate: leave.startDate.toISOString(),
+              endDate: leave.endDate.toISOString(),
+              teamId: team.id,
+            },
+          });
+
+          // LEAVE_APPROVED / LEAVE_REJECTED entry when applicable
+          if (status === "APPROVED" || status === "REJECTED") {
+            auditLogs.push({
+              action: status === "APPROVED" ? "LEAVE_APPROVED" : "LEAVE_REJECTED",
+              userId: manager.id,
+              workspaceId: workspace.id,
+              targetId: leave.id,
+              targetType: "LeaveRequest",
+              metadata: { approverId: manager.id, requesterId: member.id },
+            });
+          }
+
           totalLeaveRequests++;
         }
       }
@@ -300,12 +365,16 @@ async function main() {
     console.log(`  ✅  ${workspaceName} — ${teamNames.length} teams`);
   }
 
+  // Bulk-insert all audit log entries in one shot
+  await prisma.auditLog.createMany({ data: auditLogs });
+
   console.log(`
 ✨ Seeding complete!
    Workspaces    : ${WORKSPACES.length}
    Teams         : ${totalTeams}
    Users         : ${totalUsers}
    Leave Requests: ${totalLeaveRequests}
+   Audit Logs    : ${auditLogs.length}
 
 🔑 All users share the password: Password123!
   `);

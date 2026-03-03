@@ -33,6 +33,19 @@ enum Session {
   SECOND_HALF
 }
 
+enum AuditAction {
+  // Authentication
+  USER_REGISTERED
+  USER_LOGIN
+  USER_LOGIN_FAILED
+
+  // Leave management
+  LEAVE_APPLIED
+  LEAVE_APPROVED
+  LEAVE_REJECTED
+  LEAVE_CANCELLED
+}
+
 model Workspace {
   id        String   @id @default(uuid())
   name      String
@@ -93,4 +106,23 @@ model LeaveRequest {
   @@index([startDate])
   @@index([endDate])
   @@index([status])
+}
+
+// Append-only audit trail. Intentionally no FK to User so logs survive
+// user deletion and failed-auth attempts can be recorded without a userId.
+model AuditLog {
+  id          String      @id @default(uuid())
+  action      AuditAction
+  userId      String?     // actor — null for failed/unauthenticated actions
+  workspaceId String?     // workspace context
+  targetId    String?     // affected entity ID (userId, leaveRequestId, …)
+  targetType  String?     // "User" | "LeaveRequest"
+  ipAddress   String?
+  metadata    Json?       // flexible extra context (email, leaveType, etc.)
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([action])
+  @@index([createdAt])
 }

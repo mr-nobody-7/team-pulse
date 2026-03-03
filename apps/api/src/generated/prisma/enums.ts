@@ -45,3 +45,16 @@ export const Session = {
 } as const
 
 export type Session = (typeof Session)[keyof typeof Session]
+
+
+export const AuditAction = {
+  USER_REGISTERED: 'USER_REGISTERED',
+  USER_LOGIN: 'USER_LOGIN',
+  USER_LOGIN_FAILED: 'USER_LOGIN_FAILED',
+  LEAVE_APPLIED: 'LEAVE_APPLIED',
+  LEAVE_APPROVED: 'LEAVE_APPROVED',
+  LEAVE_REJECTED: 'LEAVE_REJECTED',
+  LEAVE_CANCELLED: 'LEAVE_CANCELLED'
+} as const
+
+export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]

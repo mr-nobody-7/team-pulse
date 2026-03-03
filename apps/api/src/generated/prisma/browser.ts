@@ -37,3 +37,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type LeaveRequest = Prisma.LeaveRequestModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

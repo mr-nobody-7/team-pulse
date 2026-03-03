@@ -1,7 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { sendSuccess } from "../utils/response.js";
-import { applyLeave } from "../services/leave.service.js";
+import { applyLeave, listLeave } from "../services/leave.service.js";
 import { createAuditLog } from "../utils/audit.js";
+import { listLeaveSchema } from "../utils/validations.js";
+import { BadRequestError } from "../utils/errors.js";
 
 export const applyLeaveController = async (
   req: Request,
@@ -37,6 +39,34 @@ export const applyLeaveController = async (
       "Leave applied successfully",
       201,
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const listLeaveController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const parsed = listLeaveSchema.safeParse(req.query);
+    if (!parsed.success) {
+      return next(
+        new BadRequestError(parsed.error.issues[0]?.message ?? "Invalid query"),
+      );
+    }
+
+    const { userId, workspaceId, role, teamId } = req.user!;
+    const result = await listLeave(
+      parsed.data,
+      userId,
+      workspaceId,
+      role,
+      teamId,
+    );
+
+    sendSuccess(res, result, "Leave requests fetched successfully");
   } catch (error) {
     next(error);
   }

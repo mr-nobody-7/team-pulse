@@ -44,3 +44,23 @@ export const applyLeaveSchema = z.object({
     .max(500, "Reason must be less than 500 characters"),
 });
 
+export const listLeaveSchema = z.object({
+  status: z
+    .enum(["PENDING", "APPROVED", "REJECTED", "CANCELLED"], {
+      error: "Invalid status value",
+    })
+    .optional(),
+  team_id: z.string().optional(),
+  page: z.coerce
+    .number({ error: "page must be a number" })
+    .int("page must be an integer")
+    .min(1, "page must be at least 1")
+    .default(1),
+  limit: z.coerce
+    .number({ error: "limit must be a number" })
+    .int("limit must be an integer")
+    .min(1, "limit must be at least 1")
+    .max(50, "limit must not exceed 50")
+    .default(10),
+});
+

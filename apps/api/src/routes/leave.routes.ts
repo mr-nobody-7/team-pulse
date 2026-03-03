@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
-import { applyLeaveController } from "../controllers/leave.controller.js";
+import { applyLeaveController, listLeaveController } from "../controllers/leave.controller.js";
 import { validate } from "../middleware/validate.js";
 import { applyLeaveSchema } from "../utils/validations.js";
 
@@ -13,6 +13,12 @@ router.post(
   authorize(["MANAGER", "USER"]),
   validate(applyLeaveSchema),
   applyLeaveController,
+);
+
+router.get(
+  "/",
+  authenticate,
+  listLeaveController,
 );
 
 export { router as leaveRoutes };

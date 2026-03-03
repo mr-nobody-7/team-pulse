@@ -42,3 +42,10 @@ export interface ApplyLeaveInput {
   type: "VACATION" | "SICK" | "PERSONAL" | "CASUAL";
   reason: string;
 }
+
+export interface ListLeaveQuery {
+  status?: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | undefined;
+  team_id?: string | undefined;
+  page: number;
+  limit: number;
+}

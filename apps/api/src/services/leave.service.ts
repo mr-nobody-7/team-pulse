@@ -1,5 +1,6 @@
 import { prisma } from "../lib/db.js";
-import type { ApplyLeaveInput } from "../types/index.js";
+import type { ApplyLeaveInput, ListLeaveQuery } from "../types/index.js";
+import type { Prisma } from "../generated/prisma/client.js";
 import {
   BadRequestError,
   ConflictError,
@@ -146,4 +147,71 @@ export const applyLeave = async (
   });
 
   return { leaveRequest, warning };
+};
+
+// ── List leave requests ───────────────────────────────────────────────────────
+// Builds a dynamic WHERE clause based on the caller's role, then runs a
+// parallel count + paginated findMany so the client can render pagination UI.
+
+export const listLeave = async (
+  query: ListLeaveQuery,
+  userId: string,
+  workspaceId: string,
+  role: string,
+  callerTeamId: string | null,
+) => {
+  const { status, team_id, page, limit } = query;
+
+  // ── Base: multi-tenant safety — always scope to caller's workspace ──────────
+  // LeaveRequest has no direct workspaceId; we scope via the user relation.
+  // This join is lightweight and guarantees cross-workspace data never leaks.
+  const where: Prisma.LeaveRequestWhereInput = {
+    user: { workspaceId },
+  };
+
+  // ── Role-based scoping ──────────────────────────────────────────────────────
+  if (role === "USER") {
+    // Employees see only their own requests; team_id param is ignored.
+    where.userId = userId;
+  } else if (role === "MANAGER") {
+    // Managers see their own team; team_id param is silently ignored so a
+    // manager can never peek at another team by passing a different team_id.
+    if (!callerTeamId) {
+      throw new BadRequestError(
+        "Manager must be assigned to a team to view leave requests",
+      );
+    }
+    where.teamId = callerTeamId;
+  } else {
+    // ADMIN — workspace-wide; optionally filter by team_id from query.
+    if (team_id) {
+      where.teamId = team_id;
+    }
+  }
+
+  // ── Optional status filter ─────────────────────────────────────────────────
+  if (status) {
+    where.status = status;
+  }
+
+  // ── Pagination math ────────────────────────────────────────────────────────
+  const skip = (page - 1) * limit;
+  const take = limit;
+
+  // ── Parallel DB calls ──────────────────────────────────────────────────────
+  const [total, data] = await Promise.all([
+    prisma.leaveRequest.count({ where }),
+    prisma.leaveRequest.findMany({
+      where,
+      skip,
+      take,
+      orderBy: { created_at: "desc" },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        approver: { select: { id: true, name: true } },
+      },
+    }),
+  ]);
+
+  return { data, total, page, limit };
 };

@@ -199,7 +199,7 @@ export const listLeave = async (
   const take = limit;
 
   // ── Parallel DB calls ──────────────────────────────────────────────────────
-  const [total, data] = await Promise.all([
+  const [total, leaves] = await Promise.all([
     prisma.leaveRequest.count({ where }),
     prisma.leaveRequest.findMany({
       where,
@@ -213,5 +213,5 @@ export const listLeave = async (
     }),
   ]);
 
-  return { data, total, page, limit };
+  return { leaves, total, page, limit };
 };

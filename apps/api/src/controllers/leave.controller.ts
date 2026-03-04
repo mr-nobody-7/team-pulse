@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { sendSuccess } from "../utils/response.js";
-import { applyLeave, listLeave, updateLeaveStatus } from "../services/leave.service.js";
+import { applyLeave, cancelLeave, listLeave, updateLeaveStatus } from "../services/leave.service.js";
 import { createAuditLog } from "../utils/audit.js";
 import { listLeaveSchema } from "../utils/validations.js";
 import { BadRequestError } from "../utils/errors.js";
@@ -117,6 +117,43 @@ export const updateLeaveStatusController = async (
     const message =
       input.status === "APPROVED" ? "Leave approved" : "Leave rejected";
     sendSuccess(res, { leave: updated }, message);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const cancelLeaveController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    const rawId = req.params["id"];
+    const leaveId = Array.isArray(rawId) ? rawId[0] : rawId;
+
+    if (!leaveId) {
+      return next(new BadRequestError("Leave request ID is required"));
+    }
+
+    const cancelled = await cancelLeave(leaveId, userId, workspaceId);
+
+    createAuditLog({
+      action: "LEAVE_CANCELLED",
+      userId,
+      workspaceId,
+      targetId: cancelled.id,
+      targetType: "LeaveRequest",
+      ipAddress: req.ip,
+      metadata: {
+        leaveType: cancelled.type,
+        teamId: cancelled.teamId,
+        startDate: cancelled.startDate.toISOString(),
+        endDate: cancelled.endDate.toISOString(),
+      },
+    });
+
+    sendSuccess(res, { leave: cancelled }, "Leave cancelled successfully");
   } catch (error) {
     next(error);
   }

@@ -3,6 +3,7 @@ import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
 import {
   applyLeaveController,
+  cancelLeaveController,
   listLeaveController,
   updateLeaveStatusController,
 } from "../controllers/leave.controller.js";
@@ -31,6 +32,12 @@ router.patch(
   authorize(["ADMIN", "MANAGER"]),
   validate(updateLeaveStatusSchema),
   updateLeaveStatusController,
+);
+
+router.patch(
+  "/:id/cancel",
+  authenticate,
+  cancelLeaveController,
 );
 
 export { router as leaveRoutes };

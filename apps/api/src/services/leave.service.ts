@@ -1,10 +1,11 @@
 import { prisma } from "../lib/db.js";
-import type { ApplyLeaveInput, ListLeaveQuery } from "../types/index.js";
+import type { ApplyLeaveInput, ListLeaveQuery, UpdateLeaveStatusInput } from "../types/index.js";
 import type { Prisma } from "../generated/prisma/client.js";
 import {
   BadRequestError,
   ConflictError,
   ForbiddenError,
+  NotFoundError,
   UnauthorizedError,
 } from "../utils/errors.js";
 
@@ -214,4 +215,59 @@ export const listLeave = async (
   ]);
 
   return { leaves, total, page, limit };
+};
+
+// ── Approve / Reject leave ────────────────────────────────────────────────────
+// Only PENDING leaves can transition. Managers are locked to their own team.
+
+export const updateLeaveStatus = async (
+  leaveId: string,
+  input: UpdateLeaveStatusInput,
+  actorId: string,
+  workspaceId: string,
+  role: string,
+  callerTeamId: string | null,
+) => {
+  // Fetch leave + user's workspaceId for isolation check in one query
+  const leave = await prisma.leaveRequest.findUnique({
+    where: { id: leaveId },
+    include: { user: { select: { workspaceId: true } } },
+  });
+
+  // 404 for not-found AND for cross-workspace requests (don't leak existence)
+  if (!leave || leave.user.workspaceId !== workspaceId) {
+    throw new NotFoundError("Leave request not found");
+  }
+
+  // ── State transition guard ─────────────────────────────────────────────────
+  // Only PENDING → APPROVED/REJECTED is allowed.
+  if (leave.status !== "PENDING") {
+    throw new ConflictError("Leave request has already been processed");
+  }
+
+  // ── Manager scope guard ────────────────────────────────────────────────────
+  // A manager can only action leave requests that belong to their own team.
+  if (role === "MANAGER") {
+    if (!callerTeamId || leave.teamId !== callerTeamId) {
+      throw new ForbiddenError(
+        "You can only manage leave requests for your own team",
+      );
+    }
+  }
+
+  // ── Persist update ─────────────────────────────────────────────────────────
+  const updated = await prisma.leaveRequest.update({
+    where: { id: leaveId },
+    data: {
+      status: input.status,
+      approverId: actorId,
+      comment: input.comment ?? null,
+    },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      approver: { select: { id: true, name: true } },
+    },
+  });
+
+  return updated;
 };

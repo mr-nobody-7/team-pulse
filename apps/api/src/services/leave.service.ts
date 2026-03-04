@@ -271,3 +271,46 @@ export const updateLeaveStatus = async (
 
   return updated;
 };
+
+// ── Cancel leave ──────────────────────────────────────────────────────────────
+// Only the owner can cancel, and only while the request is still PENDING.
+
+export const cancelLeave = async (
+  leaveId: string,
+  userId: string,
+  workspaceId: string,
+) => {
+  // Fetch with workspace isolation via user relation
+  const leave = await prisma.leaveRequest.findUnique({
+    where: { id: leaveId },
+    include: { user: { select: { workspaceId: true } } },
+  });
+
+  // 404 for not-found AND for cross-workspace (don't leak existence)
+  if (!leave || leave.user.workspaceId !== workspaceId) {
+    throw new NotFoundError("Leave request not found");
+  }
+
+  // ── Ownership guard ────────────────────────────────────────────────────────
+  if (leave.userId !== userId) {
+    throw new ForbiddenError("You can only cancel your own leave requests");
+  }
+
+  // ── State guard ────────────────────────────────────────────────────────────
+  if (leave.status !== "PENDING") {
+    throw new ConflictError(
+      "Only pending leave requests can be cancelled",
+    );
+  }
+
+  const cancelled = await prisma.leaveRequest.update({
+    where: { id: leaveId },
+    data: { status: "CANCELLED" },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      approver: { select: { id: true, name: true } },
+    },
+  });
+
+  return cancelled;
+};

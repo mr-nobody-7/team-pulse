@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
-import { applyLeaveController, listLeaveController } from "../controllers/leave.controller.js";
+import {
+  applyLeaveController,
+  listLeaveController,
+  updateLeaveStatusController,
+} from "../controllers/leave.controller.js";
 import { validate } from "../middleware/validate.js";
-import { applyLeaveSchema } from "../utils/validations.js";
+import { applyLeaveSchema, updateLeaveStatusSchema } from "../utils/validations.js";
 
 const router = Router();
 
@@ -19,6 +23,14 @@ router.get(
   "/",
   authenticate,
   listLeaveController,
+);
+
+router.patch(
+  "/:id/status",
+  authenticate,
+  authorize(["ADMIN", "MANAGER"]),
+  validate(updateLeaveStatusSchema),
+  updateLeaveStatusController,
 );
 
 export { router as leaveRoutes };

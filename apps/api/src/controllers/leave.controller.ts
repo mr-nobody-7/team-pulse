@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { sendSuccess } from "../utils/response.js";
-import { applyLeave, listLeave } from "../services/leave.service.js";
+import { applyLeave, listLeave, updateLeaveStatus } from "../services/leave.service.js";
 import { createAuditLog } from "../utils/audit.js";
 import { listLeaveSchema } from "../utils/validations.js";
 import { BadRequestError } from "../utils/errors.js";
@@ -67,6 +67,56 @@ export const listLeaveController = async (
     );
 
     sendSuccess(res, result, "Leave requests fetched successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateLeaveStatusController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId, role, teamId } = req.user!;
+    const rawId = req.params["id"];
+    const leaveId = Array.isArray(rawId) ? rawId[0] : rawId;
+
+    if (!leaveId) {
+      return next(new BadRequestError("Leave request ID is required"));
+    }
+
+    // req.body is already validated + typed by the validate() middleware
+    const input = req.body as { status: "APPROVED" | "REJECTED"; comment?: string | undefined };
+
+    const updated = await updateLeaveStatus(
+      leaveId,
+      input,
+      userId,
+      workspaceId,
+      role,
+      teamId,
+    );
+
+    createAuditLog({
+      action: input.status === "APPROVED" ? "LEAVE_APPROVED" : "LEAVE_REJECTED",
+      userId,
+      workspaceId,
+      targetId: updated.id,
+      targetType: "LeaveRequest",
+      ipAddress: req.ip,
+      metadata: {
+        newStatus: input.status,
+        previousStatus: "PENDING",
+        teamId: updated.teamId,
+        leaveType: updated.type,
+        comment: input.comment ?? null,
+      },
+    });
+
+    const message =
+      input.status === "APPROVED" ? "Leave approved" : "Leave rejected";
+    sendSuccess(res, { leave: updated }, message);
   } catch (error) {
     next(error);
   }

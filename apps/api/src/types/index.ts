@@ -49,3 +49,8 @@ export interface ListLeaveQuery {
   page: number;
   limit: number;
 }
+
+export interface UpdateLeaveStatusInput {
+  status: "APPROVED" | "REJECTED";
+  comment?: string | undefined;
+}

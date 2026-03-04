@@ -64,3 +64,13 @@ export const listLeaveSchema = z.object({
     .default(10),
 });
 
+export const updateLeaveStatusSchema = z.object({
+  status: z.enum(["APPROVED", "REJECTED"], {
+    error: "Status must be APPROVED or REJECTED",
+  }),
+  comment: z
+    .string()
+    .max(500, "Comment must be less than 500 characters")
+    .optional(),
+});
+

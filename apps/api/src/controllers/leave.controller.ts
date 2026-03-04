@@ -29,13 +29,18 @@ export const applyLeaveController = async (
         endDate: result.leaveRequest.endDate.toISOString(),
         startSession: result.leaveRequest.startSession,
         endSession: result.leaveRequest.endSession,
-        teamConflictWarning: result.warning ?? null,
+        teamConflictWarning: result.warning,
+        warningMessage: result.warningMessage ?? null,
       },
     });
 
     sendSuccess(
       res,
-      { leaveRequest: result.leaveRequest, warning: result.warning },
+      {
+        leaveRequest: result.leaveRequest,
+        warning: result.warning,
+        warningMessage: result.warningMessage ?? null,
+      },
       "Leave applied successfully",
       201,
     );

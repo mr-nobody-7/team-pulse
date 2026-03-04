@@ -35,7 +35,7 @@ function toEndSlot(date: Date, session: SessionValue): number {
 }
 
 // ── Team conflict threshold (warn when ≥ this fraction of the team is off) ───
-const TEAM_CONFLICT_THRESHOLD = 0.3; // 30 %
+const TEAM_CONFLICT_THRESHOLD = 0.5; // 50 %
 
 // ── Service ───────────────────────────────────────────────────────────────────
 
@@ -126,10 +126,10 @@ export const applyLeave = async (
   ]);
 
   const overlapFraction = teamSize > 0 ? overlappingTeamLeaves / teamSize : 0;
-  const warning =
-    overlapFraction >= TEAM_CONFLICT_THRESHOLD
-      ? `${overlappingTeamLeaves} other team member(s) (${Math.round(overlapFraction * 100)}% of your team) are already on leave during this period.`
-      : undefined;
+  const conflictDetected = overlapFraction >= TEAM_CONFLICT_THRESHOLD;
+  const warningMessage = conflictDetected
+    ? `High team overlap: ${overlappingTeamLeaves} of ${teamSize} team member(s) (${Math.round(overlapFraction * 100)}%) are already on leave during this period.`
+    : undefined;
 
   // ── Create leave request ────────────────────────────────────────────────────
   // approverId and comment are intentionally omitted — set only by an approver.
@@ -147,7 +147,7 @@ export const applyLeave = async (
     },
   });
 
-  return { leaveRequest, warning };
+  return { leaveRequest, warning: conflictDetected, warningMessage };
 };
 
 // ── List leave requests ───────────────────────────────────────────────────────

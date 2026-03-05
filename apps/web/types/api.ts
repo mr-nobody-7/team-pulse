@@ -1,0 +1,84 @@
+// ── Generic API envelope ──────────────────────────────────────────────────────
+
+export interface ApiResponse<T> {
+  success: true;
+  message: string;
+  data: T;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+}
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+
+export interface SafeUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "USER" | "MANAGER" | "ADMIN";
+  isActive: boolean;
+  workspaceId: string;
+  teamId: string | null;
+  createdAt: string;
+}
+
+export interface RegisterPayload {
+  workspace_name: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+// ── Leave ─────────────────────────────────────────────────────────────────────
+
+export type LeaveType = "VACATION" | "SICK" | "PERSONAL" | "CASUAL";
+export type LeaveStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+export type Session = "FULL_DAY" | "FIRST_HALF" | "SECOND_HALF";
+
+export interface LeaveRequest {
+  id: string;
+  userId: string;
+  teamId: string;
+  startDate: string;
+  startSession: Session;
+  endDate: string;
+  endSession: Session;
+  type: LeaveType;
+  status: LeaveStatus;
+  reason: string | null;
+  approverId: string | null;
+  comment: string | null;
+  created_at: string;
+  user: { id: string; name: string; email: string };
+  approver: { id: string; name: string } | null;
+}
+
+export interface ApplyLeavePayload {
+  start_date: string;
+  start_session: Session;
+  end_date: string;
+  end_session: Session;
+  type: LeaveType;
+  reason: string;
+}
+
+export interface ListLeaveResponse {
+  leaves: LeaveRequest[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface ListLeaveParams {
+  status?: LeaveStatus;
+  team_id?: string;
+  page?: number;
+  limit?: number;
+}

@@ -1,5 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import { loginService, registerUserService } from "../services/auth.service.js";
+import {
+  loginService,
+  getMeService,
+  registerUserService,
+} from "../services/auth.service.js";
 import { sendSuccess } from "../utils/response.js";
 import { createAuditLog } from "../utils/audit.js";
 
@@ -65,4 +69,27 @@ export const loginController = async (
     });
     next(error);
   }
+};
+export const meController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    // req.user is guaranteed by authenticate middleware
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const user = await getMeService(req.user!.userId);
+    sendSuccess(res, { user }, "User fetched successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logoutController = (_req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  sendSuccess(res, null, "Logged out successfully");
 };

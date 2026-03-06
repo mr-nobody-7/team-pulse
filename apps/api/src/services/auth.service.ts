@@ -6,7 +6,7 @@ import type {
   LoginInput,
 } from "../types/index.js";
 import { generateToken } from "../utils/jwt.js";
-import { AppError } from "../utils/errors.js";
+import { AppError, UnauthorizedError } from "../utils/errors.js";
 
 export class EmailInUseError extends AppError {
   constructor() {
@@ -74,4 +74,23 @@ export const loginService = async (input: LoginInput) => {
 
   const { passwordHash: _, ...safeUser } = user;
   return { user: safeUser, token };
+};
+
+export const getMeService = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isActive: true,
+      workspaceId: true,
+      teamId: true,
+      createdAt: true,
+      workspace: { select: { id: true, name: true, createdAt: true } },
+    },
+  });
+  if (!user) throw new UnauthorizedError("User not found");
+  return user;
 };

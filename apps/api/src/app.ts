@@ -1,4 +1,5 @@
 
+import cors from "cors";
 import express from "express";
 import { authRoutes } from "./routes/auth.routes.js";
 import { leaveRoutes } from "./routes/leave.routes.js";
@@ -7,6 +8,12 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 export const app = express();
 
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL ?? "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

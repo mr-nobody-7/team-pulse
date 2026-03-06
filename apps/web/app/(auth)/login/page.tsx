@@ -3,11 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth-context";
 import api from "@/lib/axios";
 import type { ApiResponse, SafeUser } from "@/types/api";
 
@@ -37,7 +39,15 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading, refetch } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Already logged in → skip to dashboard
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -52,6 +62,7 @@ export default function LoginPage() {
         values,
       );
       toast.success(`Welcome back, ${data.data.user.name}!`);
+      refetch();
       router.push("/dashboard");
     } catch (err) {
       const message = isAxiosError(err)
@@ -61,6 +72,14 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (

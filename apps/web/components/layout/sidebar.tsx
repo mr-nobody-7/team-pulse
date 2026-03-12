@@ -3,6 +3,7 @@
 import {
   BarChart3,
   CalendarDays,
+  CalendarRange,
   CheckSquare,
   LayoutDashboard,
   PlusCircle,
@@ -26,6 +27,12 @@ const navItems: NavItem[] = [
     href: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
+    roles: ["USER", "MANAGER", "ADMIN"],
+  },
+  {
+    href: "/calendar",
+    label: "Calendar",
+    icon: CalendarRange,
     roles: ["USER", "MANAGER", "ADMIN"],
   },
   {
@@ -98,7 +105,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
               (item.href !== "/dashboard" &&
                 pathname.startsWith(item.href + "/"));
             return (
-              <li key={item.href}>
+              <li key={`${item.href}-${item.label}`}>
                 <Link
                   href={item.href}
                   className={cn(

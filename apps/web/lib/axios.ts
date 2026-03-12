@@ -9,4 +9,20 @@ const api = axios.create({
   },
 });
 
+// On 401 (expired / invalid session) redirect to login (client-side only)
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401 &&
+      typeof window !== "undefined" &&
+      !window.location.pathname.startsWith("/login")
+    ) {
+      window.location.replace("/login");
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default api;

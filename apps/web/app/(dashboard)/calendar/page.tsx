@@ -6,6 +6,7 @@ import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { CalendarGrid } from "@/components/calendar/calendar-grid";
 import { LeaveDetailsPanel } from "@/components/calendar/leave-details-panel";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
+import { useTeams } from "@/hooks/use-teams";
 import type { LeaveRequest } from "@/types/api";
 
 export default function CalendarPage() {
@@ -18,10 +19,16 @@ export default function CalendarPage() {
     leaves: LeaveRequest[];
   } | null>(null);
 
+  // "" means "all teams"; any truthy string is a specific team id
+  const [selectedTeamId, setSelectedTeamId] = useState("all");
+
   const { data: leavesMap = {}, isLoading } = useCalendarLeaves(
     currentDate.getFullYear(),
     currentDate.getMonth(),
+    selectedTeamId === "all" ? undefined : selectedTeamId,
   );
+
+  const { data: teams = [] } = useTeams();
 
   const handlePrev = () =>
     setCurrentDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
@@ -35,9 +42,8 @@ export default function CalendarPage() {
   };
 
   const handleDayClick = (date: Date, leaves: LeaveRequest[]) => {
-    setSelectedDay((prev) =>
-      prev?.date.toDateString() === date.toDateString() ? null : { date, leaves },
-    );
+    if (leaves.length === 0) return;
+    setSelectedDay({ date, leaves });
   };
 
   return (
@@ -54,22 +60,26 @@ export default function CalendarPage() {
         onPrev={handlePrev}
         onNext={handleNext}
         onToday={handleToday}
+        teams={teams}
+        selectedTeamId={selectedTeamId}
+        onTeamChange={setSelectedTeamId}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        <CalendarGrid
-          currentDate={currentDate}
-          leavesMap={leavesMap}
-          isLoading={isLoading}
-          onDayClick={handleDayClick}
-          selectedDate={selectedDay?.date ?? null}
-        />
+      <CalendarGrid
+        currentDate={currentDate}
+        leavesMap={leavesMap}
+        isLoading={isLoading}
+        onDayClick={handleDayClick}
+        selectedDate={selectedDay?.date ?? null}
+      />
 
-        <LeaveDetailsPanel
-          selectedDay={selectedDay}
-          onClose={() => setSelectedDay(null)}
-        />
-      </div>
+      <LeaveDetailsPanel
+        open={selectedDay !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedDay(null);
+        }}
+        selectedDay={selectedDay}
+      />
     </PageContainer>
   );
 }

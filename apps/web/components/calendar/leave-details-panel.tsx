@@ -1,17 +1,24 @@
-import { format } from "date-fns";
-import { X } from "lucide-react";
+"use client";
 
+import { format } from "date-fns";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { LeaveRequest } from "@/types/api";
 
 interface LeaveDetailsPanelProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   selectedDay: { date: Date; leaves: LeaveRequest[] } | null;
-  onClose: () => void;
 }
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
@@ -83,52 +90,40 @@ function LeaveCard({ leave, day }: { leave: LeaveRequest; day: Date }) {
 }
 
 export function LeaveDetailsPanel({
+  open,
+  onOpenChange,
   selectedDay,
-  onClose,
 }: LeaveDetailsPanelProps) {
-  if (!selectedDay) {
-    return (
-      <Card className="flex h-full min-h-48 flex-col items-center justify-center">
-        <CardContent className="pt-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Click a day with leaves to see details.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const { date, leaves } = selectedDay;
-
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base">
-          {format(date, "EEEE, MMM d")}
-          <span className="ml-2 text-sm font-normal text-muted-foreground">
-            {leaves.length} on leave
-          </span>
-        </CardTitle>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7"
-          onClick={onClose}
-          aria-label="Close panel"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </CardHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="flex max-h-[80vh] flex-col gap-0 p-0 sm:max-w-md">
+        <DialogHeader className="px-6 pt-6 pb-4">
+          <DialogTitle>
+            {selectedDay ? format(selectedDay.date, "EEEE, MMMM d") : ""}
+          </DialogTitle>
+          <DialogDescription>
+            {selectedDay
+              ? `${selectedDay.leaves.length} ${selectedDay.leaves.length === 1 ? "person" : "people"} on leave`
+              : ""}
+          </DialogDescription>
+        </DialogHeader>
 
-      <Separator />
+        <Separator />
 
-      <CardContent className="flex-1 overflow-y-auto p-0">
-        <div className="divide-y">
-          {leaves.map((leave) => (
-            <LeaveCard key={leave.id} leave={leave} day={date} />
-          ))}
+        <div className="flex-1 overflow-y-auto pb-2">
+          {selectedDay && (
+            <div className="divide-y">
+              {selectedDay.leaves.map((leave) => (
+                <LeaveCard
+                  key={leave.id}
+                  leave={leave}
+                  day={selectedDay.date}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -82,3 +82,10 @@ export interface ListLeaveParams {
   page?: number;
   limit?: number;
 }
+
+// ── Teams ─────────────────────────────────────────────────────────────────────
+
+export interface Team {
+  id: string;
+  name: string;
+}

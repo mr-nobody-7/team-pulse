@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import { authRoutes } from "./routes/auth.routes.js";
 import { leaveRoutes } from "./routes/leave.routes.js";
+import { teamRoutes } from "./routes/team.routes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRoutes);
 app.use("/leave", leaveRoutes);
+app.use("/teams", teamRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ success: true, message: "API running 🚀" });

@@ -17,11 +17,17 @@ export type CalendarLeavesMap = Record<string, LeaveRequest[]>;
 async function fetchMonthLeaves(
   year: number,
   month: number,
+  teamId?: string,
 ): Promise<CalendarLeavesMap> {
   // The API has no date-range filter, so we fetch all approved leaves
   // in one call (high limit) and filter/expand client-side.
   const { data } = await api.get<ApiResponse<ListLeaveResponse>>("/leave", {
-    params: { status: "APPROVED", page: 1, limit: 500 },
+    params: {
+      status: "APPROVED",
+      page: 1,
+      limit: 500,
+      ...(teamId ? { team_id: teamId } : {}),
+    },
   });
 
   const monthStart = startOfMonth(new Date(year, month));
@@ -59,10 +65,15 @@ async function fetchMonthLeaves(
  *
  * @param year  Full year (e.g. 2026)
  * @param month 0-indexed month (0 = January)
+ * @param teamId Optional team ID to filter leaves; omit for all teams
  */
-export function useCalendarLeaves(year: number, month: number) {
+export function useCalendarLeaves(
+  year: number,
+  month: number,
+  teamId?: string,
+) {
   return useQuery({
-    queryKey: ["calendar-leaves", year, month],
-    queryFn: () => fetchMonthLeaves(year, month),
+    queryKey: ["calendar-leaves", year, month, teamId ?? ""],
+    queryFn: () => fetchMonthLeaves(year, month, teamId),
   });
 }

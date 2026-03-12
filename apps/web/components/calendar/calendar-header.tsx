@@ -4,12 +4,23 @@ import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Team } from "@/types/api";
 
 interface CalendarHeaderProps {
   currentDate: Date;
   onPrev: () => void;
   onNext: () => void;
   onToday: () => void;
+  teams?: Team[];
+  selectedTeamId: string;
+  onTeamChange: (teamId: string) => void;
 }
 
 export function CalendarHeader({
@@ -17,9 +28,12 @@ export function CalendarHeader({
   onPrev,
   onNext,
   onToday,
+  teams = [],
+  selectedTeamId,
+  onTeamChange,
 }: CalendarHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-3">
         <h2 className="text-xl font-semibold tracking-tight">
           {format(currentDate, "MMMM yyyy")}
@@ -41,6 +55,21 @@ export function CalendarHeader({
       </div>
 
       <div className="flex items-center gap-1">
+        {/* Team filter */}
+        <Select value={selectedTeamId} onValueChange={onTeamChange}>
+          <SelectTrigger size="sm" className="w-36">
+            <SelectValue placeholder="All teams" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All teams</SelectItem>
+            {teams.map((team) => (
+              <SelectItem key={team.id} value={team.id}>
+                {team.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         <Button variant="outline" size="sm" onClick={onToday}>
           Today
         </Button>

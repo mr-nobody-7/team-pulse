@@ -1,21 +1,24 @@
 "use client";
 
 import {
+  BarChart3,
   CalendarDays,
   CheckSquare,
   LayoutDashboard,
   PlusCircle,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import type { UserRole } from "@/hooks/use-role";
 
 interface NavItem {
   href: string;
   label: string;
   icon: React.ElementType;
-  roles: string[];
+  roles: UserRole[];
 }
 
 const navItems: NavItem[] = [
@@ -29,7 +32,19 @@ const navItems: NavItem[] = [
     href: "/leaves",
     label: "My Leaves",
     icon: CalendarDays,
-    roles: ["USER", "MANAGER", "ADMIN"],
+    roles: ["USER"],
+  },
+  {
+    href: "/leaves",
+    label: "Team Leaves",
+    icon: Users,
+    roles: ["MANAGER"],
+  },
+  {
+    href: "/leaves",
+    label: "All Leaves",
+    icon: CalendarDays,
+    roles: ["ADMIN"],
   },
   {
     href: "/leaves/apply",
@@ -43,10 +58,16 @@ const navItems: NavItem[] = [
     icon: CheckSquare,
     roles: ["MANAGER", "ADMIN"],
   },
+  {
+    href: "/reports",
+    label: "Reports",
+    icon: BarChart3,
+    roles: ["ADMIN"],
+  },
 ];
 
 interface SidebarProps {
-  userRole?: string;
+  userRole?: UserRole;
   userName?: string;
   userEmail?: string;
 }

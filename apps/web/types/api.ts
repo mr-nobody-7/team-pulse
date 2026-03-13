@@ -100,9 +100,23 @@ export interface DashboardSummaryItem {
   user: { id: string; name: string; email: string };
 }
 
+export interface DashboardLeaveDistributionItem {
+  type: LeaveType;
+  count: number;
+}
+
+export interface DashboardAvailabilityItem {
+  date: string;
+  available: number;
+  onLeave: number;
+  total: number;
+}
+
 export interface DashboardSummary {
   totalUsers: number;
   pendingApprovals: number;
   todayLeaves: number;
   upcomingLeaves: DashboardSummaryItem[];
+  leaveDistribution: DashboardLeaveDistributionItem[];
+  availabilityByDay: DashboardAvailabilityItem[];
 }

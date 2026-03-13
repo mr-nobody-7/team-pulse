@@ -15,9 +15,10 @@ async function fetchLeaves(params: ListLeaveParams): Promise<ListLeaveResponse> 
  * @example
  * const { data, isLoading } = useLeaves({ status: "PENDING", page: 1, limit: 10 });
  */
-export function useLeaves(params: ListLeaveParams = {}) {
+export function useLeaves(params: ListLeaveParams = {}, enabled = true) {
   return useQuery({
     queryKey: ["leaves", params],
     queryFn: () => fetchLeaves(params),
+    enabled,
   });
 }

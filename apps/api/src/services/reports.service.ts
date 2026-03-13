@@ -9,6 +9,8 @@ interface GetDashboardSummaryParams {
   teamId: string | null;
 }
 
+const LEAVE_TYPES = ["VACATION", "SICK", "PERSONAL", "CASUAL"] as const;
+
 function startOfTodayUtc() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
@@ -61,7 +63,35 @@ export const getDashboardSummary = async ({
     status: "APPROVED",
   };
 
-  const [totalUsers, pendingApprovals, todayLeaves, upcomingLeaves] =
+  const availabilityRangeStart = new Date(today);
+  const availabilityRangeEnd = new Date(next7Days);
+
+  const distributionRowsPromise = prisma.leaveRequest.groupBy({
+    by: ["type"],
+    where: approvedWhere,
+    _count: { _all: true },
+  });
+
+  const overlappingApprovedLeavesPromise = prisma.leaveRequest.findMany({
+    where: {
+      ...approvedWhere,
+      startDate: { lte: availabilityRangeEnd },
+      endDate: { gte: availabilityRangeStart },
+    },
+    select: {
+      startDate: true,
+      endDate: true,
+    },
+  });
+
+  const [
+    totalUsers,
+    pendingApprovals,
+    todayLeaves,
+    upcomingLeaves,
+    distributionRows,
+    overlappingApprovedLeaves,
+  ] =
     await Promise.all([
       prisma.user.count({ where: userCountWhere }),
       canApprove ? prisma.leaveRequest.count({ where: pendingWhere }) : 0,
@@ -85,12 +115,42 @@ export const getDashboardSummary = async ({
           },
         },
       }),
+      distributionRowsPromise,
+      overlappingApprovedLeavesPromise,
     ]);
+
+  const leaveDistribution = LEAVE_TYPES.map((type) => ({
+    type,
+    count: distributionRows.find((row) => row.type === type)?._count._all ?? 0,
+  }));
+
+  const availabilityByDay = Array.from({ length: 7 }, (_, offset) => {
+    const date = new Date(today);
+    date.setUTCDate(date.getUTCDate() + offset);
+    date.setUTCHours(0, 0, 0, 0);
+
+    const onLeaveCount = overlappingApprovedLeaves.filter((leave) => {
+      const start = new Date(leave.startDate);
+      const end = new Date(leave.endDate);
+      start.setUTCHours(0, 0, 0, 0);
+      end.setUTCHours(0, 0, 0, 0);
+      return start <= date && end >= date;
+    }).length;
+
+    return {
+      date: date.toISOString(),
+      available: Math.max(totalUsers - onLeaveCount, 0),
+      onLeave: onLeaveCount,
+      total: totalUsers,
+    };
+  });
 
   return {
     totalUsers,
     pendingApprovals,
     todayLeaves,
     upcomingLeaves,
+    leaveDistribution,
+    availabilityByDay,
   };
 };

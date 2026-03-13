@@ -1,15 +1,15 @@
 import {
+  addDays,
   eachDayOfInterval,
   endOfMonth,
   format,
   getDay,
   startOfMonth,
-  addDays,
   subDays,
 } from "date-fns";
 
-import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarDay } from "./calendar-day";
 import type { CalendarLeavesMap } from "@/hooks/use-calendar-leaves";
 import type { LeaveRequest } from "@/types/api";
@@ -56,13 +56,16 @@ export function CalendarGrid({
   );
 
   const allDays = [...leadingDays, ...monthDays, ...trailingDays];
+  const showSkeleton = isLoading && Object.keys(leavesMap).length === 0;
 
   return (
-    <div className={cn("rounded-xl border bg-card transition-opacity", isLoading && "opacity-50")}>
-      {/* Loading overlay */}
-      {isLoading && (
+    <div className="relative rounded-xl border bg-card">
+      {/* Loading overlay for background refetches */}
+      {isLoading && !showSkeleton && (
         <div className="absolute inset-0 z-10 flex items-center justify-center">
-          <Spinner size="lg" />
+          <div className="rounded-lg border bg-background/85 p-2 shadow-sm backdrop-blur-sm">
+            <Spinner size="lg" />
+          </div>
         </div>
       )}
 
@@ -80,22 +83,35 @@ export function CalendarGrid({
 
       {/* Day grid — gap-px with bg-border gives thin borders between cells */}
       <div className="grid grid-cols-7 gap-px bg-border p-px">
-        {allDays.map((date) => {
-          const key = format(date, "yyyy-MM-dd");
-          return (
-            <CalendarDay
-              key={key}
-              date={date}
-              currentMonth={currentDate}
-              leaves={leavesMap[key] ?? []}
-              isSelected={
-                selectedDate !== null &&
-                date.toDateString() === selectedDate.toDateString()
-              }
-              onClick={onDayClick}
-            />
-          );
-        })}
+        {showSkeleton
+          ? Array.from({ length: 42 }, (_, idx) => (
+              <div
+                key={`skeleton-${idx + 1}`}
+                className="flex min-h-22 flex-col rounded-lg bg-card p-2"
+              >
+                <Skeleton className="h-6 w-6 rounded-full" />
+                <div className="mt-2 space-y-1">
+                  <Skeleton className="h-3 w-14" />
+                  <Skeleton className="h-3 w-10" />
+                </div>
+              </div>
+            ))
+          : allDays.map((date) => {
+              const key = format(date, "yyyy-MM-dd");
+              return (
+                <CalendarDay
+                  key={key}
+                  date={date}
+                  currentMonth={currentDate}
+                  leaves={leavesMap[key] ?? []}
+                  isSelected={
+                    selectedDate !== null &&
+                    date.toDateString() === selectedDate.toDateString()
+                  }
+                  onClick={onDayClick}
+                />
+              );
+            })}
       </div>
     </div>
   );

@@ -22,6 +22,8 @@ export default function CalendarPage() {
   // "" means "all teams"; any truthy string is a specific team id
   const [selectedTeamId, setSelectedTeamId] = useState("all");
 
+  const monthKey = `${currentDate.getFullYear()}-${currentDate.getMonth()}`;
+
   const { data: leavesMap = {}, isLoading } = useCalendarLeaves(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -65,13 +67,18 @@ export default function CalendarPage() {
         onTeamChange={setSelectedTeamId}
       />
 
-      <CalendarGrid
-        currentDate={currentDate}
-        leavesMap={leavesMap}
-        isLoading={isLoading}
-        onDayClick={handleDayClick}
-        selectedDate={selectedDay?.date ?? null}
-      />
+      <div
+        key={monthKey}
+        className="animate-in fade-in-0 slide-in-from-bottom-1 duration-200"
+      >
+        <CalendarGrid
+          currentDate={currentDate}
+          leavesMap={leavesMap}
+          isLoading={isLoading}
+          onDayClick={handleDayClick}
+          selectedDate={selectedDay?.date ?? null}
+        />
+      </div>
 
       <LeaveDetailsPanel
         open={selectedDay !== null}

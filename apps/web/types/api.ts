@@ -89,3 +89,20 @@ export interface Team {
   id: string;
   name: string;
 }
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
+export interface DashboardSummaryItem {
+  id: string;
+  startDate: string;
+  endDate: string;
+  type: LeaveType;
+  user: { id: string; name: string; email: string };
+}
+
+export interface DashboardSummary {
+  totalUsers: number;
+  pendingApprovals: number;
+  todayLeaves: number;
+  upcomingLeaves: DashboardSummaryItem[];
+}

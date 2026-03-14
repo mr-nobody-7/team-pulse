@@ -6,7 +6,7 @@ import type {
   LoginInput,
 } from "../types/index.js";
 import { generateToken } from "../utils/jwt.js";
-import { AppError, UnauthorizedError } from "../utils/errors.js";
+import { AppError, ForbiddenError, UnauthorizedError } from "../utils/errors.js";
 
 export class EmailInUseError extends AppError {
   constructor() {
@@ -23,9 +23,12 @@ export class InvalidCredentialsError extends AppError {
 export const registerUserService = async (
   input: RegisterInput,
 ): Promise<RegisterResult> => {
-  const { workspace_name, name, email, password } = input;
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const name = input.name.trim();
+  const workspaceName = input.workspace_name.trim();
+  const password = input.password;
 
-  const existingUser = await prisma.user.findUnique({ where: { email } });
+  const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existingUser) {
     throw new EmailInUseError();
   }
@@ -34,13 +37,13 @@ export const registerUserService = async (
 
   return prisma.$transaction(async (tx) => {
     const workspace = await tx.workspace.create({
-      data: { name: workspace_name },
+      data: { name: workspaceName },
     });
 
     const user = await tx.user.create({
       data: {
         name,
-        email,
+        email: normalizedEmail,
         passwordHash,
         role: "ADMIN",
         workspaceId: workspace.id,
@@ -53,10 +56,16 @@ export const registerUserService = async (
 };
 
 export const loginService = async (input: LoginInput) => {
-  const { email, password } = input;
+  const email = input.email.trim().toLowerCase();
+  const password = input.password;
+
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     throw new InvalidCredentialsError();
+  }
+
+  if (!user.isActive) {
+    throw new ForbiddenError("Account is inactive");
   }
 
   const passwordMatch = await bcrypt.compare(password, user.passwordHash);

@@ -120,3 +120,21 @@ export interface DashboardSummary {
   leaveDistribution: DashboardLeaveDistributionItem[];
   availabilityByDay: DashboardAvailabilityItem[];
 }
+
+export interface ReportsMonthlyUsageItem {
+  month: string; // YYYY-MM
+  count: number;
+}
+
+export interface ReportsTeamUsageItem {
+  teamId: string;
+  teamName: string;
+  count: number;
+}
+
+export interface ReportsAnalytics {
+  month: string;
+  leaveUsageByMonth: ReportsMonthlyUsageItem[];
+  leaveByType: DashboardLeaveDistributionItem[];
+  leaveByTeam: ReportsTeamUsageItem[];
+}

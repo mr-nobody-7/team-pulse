@@ -16,6 +16,7 @@ import {
 } from "recharts";
 
 import { PageContainer } from "@/components/layout/page-container";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReportsAnalytics } from "@/hooks/use-reports-analytics";
+import { useRole } from "@/hooks/use-role";
 import { useTeams } from "@/hooks/use-teams";
 
 const TYPE_COLORS: Record<string, string> = {
@@ -67,16 +69,20 @@ function ReportsLoadingSkeleton() {
 }
 
 export default function ReportsPage() {
+  const { isWorkspaceAdmin } = useRole();
   const [month, setMonth] = useState(() =>
     new Date().toISOString().slice(0, 7),
   );
   const [teamId, setTeamId] = useState("all");
 
   const { data: teams = [] } = useTeams();
-  const { data, isLoading } = useReportsAnalytics({
-    month,
-    teamId: teamId === "all" ? undefined : teamId,
-  });
+  const { data, isLoading, isError, refetch } = useReportsAnalytics(
+    {
+      month,
+      teamId: teamId === "all" ? undefined : teamId,
+    },
+    { enabled: isWorkspaceAdmin },
+  );
 
   const usageByMonth = useMemo(
     () =>
@@ -92,6 +98,23 @@ export default function ReportsPage() {
 
   const leaveByTeam = data?.leaveByTeam ?? [];
   const leaveByType = data?.leaveByType ?? [];
+  const hasAnyData =
+    usageByMonth.some((item) => item.count > 0) ||
+    leaveByTeam.length > 0 ||
+    leaveByType.some((item) => item.count > 0);
+
+  if (!isWorkspaceAdmin) {
+    return (
+      <PageContainer className="flex flex-col gap-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            This section is available to workspace admins only.
+          </p>
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer className="flex flex-col gap-6">
@@ -128,6 +151,31 @@ export default function ReportsPage() {
 
       {isLoading ? (
         <ReportsLoadingSkeleton />
+      ) : isError ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Unable to load reports</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-start gap-3">
+            <p className="text-sm text-muted-foreground">
+              Something went wrong while fetching analytics.
+            </p>
+            <Button size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      ) : !hasAnyData ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>No data for selected filters</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Try selecting a different month or team.
+            </p>
+          </CardContent>
+        </Card>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
           <Card>
@@ -135,17 +183,27 @@ export default function ReportsPage() {
               <CardTitle>Leave Usage per Month</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={usageByMonth}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="label" />
-                    <YAxis allowDecimals={false} />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#f59e0b" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              {usageByMonth.some((item) => item.count > 0) ? (
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={usageByMonth}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="label" />
+                      <YAxis allowDecimals={false} />
+                      <Tooltip />
+                      <Bar
+                        dataKey="count"
+                        fill="#f59e0b"
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No month usage data available.
+                </p>
+              )}
             </CardContent>
           </Card>
 
@@ -154,28 +212,34 @@ export default function ReportsPage() {
               <CardTitle>Leave by Type ({month})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={leaveByType}
-                      dataKey="count"
-                      nameKey="type"
-                      innerRadius={40}
-                      outerRadius={95}
-                      paddingAngle={3}
-                    >
-                      {leaveByType.map((entry) => (
-                        <Cell
-                          key={entry.type}
-                          fill={TYPE_COLORS[entry.type] ?? "#94a3b8"}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              {leaveByType.some((item) => item.count > 0) ? (
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={leaveByType}
+                        dataKey="count"
+                        nameKey="type"
+                        innerRadius={40}
+                        outerRadius={95}
+                        paddingAngle={3}
+                      >
+                        {leaveByType.map((entry) => (
+                          <Cell
+                            key={entry.type}
+                            fill={TYPE_COLORS[entry.type] ?? "#94a3b8"}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No leave type data for selected month.
+                </p>
+              )}
             </CardContent>
           </Card>
 

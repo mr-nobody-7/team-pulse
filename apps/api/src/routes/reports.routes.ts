@@ -5,10 +5,16 @@ import {
 	getSummaryController,
 } from "../controllers/reports.controller.js";
 import { authenticate } from "../middleware/authenticate.js";
+import { authorize } from "../middleware/authorize.js";
 
 const router = Router();
 
 router.get("/summary", authenticate, getSummaryController);
-router.get("/analytics", authenticate, getAnalyticsController);
+router.get(
+	"/analytics",
+	authenticate,
+	authorize(["ADMIN"]),
+	getAnalyticsController,
+);
 
 export { router as reportsRoutes };

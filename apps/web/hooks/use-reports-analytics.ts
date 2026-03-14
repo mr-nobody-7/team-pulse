@@ -8,6 +8,10 @@ interface UseReportsAnalyticsParams {
   teamId?: string;
 }
 
+interface UseReportsAnalyticsOptions {
+  enabled?: boolean;
+}
+
 async function fetchReportsAnalytics({
   month,
   teamId,
@@ -25,13 +29,14 @@ async function fetchReportsAnalytics({
   return data.data;
 }
 
-export function useReportsAnalytics({
-  month,
-  teamId,
-}: UseReportsAnalyticsParams) {
+export function useReportsAnalytics(
+  { month, teamId }: UseReportsAnalyticsParams,
+  options: UseReportsAnalyticsOptions = {},
+) {
   return useQuery({
     queryKey: ["reports-analytics", month, teamId ?? "all"],
     queryFn: () => fetchReportsAnalytics({ month, teamId }),
     staleTime: 5 * 60_000,
+    enabled: options.enabled ?? true,
   });
 }

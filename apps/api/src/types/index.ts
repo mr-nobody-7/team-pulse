@@ -54,3 +54,8 @@ export interface UpdateLeaveStatusInput {
   status: "APPROVED" | "REJECTED";
   comment?: string | undefined;
 }
+
+export interface ReportsAnalyticsQuery {
+  month: string;
+  team_id?: string | undefined;
+}

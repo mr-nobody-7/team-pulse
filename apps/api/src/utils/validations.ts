@@ -74,3 +74,11 @@ export const updateLeaveStatusSchema = z.object({
     .optional(),
 });
 
+export const reportsAnalyticsSchema = z.object({
+  month: z
+    .string()
+    .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "month must be in YYYY-MM format")
+    .default(new Date().toISOString().slice(0, 7)),
+  team_id: z.string().optional(),
+});
+

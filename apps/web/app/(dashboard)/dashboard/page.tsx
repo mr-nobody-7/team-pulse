@@ -1,21 +1,22 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format, parseISO } from "date-fns";
 import {
-  CalendarDays,
   CalendarCheck2,
+  CalendarDays,
   ClipboardList,
   PieChart,
   Users,
 } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import {
   Cell,
   Legend,
   Pie,
   PieChart as RechartsPieChart,
-  ResponsiveContainer,
   Tooltip as RechartsTooltip,
+  ResponsiveContainer,
 } from "recharts";
 import { toast } from "sonner";
 
@@ -24,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { StatCard } from "@/components/ui/stat-card";
 import { useAuth } from "@/contexts/auth-context";
 import { useDashboardSummary } from "@/hooks/use-dashboard-summary";
@@ -36,16 +38,13 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { canApprove, isManager } = useRole();
   const { data: summary, isLoading } = useDashboardSummary();
-  const {
-    data: pendingLeaves,
-    isLoading: pendingLoading,
-  } = useLeaves(
+  const { data: pendingLeaves, isLoading: pendingLoading } = useLeaves(
     {
       status: "PENDING",
       page: 1,
       limit: 5,
     },
-    isManager,
+    { enabled: isManager, staleTime: 30_000 },
   );
 
   const decisionMutation = useMutation({
@@ -60,9 +59,7 @@ export default function DashboardPage() {
     },
     onSuccess: async (_data, variables) => {
       toast.success(
-        variables.status === "APPROVED"
-          ? "Leave approved"
-          : "Leave rejected",
+        variables.status === "APPROVED" ? "Leave approved" : "Leave rejected",
       );
 
       await Promise.all([
@@ -75,16 +72,45 @@ export default function DashboardPage() {
     },
   });
 
-  const upcomingLeaves = summary?.upcomingLeaves ?? [];
-  const leaveDistribution = summary?.leaveDistribution ?? [];
-  const availabilityByDay = summary?.availabilityByDay ?? [];
-
   const DISTRIBUTION_COLOR: Record<string, string> = {
     VACATION: "#3b82f6",
     SICK: "#ef4444",
     PERSONAL: "#a855f7",
     CASUAL: "#f59e0b",
   };
+
+  const upcomingLeaves = useMemo(
+    () => summary?.upcomingLeaves ?? [],
+    [summary?.upcomingLeaves],
+  );
+
+  const leaveDistribution = useMemo(
+    () => summary?.leaveDistribution ?? [],
+    [summary?.leaveDistribution],
+  );
+
+  const availabilityByDay = useMemo(
+    () => summary?.availabilityByDay ?? [],
+    [summary?.availabilityByDay],
+  );
+
+  const formattedUpcomingLeaves = useMemo(
+    () =>
+      upcomingLeaves.map((leave) => ({
+        ...leave,
+        dateLabel: `${format(parseISO(leave.startDate), "MMM d")} → ${format(parseISO(leave.endDate), "MMM d")}`,
+      })),
+    [upcomingLeaves],
+  );
+
+  const formattedAvailability = useMemo(
+    () =>
+      availabilityByDay.map((day) => ({
+        ...day,
+        label: format(parseISO(day.date), "MMM d"),
+      })),
+    [availabilityByDay],
+  );
 
   return (
     <PageContainer>
@@ -125,7 +151,9 @@ export default function DashboardPage() {
             isLoading={isLoading}
             iconClassName="bg-amber-100"
             className={
-              (summary?.pendingApprovals ?? 0) > 0 ? "border-amber-300" : undefined
+              (summary?.pendingApprovals ?? 0) > 0
+                ? "border-amber-300"
+                : undefined
             }
           />
         )}
@@ -151,7 +179,14 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               {pendingLoading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }, (_, idx) => (
+                    <Skeleton
+                      key={`pending-skel-${idx + 1}`}
+                      className="h-14 w-full"
+                    />
+                  ))}
+                </div>
               ) : !(pendingLeaves?.leaves.length ?? 0) ? (
                 <p className="py-4 text-center text-sm text-muted-foreground">
                   No pending requests 🎉
@@ -167,9 +202,12 @@ export default function DashboardPage() {
                       <div key={leave.id} className="py-3">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-medium">{leave.user.name}</span>
+                            <span className="text-sm font-medium">
+                              {leave.user.name}
+                            </span>
                             <span className="text-xs text-muted-foreground">
-                              {format(parseISO(leave.startDate), "MMM d")} → {format(parseISO(leave.endDate), "MMM d")}
+                              {format(parseISO(leave.startDate), "MMM d")} →{" "}
+                              {format(parseISO(leave.endDate), "MMM d")}
                             </span>
                           </div>
 
@@ -226,25 +264,36 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <p className="text-sm text-muted-foreground">Loading…</p>
-            ) : upcomingLeaves.length === 0 ? (
+              <div className="space-y-3">
+                {Array.from({ length: 4 }, (_, idx) => (
+                  <Skeleton
+                    key={`upcoming-skel-${idx + 1}`}
+                    className="h-12 w-full"
+                  />
+                ))}
+              </div>
+            ) : formattedUpcomingLeaves.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted-foreground">
                 No upcoming leaves in the next 7 days.
               </p>
             ) : (
               <div className="divide-y">
-                {upcomingLeaves.map((leave, i) => (
+                {formattedUpcomingLeaves.map((leave, i) => (
                   <div key={leave.id}>
                     <div className="flex items-center justify-between py-3">
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-sm font-medium">{leave.user.name}</span>
+                        <span className="text-sm font-medium">
+                          {leave.user.name}
+                        </span>
                         <span className="text-xs text-muted-foreground">
-                          {format(parseISO(leave.startDate), "MMM d")} → {format(parseISO(leave.endDate), "MMM d")}
+                          {leave.dateLabel}
                         </span>
                       </div>
                       <Badge variant="outline">{leave.type}</Badge>
                     </div>
-                    {i < upcomingLeaves.length - 1 && <Separator className="my-0" />}
+                    {i < formattedUpcomingLeaves.length - 1 && (
+                      <Separator className="my-0" />
+                    )}
                   </div>
                 ))}
               </div>
@@ -265,7 +314,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <Skeleton className="h-64 w-full" />
               ) : (
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -302,16 +351,26 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <p className="text-sm text-muted-foreground">Loading…</p>
+                <div className="space-y-3">
+                  {Array.from({ length: 7 }, (_, idx) => (
+                    <Skeleton
+                      key={`availability-skel-${idx + 1}`}
+                      className="h-10 w-full"
+                    />
+                  ))}
+                </div>
               ) : (
                 <div className="divide-y">
-                  {availabilityByDay.map((day) => (
-                    <div key={day.date} className="flex items-center justify-between py-3">
-                      <div className="text-sm font-medium">
-                        {format(parseISO(day.date), "MMM d")}
-                      </div>
+                  {formattedAvailability.map((day) => (
+                    <div
+                      key={day.date}
+                      className="flex items-center justify-between py-3"
+                    >
+                      <div className="text-sm font-medium">{day.label}</div>
                       <div className="text-right">
-                        <p className="text-sm font-semibold">{day.available} available</p>
+                        <p className="text-sm font-semibold">
+                          {day.available} available
+                        </p>
                         <p className="text-xs text-muted-foreground">
                           {day.onLeave} on leave / {day.total} total
                         </p>

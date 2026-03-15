@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
-import type { ApiResponse, LoginPayload, SafeUser } from "@/types/api";
+import type {
+  ApiResponse,
+  LoginPayload,
+  RegisterPayload,
+  SafeUser,
+} from "@/types/api";
 
 export interface MeData {
   user: SafeUser & {
@@ -15,6 +20,14 @@ export async function getMe(): Promise<MeData["user"]> {
 export async function login(payload: LoginPayload): Promise<SafeUser> {
   const { data } = await api.post<ApiResponse<{ user: SafeUser }>>(
     "/auth/login",
+    payload,
+  );
+  return data.data.user;
+}
+
+export async function register(payload: RegisterPayload): Promise<SafeUser> {
+  const { data } = await api.post<ApiResponse<{ user: SafeUser }>>(
+    "/auth/register",
     payload,
   );
   return data.data.user;

@@ -2,13 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
-import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/auth-context";
 import api from "@/lib/axios";
 import type { ApiResponse, SafeUser } from "@/types/api";
@@ -139,6 +139,13 @@ export default function LoginPage() {
               </Button>
             </form>
           </Form>
+
+          <p className="mt-4 text-center text-sm text-muted-foreground">
+            New workspace?{" "}
+            <Link href="/register" className="text-primary hover:underline">
+              Create account
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>

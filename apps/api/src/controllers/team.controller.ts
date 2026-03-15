@@ -5,6 +5,7 @@ import {
   listTeams,
   updateTeam,
 } from "../services/team.service.js";
+import { createAuditLog } from "../utils/audit.js";
 import { BadRequestError } from "../utils/errors.js";
 import { sendSuccess } from "../utils/response.js";
 
@@ -20,8 +21,22 @@ export const createTeamController = async (
   next: NextFunction,
 ) => {
   try {
-    const { workspaceId } = req.user!;
-    const team = await createTeam(workspaceId, (req.body as { name: string }).name);
+    const { userId, workspaceId } = req.user!;
+    const team = await createTeam(
+      workspaceId,
+      (req.body as { name: string }).name,
+    );
+
+    createAuditLog({
+      action: "TEAM_CREATED",
+      userId,
+      workspaceId,
+      targetId: team.id,
+      targetType: "Team",
+      ipAddress: req.ip,
+      metadata: { name: team.name },
+    });
+
     sendSuccess(res, team, "Team created", 201);
   } catch (error) {
     next(error);
@@ -41,12 +56,22 @@ export const updateTeamController = async (
       return next(new BadRequestError("Team ID is required"));
     }
 
-    const { workspaceId } = req.user!;
+    const { userId, workspaceId } = req.user!;
     const team = await updateTeam(
       workspaceId,
       teamId,
       (req.body as { name: string }).name,
     );
+
+    createAuditLog({
+      action: "TEAM_UPDATED",
+      userId,
+      workspaceId,
+      targetId: team.id,
+      targetType: "Team",
+      ipAddress: req.ip,
+      metadata: { name: team.name },
+    });
 
     sendSuccess(res, team, "Team updated");
   } catch (error) {
@@ -67,8 +92,18 @@ export const deleteTeamController = async (
       return next(new BadRequestError("Team ID is required"));
     }
 
-    const { workspaceId } = req.user!;
+    const { userId, workspaceId } = req.user!;
     await deleteTeam(workspaceId, teamId);
+
+    createAuditLog({
+      action: "TEAM_DELETED",
+      userId,
+      workspaceId,
+      targetId: teamId,
+      targetType: "Team",
+      ipAddress: req.ip,
+    });
+
     sendSuccess(res, null, "Team deleted");
   } catch (error) {
     next(error);

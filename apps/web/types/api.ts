@@ -119,6 +119,13 @@ export interface AuditLog {
     | "USER_REGISTERED"
     | "USER_LOGIN"
     | "USER_LOGIN_FAILED"
+    | "USER_CREATED"
+    | "USER_UPDATED"
+    | "USER_DEACTIVATED"
+    | "TEAM_CREATED"
+    | "TEAM_UPDATED"
+    | "TEAM_DELETED"
+    | "LEAVE_TYPES_UPDATED"
     | "LEAVE_APPLIED"
     | "LEAVE_APPROVED"
     | "LEAVE_REJECTED"
@@ -183,7 +190,21 @@ export interface ReportsTeamUsageItem {
 
 export interface ReportsAnalytics {
   month: string;
+  from: string;
+  to: string;
   leaveUsageByMonth: ReportsMonthlyUsageItem[];
   leaveByType: DashboardLeaveDistributionItem[];
   leaveByTeam: ReportsTeamUsageItem[];
+}
+
+export interface LeaveTypeSetting {
+  id: string;
+  type: LeaveType;
+  isActive: boolean;
+  updatedAt: string;
+}
+
+export interface LeaveTypeSettingsResponse {
+  leaveTypes: LeaveTypeSetting[];
+  enabledTypes: LeaveType[];
 }

@@ -55,7 +55,8 @@ export const ModelName = {
   Team: 'Team',
   User: 'User',
   LeaveRequest: 'LeaveRequest',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  WorkspaceLeaveType: 'WorkspaceLeaveType'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -140,6 +141,18 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const WorkspaceLeaveTypeScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkspaceLeaveTypeScalarFieldEnum = (typeof WorkspaceLeaveTypeScalarFieldEnum)[keyof typeof WorkspaceLeaveTypeScalarFieldEnum]
 
 
 export const SortOrder = {

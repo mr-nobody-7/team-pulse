@@ -81,12 +81,38 @@ export const updateLeaveStatusSchema = z.object({
     .optional(),
 });
 
-export const reportsAnalyticsSchema = z.object({
-  month: z
-    .string()
-    .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "month must be in YYYY-MM format")
-    .default(new Date().toISOString().slice(0, 7)),
-  team_id: z.string().optional(),
+export const reportsAnalyticsSchema = z
+  .object({
+    month: z
+      .string()
+      .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "month must be in YYYY-MM format")
+      .optional(),
+    from: z.string().date().optional(),
+    to: z.string().date().optional(),
+    team_id: z.string().optional(),
+  })
+  .refine(
+    ({ from, to }) =>
+      (from === undefined && to === undefined) ||
+      (from !== undefined && to !== undefined),
+    {
+      message: "from and to must be provided together",
+      path: ["from"],
+    },
+  )
+  .refine(({ month, from, to }) => !(month && from && to), {
+    message: "Provide either month or from/to range, not both",
+    path: ["month"],
+  })
+  .refine(({ from, to }) => !from || !to || new Date(from) <= new Date(to), {
+    message: "from must be before or equal to to",
+    path: ["to"],
+  });
+
+export const updateLeaveTypesSchema = z.object({
+  enabled_types: z
+    .array(z.enum(["VACATION", "SICK", "PERSONAL", "CASUAL"]))
+    .min(1, "At least one leave type must remain enabled"),
 });
 
 export const createTeamSchema = z.object({
@@ -160,6 +186,13 @@ export const listAuditLogsSchema = z.object({
       "USER_REGISTERED",
       "USER_LOGIN",
       "USER_LOGIN_FAILED",
+      "USER_CREATED",
+      "USER_UPDATED",
+      "USER_DEACTIVATED",
+      "TEAM_CREATED",
+      "TEAM_UPDATED",
+      "TEAM_DELETED",
+      "LEAVE_TYPES_UPDATED",
       "LEAVE_APPLIED",
       "LEAVE_APPROVED",
       "LEAVE_REJECTED",
@@ -172,4 +205,3 @@ export const listAuditLogsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
-

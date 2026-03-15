@@ -1,6 +1,6 @@
 "use client";
 
-import { format, parse } from "date-fns";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 import { Download } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
@@ -88,15 +88,19 @@ function ReportsLoadingSkeleton() {
 export default function ReportsPage() {
   const { isManager, isWorkspaceAdmin } = useRole();
   const canAccessReports = isWorkspaceAdmin || isManager;
-  const [month, setMonth] = useState(() =>
-    new Date().toISOString().slice(0, 7),
+  const [fromDate, setFromDate] = useState(() =>
+    format(startOfMonth(new Date()), "yyyy-MM-dd"),
+  );
+  const [toDate, setToDate] = useState(() =>
+    format(endOfMonth(new Date()), "yyyy-MM-dd"),
   );
   const [teamId, setTeamId] = useState("all");
 
   const { data: teams = [] } = useTeams();
   const { data, isLoading, isError, refetch } = useReportsAnalytics(
     {
-      month,
+      from: fromDate,
+      to: toDate,
       teamId: teamId === "all" ? undefined : teamId,
     },
     { enabled: canAccessReports },
@@ -106,13 +110,12 @@ export default function ReportsPage() {
     () =>
       (data?.leaveUsageByMonth ?? []).map((item) => ({
         ...item,
-        label: format(
-          parse(`${item.month}-01`, "yyyy-MM-dd", new Date()),
-          "MMM",
-        ),
+        label: format(new Date(`${item.month}-01`), "MMM"),
       })),
     [data?.leaveUsageByMonth],
   );
+
+  const rangeLabel = `${data?.from ?? fromDate} → ${data?.to ?? toDate}`;
 
   const leaveByTeam = data?.leaveByTeam ?? [];
   const leaveByType = data?.leaveByType ?? [];
@@ -155,7 +158,7 @@ export default function ReportsPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `reports-${month}.csv`;
+    link.download = `reports-${fromDate}-to-${toDate}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -180,17 +183,25 @@ export default function ReportsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Analyze leave trends by month, team, and type.
+            Analyze leave trends by date range, team, and type.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <input
-            type="month"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
             className="border-input bg-background h-9 rounded-md border px-3 text-sm"
-            aria-label="Month filter"
+            aria-label="From date filter"
+          />
+
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+            aria-label="To date filter"
           />
 
           <Select value={teamId} onValueChange={setTeamId}>
@@ -242,7 +253,7 @@ export default function ReportsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Try selecting a different month or team.
+                Try selecting a different date range or team.
               </p>
             </CardContent>
           </Card>
@@ -279,7 +290,7 @@ export default function ReportsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Leave by Type ({month})</CardTitle>
+                <CardTitle>Leave by Type ({rangeLabel})</CardTitle>
               </CardHeader>
               <CardContent>
                 {leaveByType.some((item) => item.count > 0) ? (
@@ -315,7 +326,7 @@ export default function ReportsPage() {
 
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>Leave by Team ({month})</CardTitle>
+                <CardTitle>Leave by Team ({rangeLabel})</CardTitle>
               </CardHeader>
               <CardContent>
                 {leaveByTeam.length === 0 ? (

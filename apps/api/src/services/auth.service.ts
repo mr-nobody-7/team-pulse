@@ -1,12 +1,16 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/db.js";
 import type {
+  LoginInput,
   RegisterInput,
   RegisterResult,
-  LoginInput,
 } from "../types/index.js";
+import {
+  AppError,
+  ForbiddenError,
+  UnauthorizedError,
+} from "../utils/errors.js";
 import { generateToken } from "../utils/jwt.js";
-import { AppError, ForbiddenError, UnauthorizedError } from "../utils/errors.js";
 
 export class EmailInUseError extends AppError {
   constructor() {
@@ -28,7 +32,9 @@ export const registerUserService = async (
   const workspaceName = input.workspace_name.trim();
   const password = input.password;
 
-  const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+  const existingUser = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
+  });
   if (existingUser) {
     throw new EmailInUseError();
   }
@@ -48,6 +54,16 @@ export const registerUserService = async (
         role: "ADMIN",
         workspaceId: workspace.id,
       },
+    });
+
+    await tx.workspaceLeaveType.createMany({
+      data: [
+        { workspaceId: workspace.id, type: "VACATION", isActive: true },
+        { workspaceId: workspace.id, type: "SICK", isActive: true },
+        { workspaceId: workspace.id, type: "PERSONAL", isActive: true },
+        { workspaceId: workspace.id, type: "CASUAL", isActive: true },
+      ],
+      skipDuplicates: true,
     });
 
     const { passwordHash: _, ...safeUser } = user;

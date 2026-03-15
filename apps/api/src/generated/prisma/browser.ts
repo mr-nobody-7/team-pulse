@@ -42,3 +42,8 @@ export type LeaveRequest = Prisma.LeaveRequestModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model WorkspaceLeaveType
+ * 
+ */
+export type WorkspaceLeaveType = Prisma.WorkspaceLeaveTypeModel

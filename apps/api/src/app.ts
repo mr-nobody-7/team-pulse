@@ -1,17 +1,17 @@
-
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
-import { authRoutes } from "./routes/auth.routes.js";
-import { auditRoutes } from "./routes/audit.routes.js";
-import { leaveRoutes } from "./routes/leave.routes.js";
-import { reportsRoutes } from "./routes/reports.routes.js";
-import { teamRoutes } from "./routes/team.routes.js";
-import { userRoutes } from "./routes/user.routes.js";
-import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
+import { auditRoutes } from "./routes/audit.routes.js";
+import { authRoutes } from "./routes/auth.routes.js";
+import { leaveRoutes } from "./routes/leave.routes.js";
+import { reportsRoutes } from "./routes/reports.routes.js";
+import { settingsRoutes } from "./routes/settings.routes.js";
+import { teamRoutes } from "./routes/team.routes.js";
+import { userRoutes } from "./routes/user.routes.js";
 
 export const app = express();
 
@@ -33,6 +33,7 @@ app.use(cookieParser());
 app.use("/auth", authRateLimit, authRoutes);
 app.use("/leave", leaveRoutes);
 app.use("/reports", reportsRoutes);
+app.use("/settings", settingsRoutes);
 app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
 app.use("/audit-logs", auditRoutes);

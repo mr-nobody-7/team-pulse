@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -26,7 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import api from "@/lib/axios";
-import type { ApplyLeavePayload, LeaveType, Session } from "@/types/api";
+import type {
+  ApiResponse,
+  ApplyLeavePayload,
+  LeaveTypeSettingsResponse,
+  Session,
+} from "@/types/api";
 
 const applyLeaveSchema = z.object({
   start_date: z.string().min(1, "Start date is required"),
@@ -39,11 +45,22 @@ const applyLeaveSchema = z.object({
 
 type ApplyLeaveForm = z.infer<typeof applyLeaveSchema>;
 
-const LEAVE_TYPES: LeaveType[] = ["VACATION", "SICK", "PERSONAL", "CASUAL"];
 const SESSIONS: Session[] = ["FULL_DAY", "FIRST_HALF", "SECOND_HALF"];
 
 export default function ApplyLeavePage() {
   const queryClient = useQueryClient();
+
+  const { data: leaveTypeSettings, isLoading: isLeaveTypesLoading } = useQuery({
+    queryKey: ["leave-type-settings"],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<LeaveTypeSettingsResponse>>(
+        "/settings/leave-types",
+      );
+      return response.data.data;
+    },
+  });
+
+  const enabledTypes = leaveTypeSettings?.enabledTypes ?? [];
 
   const form = useForm<ApplyLeaveForm>({
     resolver: zodResolver(applyLeaveSchema),
@@ -85,6 +102,19 @@ export default function ApplyLeavePage() {
       toast.error("Could not submit leave request");
     },
   });
+
+  useEffect(() => {
+    if (enabledTypes.length === 0) {
+      return;
+    }
+
+    const current = form.getValues("type");
+    if (!enabledTypes.includes(current)) {
+      form.setValue("type", enabledTypes[0] ?? "VACATION", {
+        shouldValidate: true,
+      });
+    }
+  }, [enabledTypes, form]);
 
   return (
     <PageContainer className="flex flex-col gap-6">
@@ -191,12 +221,12 @@ export default function ApplyLeavePage() {
                     <FormLabel>Leave type</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger disabled={isLeaveTypesLoading}>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {LEAVE_TYPES.map((type) => (
+                        {enabledTypes.map((type) => (
                           <SelectItem key={type} value={type}>
                             {type}
                           </SelectItem>
@@ -223,9 +253,22 @@ export default function ApplyLeavePage() {
               />
 
               <div className="md:col-span-2">
-                <Button type="submit" disabled={mutation.isPending}>
+                <Button
+                  type="submit"
+                  disabled={
+                    mutation.isPending ||
+                    isLeaveTypesLoading ||
+                    enabledTypes.length === 0
+                  }
+                >
                   {mutation.isPending ? "Submitting..." : "Submit request"}
                 </Button>
+                {enabledTypes.length === 0 && (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    No leave types are currently enabled. Please contact your
+                    workspace admin.
+                  </p>
+                )}
               </div>
             </form>
           </Form>

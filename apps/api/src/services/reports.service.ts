@@ -14,7 +14,9 @@ interface GetReportsAnalyticsParams {
   workspaceId: string;
   role: string;
   teamId: string | null;
-  month: string; // YYYY-MM
+  month?: string;
+  from?: string;
+  to?: string;
   teamFilterId?: string;
 }
 
@@ -39,6 +41,59 @@ function endOfMonthUtc(start: Date) {
   end.setUTCDate(0);
   end.setUTCHours(23, 59, 59, 999);
   return end;
+}
+
+function startOfUtcDay(date: Date) {
+  const copy = new Date(date);
+  copy.setUTCHours(0, 0, 0, 0);
+  return copy;
+}
+
+function endOfUtcDay(date: Date) {
+  const copy = new Date(date);
+  copy.setUTCHours(23, 59, 59, 999);
+  return copy;
+}
+
+function resolveRange({
+  month,
+  from,
+  to,
+}: {
+  month?: string | undefined;
+  from?: string | undefined;
+  to?: string | undefined;
+}) {
+  if (month) {
+    const rangeStart = startOfMonthUtc(month);
+    return {
+      labelMonth: month,
+      rangeStart,
+      rangeEnd: endOfMonthUtc(rangeStart),
+      usageYear: rangeStart.getUTCFullYear(),
+    };
+  }
+
+  if (from && to) {
+    const startDate = startOfUtcDay(new Date(from));
+    const endDate = endOfUtcDay(new Date(to));
+
+    return {
+      labelMonth: `${startDate.getUTCFullYear()}-${String(startDate.getUTCMonth() + 1).padStart(2, "0")}`,
+      rangeStart: startDate,
+      rangeEnd: endDate,
+      usageYear: startDate.getUTCFullYear(),
+    };
+  }
+
+  const defaultMonth = new Date().toISOString().slice(0, 7);
+  const rangeStart = startOfMonthUtc(defaultMonth);
+  return {
+    labelMonth: defaultMonth,
+    rangeStart,
+    rangeEnd: endOfMonthUtc(rangeStart),
+    usageYear: rangeStart.getUTCFullYear(),
+  };
 }
 
 function overlapsRange(
@@ -124,33 +179,32 @@ export const getDashboardSummary = async ({
     upcomingLeaves,
     distributionRows,
     overlappingApprovedLeaves,
-  ] =
-    await Promise.all([
-      prisma.user.count({ where: userCountWhere }),
-      canApprove ? prisma.leaveRequest.count({ where: pendingWhere }) : 0,
-      prisma.leaveRequest.count({
-        where: {
-          ...approvedWhere,
-          startDate: { lte: today },
-          endDate: { gte: today },
+  ] = await Promise.all([
+    prisma.user.count({ where: userCountWhere }),
+    canApprove ? prisma.leaveRequest.count({ where: pendingWhere }) : 0,
+    prisma.leaveRequest.count({
+      where: {
+        ...approvedWhere,
+        startDate: { lte: today },
+        endDate: { gte: today },
+      },
+    }),
+    prisma.leaveRequest.findMany({
+      where: {
+        ...approvedWhere,
+        startDate: { gte: today, lte: next7Days },
+      },
+      orderBy: [{ startDate: "asc" }, { created_at: "desc" }],
+      take: 10,
+      include: {
+        user: {
+          select: { id: true, name: true, email: true },
         },
-      }),
-      prisma.leaveRequest.findMany({
-        where: {
-          ...approvedWhere,
-          startDate: { gte: today, lte: next7Days },
-        },
-        orderBy: [{ startDate: "asc" }, { created_at: "desc" }],
-        take: 10,
-        include: {
-          user: {
-            select: { id: true, name: true, email: true },
-          },
-        },
-      }),
-      distributionRowsPromise,
-      overlappingApprovedLeavesPromise,
-    ]);
+      },
+    }),
+    distributionRowsPromise,
+    overlappingApprovedLeavesPromise,
+  ]);
 
   const leaveDistribution = LEAVE_TYPES.map((type) => ({
     type,
@@ -194,17 +248,18 @@ export const getReportsAnalytics = async ({
   role,
   teamId,
   month,
+  from,
+  to,
   teamFilterId,
 }: GetReportsAnalyticsParams) => {
-  const monthStart = startOfMonthUtc(month);
-  const monthEnd = endOfMonthUtc(monthStart);
+  const { labelMonth, rangeStart, rangeEnd, usageYear } = resolveRange({
+    month,
+    from,
+    to,
+  });
 
-  const yearStart = new Date(
-    Date.UTC(monthStart.getUTCFullYear(), 0, 1, 0, 0, 0, 0),
-  );
-  const yearEnd = new Date(
-    Date.UTC(monthStart.getUTCFullYear(), 11, 31, 23, 59, 59, 999),
-  );
+  const yearStart = new Date(Date.UTC(usageYear, 0, 1, 0, 0, 0, 0));
+  const yearEnd = new Date(Date.UTC(usageYear, 11, 31, 23, 59, 59, 999));
 
   const leaveScope: Prisma.LeaveRequestWhereInput = {
     user: { workspaceId },
@@ -248,7 +303,7 @@ export const getReportsAnalytics = async ({
   const teamNameById = new Map(teams.map((team) => [team.id, team.name]));
 
   const usageByMonth = Array.from({ length: 12 }, (_, monthIndex) => {
-    const start = new Date(Date.UTC(monthStart.getUTCFullYear(), monthIndex, 1));
+    const start = new Date(Date.UTC(usageYear, monthIndex, 1));
     const end = endOfMonthUtc(start);
 
     const count = leaves.filter((leave) =>
@@ -262,7 +317,7 @@ export const getReportsAnalytics = async ({
   });
 
   const monthScopedLeaves = leaves.filter((leave) =>
-    overlapsRange(leave.startDate, leave.endDate, monthStart, monthEnd),
+    overlapsRange(leave.startDate, leave.endDate, rangeStart, rangeEnd),
   );
 
   const leaveByType = LEAVE_TYPES.map((type) => ({
@@ -284,7 +339,9 @@ export const getReportsAnalytics = async ({
     .sort((a, b) => b.count - a.count);
 
   return {
-    month,
+    month: labelMonth,
+    from: rangeStart.toISOString().slice(0, 10),
+    to: rangeEnd.toISOString().slice(0, 10),
     leaveUsageByMonth: usageByMonth,
     leaveByType,
     leaveByTeam,

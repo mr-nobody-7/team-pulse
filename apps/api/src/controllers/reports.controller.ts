@@ -49,7 +49,9 @@ export const getAnalyticsController = async (
       workspaceId,
       role,
       teamId,
-      month: parsed.data.month,
+      ...(parsed.data.month ? { month: parsed.data.month } : {}),
+      ...(parsed.data.from ? { from: parsed.data.from } : {}),
+      ...(parsed.data.to ? { to: parsed.data.to } : {}),
       ...(parsed.data.team_id ? { teamFilterId: parsed.data.team_id } : {}),
     });
 

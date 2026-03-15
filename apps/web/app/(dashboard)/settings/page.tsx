@@ -1,13 +1,78 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 import { RoleGuard } from "@/components/auth/role-guard";
 import { PageContainer } from "@/components/layout/page-container";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import api from "@/lib/axios";
+import type {
+  ApiResponse,
+  LeaveType,
+  LeaveTypeSettingsResponse,
+} from "@/types/api";
 
 const LEAVE_TYPES = ["VACATION", "SICK", "PERSONAL", "CASUAL"];
 
 export default function SettingsPage() {
+  const queryClient = useQueryClient();
+  const [enabledTypes, setEnabledTypes] = useState<LeaveType[]>([]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["leave-type-settings"],
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<LeaveTypeSettingsResponse>>(
+        "/settings/leave-types",
+      );
+      return response.data.data;
+    },
+  });
+
+  useEffect(() => {
+    if (data?.enabledTypes) {
+      setEnabledTypes(data.enabledTypes);
+    }
+  }, [data]);
+
+  const mutation = useMutation({
+    mutationFn: async (nextEnabledTypes: LeaveType[]) => {
+      await api.put("/settings/leave-types", {
+        enabled_types: nextEnabledTypes,
+      });
+    },
+    onSuccess: async () => {
+      toast.success("Leave type settings updated");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["leave-type-settings"] }),
+        queryClient.invalidateQueries({ queryKey: ["audit-logs"] }),
+      ]);
+    },
+    onError: () => {
+      toast.error("Could not update leave type settings");
+    },
+  });
+
+  const toggleType = (type: LeaveType) => {
+    setEnabledTypes((current) => {
+      if (current.includes(type)) {
+        if (current.length === 1) {
+          toast.error("At least one leave type must remain enabled");
+          return current;
+        }
+        return current.filter((item) => item !== type);
+      }
+      return [...current, type];
+    });
+  };
+
+  const save = () => {
+    mutation.mutate(enabledTypes);
+  };
+
   return (
     <RoleGuard
       allowedRoles={["ADMIN"]}
@@ -30,17 +95,50 @@ export default function SettingsPage() {
             <CardTitle>Leave Types</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              {LEAVE_TYPES.map((type) => (
-                <Badge key={type} variant="outline">
-                  {type}
-                </Badge>
-              ))}
+            <div className="grid gap-2 sm:grid-cols-2">
+              {LEAVE_TYPES.map((type) => {
+                const isActive = enabledTypes.includes(type as LeaveType);
+
+                return (
+                  <label
+                    key={type}
+                    className="flex cursor-pointer items-center justify-between rounded-md border p-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => toggleType(type as LeaveType)}
+                        disabled={
+                          mutation.isPending ||
+                          isLoading ||
+                          (isActive && enabledTypes.length === 1)
+                        }
+                      />
+                      <span className="text-sm font-medium">{type}</span>
+                    </div>
+
+                    <Badge variant={isActive ? "default" : "outline"}>
+                      {isActive ? "Enabled" : "Disabled"}
+                    </Badge>
+                  </label>
+                );
+              })}
             </div>
             <p className="text-xs text-muted-foreground">
-              Leave type customization is planned for next milestone. Current
-              types are fixed for v1.
+              Changes here affect the leave types available when submitting new
+              leave requests.
             </p>
+
+            <div>
+              <Button
+                size="sm"
+                onClick={save}
+                disabled={mutation.isPending || isLoading}
+              >
+                {mutation.isPending ? "Saving..." : "Save leave type settings"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 

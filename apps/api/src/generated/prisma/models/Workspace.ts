@@ -168,6 +168,7 @@ export type WorkspaceWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Workspace"> | Date | string
   users?: Prisma.UserListRelationFilter
   teams?: Prisma.TeamListRelationFilter
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -176,6 +177,7 @@ export type WorkspaceOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   teams?: Prisma.TeamOrderByRelationAggregateInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -187,6 +189,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Workspace"> | Date | string
   users?: Prisma.UserListRelationFilter
   teams?: Prisma.TeamListRelationFilter
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeListRelationFilter
 }, "id">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -213,6 +216,7 @@ export type WorkspaceCreateInput = {
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -221,6 +225,7 @@ export type WorkspaceUncheckedCreateInput = {
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -229,6 +234,7 @@ export type WorkspaceUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -237,6 +243,7 @@ export type WorkspaceUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -316,11 +323,26 @@ export type WorkspaceUpdateOneRequiredWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutUsersInput, Prisma.WorkspaceUpdateWithoutUsersInput>, Prisma.WorkspaceUncheckedUpdateWithoutUsersInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutLeaveTypeSettingsInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLeaveTypeSettingsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneRequiredWithoutLeaveTypeSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutLeaveTypeSettingsInput
+  upsert?: Prisma.WorkspaceUpsertWithoutLeaveTypeSettingsInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUpdateWithoutLeaveTypeSettingsInput>, Prisma.WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput>
+}
+
 export type WorkspaceCreateWithoutTeamsInput = {
   id?: string
   name: string
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTeamsInput = {
@@ -328,6 +350,7 @@ export type WorkspaceUncheckedCreateWithoutTeamsInput = {
   name: string
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTeamsInput = {
@@ -351,6 +374,7 @@ export type WorkspaceUpdateWithoutTeamsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTeamsInput = {
@@ -358,6 +382,7 @@ export type WorkspaceUncheckedUpdateWithoutTeamsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutUsersInput = {
@@ -365,6 +390,7 @@ export type WorkspaceCreateWithoutUsersInput = {
   name: string
   createdAt?: Date | string
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutUsersInput = {
@@ -372,6 +398,7 @@ export type WorkspaceUncheckedCreateWithoutUsersInput = {
   name: string
   createdAt?: Date | string
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutUsersInput = {
@@ -395,12 +422,62 @@ export type WorkspaceUpdateWithoutUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutLeaveTypeSettingsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
+  teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutLeaveTypeSettingsInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput>
+}
+
+export type WorkspaceUpsertWithoutLeaveTypeSettingsInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutLeaveTypeSettingsInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutLeaveTypeSettingsInput, Prisma.WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput>
+}
+
+export type WorkspaceUpdateWithoutLeaveTypeSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
@@ -412,11 +489,13 @@ export type WorkspaceUncheckedUpdateWithoutUsersInput = {
 export type WorkspaceCountOutputType = {
   users: number
   teams: number
+  leaveTypeSettings: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | WorkspaceCountOutputTypeCountUsersArgs
   teams?: boolean | WorkspaceCountOutputTypeCountTeamsArgs
+  leaveTypeSettings?: boolean | WorkspaceCountOutputTypeCountLeaveTypeSettingsArgs
 }
 
 /**
@@ -443,6 +522,13 @@ export type WorkspaceCountOutputTypeCountTeamsArgs<ExtArgs extends runtime.Types
   where?: Prisma.TeamWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountLeaveTypeSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkspaceLeaveTypeWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -450,6 +536,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   users?: boolean | Prisma.Workspace$usersArgs<ExtArgs>
   teams?: boolean | Prisma.Workspace$teamsArgs<ExtArgs>
+  leaveTypeSettings?: boolean | Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -475,6 +562,7 @@ export type WorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Workspace$usersArgs<ExtArgs>
   teams?: boolean | Prisma.Workspace$teamsArgs<ExtArgs>
+  leaveTypeSettings?: boolean | Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -485,6 +573,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     users: Prisma.$UserPayload<ExtArgs>[]
     teams: Prisma.$TeamPayload<ExtArgs>[]
+    leaveTypeSettings: Prisma.$WorkspaceLeaveTypePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -886,6 +975,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   users<T extends Prisma.Workspace$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   teams<T extends Prisma.Workspace$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leaveTypeSettings<T extends Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceLeaveTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1351,6 +1441,30 @@ export type Workspace$teamsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.TeamScalarFieldEnum | Prisma.TeamScalarFieldEnum[]
+}
+
+/**
+ * Workspace.leaveTypeSettings
+ */
+export type Workspace$leaveTypeSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkspaceLeaveType
+   */
+  select?: Prisma.WorkspaceLeaveTypeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkspaceLeaveType
+   */
+  omit?: Prisma.WorkspaceLeaveTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkspaceLeaveTypeInclude<ExtArgs> | null
+  where?: Prisma.WorkspaceLeaveTypeWhereInput
+  orderBy?: Prisma.WorkspaceLeaveTypeOrderByWithRelationInput | Prisma.WorkspaceLeaveTypeOrderByWithRelationInput[]
+  cursor?: Prisma.WorkspaceLeaveTypeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkspaceLeaveTypeScalarFieldEnum | Prisma.WorkspaceLeaveTypeScalarFieldEnum[]
 }
 
 /**

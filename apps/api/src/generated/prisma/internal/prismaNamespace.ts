@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.2
- * Query Engine version: 94a226be1cf2967af2541cca5529f0f7ba866919
+ * Prisma Client JS version: 7.4.1
+ * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.2",
-  engine: "94a226be1cf2967af2541cca5529f0f7ba866919"
+  client: "7.4.1",
+  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
 }
 
 /**
@@ -388,7 +388,8 @@ export const ModelName = {
   Team: 'Team',
   User: 'User',
   LeaveRequest: 'LeaveRequest',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  WorkspaceLeaveType: 'WorkspaceLeaveType'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog"
+    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog" | "workspaceLeaveType"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorkspaceLeaveType: {
+      payload: Prisma.$WorkspaceLeaveTypePayload<ExtArgs>
+      fields: Prisma.WorkspaceLeaveTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkspaceLeaveTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkspaceLeaveTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        findFirst: {
+          args: Prisma.WorkspaceLeaveTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkspaceLeaveTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        findMany: {
+          args: Prisma.WorkspaceLeaveTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>[]
+        }
+        create: {
+          args: Prisma.WorkspaceLeaveTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        createMany: {
+          args: Prisma.WorkspaceLeaveTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorkspaceLeaveTypeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>[]
+        }
+        delete: {
+          args: Prisma.WorkspaceLeaveTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        update: {
+          args: Prisma.WorkspaceLeaveTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkspaceLeaveTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkspaceLeaveTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorkspaceLeaveTypeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>[]
+        }
+        upsert: {
+          args: Prisma.WorkspaceLeaveTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkspaceLeaveTypePayload>
+        }
+        aggregate: {
+          args: Prisma.WorkspaceLeaveTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkspaceLeaveType>
+        }
+        groupBy: {
+          args: Prisma.WorkspaceLeaveTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkspaceLeaveTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkspaceLeaveTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkspaceLeaveTypeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -883,6 +958,18 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const WorkspaceLeaveTypeScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkspaceLeaveTypeScalarFieldEnum = (typeof WorkspaceLeaveTypeScalarFieldEnum)[keyof typeof WorkspaceLeaveTypeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1164,6 +1251,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   leaveRequest?: Prisma.LeaveRequestOmit
   auditLog?: Prisma.AuditLogOmit
+  workspaceLeaveType?: Prisma.WorkspaceLeaveTypeOmit
 }
 
 /* Types for Logging */

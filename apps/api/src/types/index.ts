@@ -1,4 +1,3 @@
-
 export interface RegisterInput {
   workspace_name: string;
   name: string;
@@ -56,8 +55,16 @@ export interface UpdateLeaveStatusInput {
 }
 
 export interface ReportsAnalyticsQuery {
-  month: string;
+  month?: string | undefined;
+  from?: string | undefined;
+  to?: string | undefined;
   team_id?: string | undefined;
+}
+
+export type LeaveTypeValue = "VACATION" | "SICK" | "PERSONAL" | "CASUAL";
+
+export interface UpdateLeaveTypesInput {
+  enabled_types: LeaveTypeValue[];
 }
 
 export interface CreateTeamInput {
@@ -97,6 +104,13 @@ export interface ListAuditLogsQuery {
     | "USER_REGISTERED"
     | "USER_LOGIN"
     | "USER_LOGIN_FAILED"
+    | "USER_CREATED"
+    | "USER_UPDATED"
+    | "USER_DEACTIVATED"
+    | "TEAM_CREATED"
+    | "TEAM_UPDATED"
+    | "TEAM_DELETED"
+    | "LEAVE_TYPES_UPDATED"
     | "LEAVE_APPLIED"
     | "LEAVE_APPROVED"
     | "LEAVE_REJECTED"

@@ -39,6 +39,19 @@ enum AuditAction {
   USER_LOGIN
   USER_LOGIN_FAILED
 
+  // User management
+  USER_CREATED
+  USER_UPDATED
+  USER_DEACTIVATED
+
+  // Team management
+  TEAM_CREATED
+  TEAM_UPDATED
+  TEAM_DELETED
+
+  // Settings
+  LEAVE_TYPES_UPDATED
+
   // Leave management
   LEAVE_APPLIED
   LEAVE_APPROVED
@@ -51,8 +64,9 @@ model Workspace {
   name      String
   createdAt DateTime @default(now())
 
-  users User[]
-  teams Team[]
+  users             User[]
+  teams             Team[]
+  leaveTypeSettings WorkspaceLeaveType[]
 }
 
 model Team {
@@ -125,4 +139,17 @@ model AuditLog {
   @@index([workspaceId])
   @@index([action])
   @@index([createdAt])
+}
+
+model WorkspaceLeaveType {
+  id         String    @id @default(uuid())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
+  type       LeaveType
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([workspaceId, type])
+  @@index([workspaceId])
 }

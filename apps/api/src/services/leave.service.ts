@@ -1,6 +1,10 @@
-import { prisma } from "../lib/db.js";
-import type { ApplyLeaveInput, ListLeaveQuery, UpdateLeaveStatusInput } from "../types/index.js";
 import type { Prisma } from "../generated/prisma/client.js";
+import { prisma } from "../lib/db.js";
+import type {
+  ApplyLeaveInput,
+  ListLeaveQuery,
+  UpdateLeaveStatusInput,
+} from "../types/index.js";
 import {
   BadRequestError,
   ConflictError,
@@ -8,6 +12,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/errors.js";
+import { isLeaveTypeEnabledForWorkspace } from "./settings.service.js";
 
 // ── Session ordering helpers ──────────────────────────────────────────────────
 // Map each leave period to a range of "half-day slots" so overlap detection
@@ -64,6 +69,14 @@ export const applyLeave = async (
     throw new ForbiddenError("Cross-workspace action not allowed");
   }
 
+  const leaveTypeEnabled = await isLeaveTypeEnabledForWorkspace(
+    workspaceId,
+    input.type,
+  );
+  if (!leaveTypeEnabled) {
+    throw new BadRequestError("Selected leave type is currently disabled");
+  }
+
   // ── Rule 2: Date and session validity ───────────────────────────────────────
   const startDate = new Date(input.start_date);
   const endDate = new Date(input.end_date);
@@ -101,8 +114,14 @@ export const applyLeave = async (
   });
 
   for (const existing of candidateLeaves) {
-    const exStart = toStartSlot(existing.startDate, existing.startSession as SessionValue);
-    const exEnd = toEndSlot(existing.endDate, existing.endSession as SessionValue);
+    const exStart = toStartSlot(
+      existing.startDate,
+      existing.startSession as SessionValue,
+    );
+    const exEnd = toEndSlot(
+      existing.endDate,
+      existing.endSession as SessionValue,
+    );
 
     if (newStartSlot <= exEnd && newEndSlot >= exStart) {
       throw new ConflictError(
@@ -298,9 +317,7 @@ export const cancelLeave = async (
 
   // ── State guard ────────────────────────────────────────────────────────────
   if (leave.status !== "PENDING") {
-    throw new ConflictError(
-      "Only pending leave requests can be cancelled",
-    );
+    throw new ConflictError("Only pending leave requests can be cancelled");
   }
 
   const cancelled = await prisma.leaveRequest.update({

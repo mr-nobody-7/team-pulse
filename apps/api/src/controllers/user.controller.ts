@@ -6,6 +6,7 @@ import {
   listUsers,
   updateUser,
 } from "../services/user.service.js";
+import { createAuditLog } from "../utils/audit.js";
 import { BadRequestError } from "../utils/errors.js";
 import { sendSuccess } from "../utils/response.js";
 import { listUsersSchema } from "../utils/validations.js";
@@ -37,8 +38,23 @@ export const createUserController = async (
   next: NextFunction,
 ) => {
   try {
-    const { workspaceId } = req.user!;
+    const { userId, workspaceId } = req.user!;
     const user = await createUser(workspaceId, req.body);
+
+    createAuditLog({
+      action: "USER_CREATED",
+      userId,
+      workspaceId,
+      targetId: user.id,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: {
+        role: user.role,
+        email: user.email,
+        teamId: user.teamId,
+      },
+    });
+
     sendSuccess(res, { user }, "User created", 201);
   } catch (error) {
     next(error);
@@ -58,8 +74,24 @@ export const updateUserController = async (
       return next(new BadRequestError("User ID is required"));
     }
 
-    const { workspaceId } = req.user!;
+    const { userId: actorId, workspaceId } = req.user!;
     const user = await updateUser(workspaceId, userId, req.body);
+
+    createAuditLog({
+      action: "USER_UPDATED",
+      userId: actorId,
+      workspaceId,
+      targetId: user.id,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: {
+        role: user.role,
+        email: user.email,
+        teamId: user.teamId,
+        isActive: user.isActive,
+      },
+    });
+
     sendSuccess(res, { user }, "User updated");
   } catch (error) {
     next(error);
@@ -79,8 +111,22 @@ export const deactivateUserController = async (
       return next(new BadRequestError("User ID is required"));
     }
 
-    const { workspaceId } = req.user!;
+    const { userId: actorId, workspaceId } = req.user!;
     const user = await deactivateUser(workspaceId, userId);
+
+    createAuditLog({
+      action: "USER_DEACTIVATED",
+      userId: actorId,
+      workspaceId,
+      targetId: user.id,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: {
+        role: user.role,
+        email: user.email,
+      },
+    });
+
     sendSuccess(res, { user }, "User deactivated");
   } catch (error) {
     next(error);

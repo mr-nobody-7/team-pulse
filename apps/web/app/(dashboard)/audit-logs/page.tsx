@@ -24,6 +24,13 @@ const ACTIONS = [
   "USER_REGISTERED",
   "USER_LOGIN",
   "USER_LOGIN_FAILED",
+  "USER_CREATED",
+  "USER_UPDATED",
+  "USER_DEACTIVATED",
+  "TEAM_CREATED",
+  "TEAM_UPDATED",
+  "TEAM_DELETED",
+  "LEAVE_TYPES_UPDATED",
   "LEAVE_APPLIED",
   "LEAVE_APPROVED",
   "LEAVE_REJECTED",
@@ -68,7 +75,8 @@ export default function AuditLogsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Audit Logs</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Track key security and leave workflow events.
+            Track authentication, user/team administration, and leave workflow
+            events.
           </p>
         </div>
 

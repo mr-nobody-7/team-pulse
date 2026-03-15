@@ -13,7 +13,7 @@ router.get("/summary", authenticate, getSummaryController);
 router.get(
 	"/analytics",
 	authenticate,
-	authorize(["ADMIN"]),
+	authorize(["ADMIN", "MANAGER"]),
 	getAnalyticsController,
 );
 

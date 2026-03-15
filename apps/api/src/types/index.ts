@@ -59,3 +59,52 @@ export interface ReportsAnalyticsQuery {
   month: string;
   team_id?: string | undefined;
 }
+
+export interface CreateTeamInput {
+  name: string;
+}
+
+export interface UpdateTeamInput {
+  name: string;
+}
+
+export interface ListUsersQuery {
+  role?: "USER" | "MANAGER" | "ADMIN" | undefined;
+  team_id?: string | undefined;
+  is_active?: boolean | undefined;
+  page: number;
+  limit: number;
+}
+
+export interface CreateUserInput {
+  name: string;
+  email: string;
+  password: string;
+  role: "USER" | "MANAGER" | "ADMIN";
+  team_id?: string | undefined;
+}
+
+export interface UpdateUserInput {
+  name?: string | undefined;
+  email?: string | undefined;
+  role?: "USER" | "MANAGER" | "ADMIN" | undefined;
+  team_id?: string | undefined;
+  is_active?: boolean | undefined;
+}
+
+export interface ListAuditLogsQuery {
+  action?:
+    | "USER_REGISTERED"
+    | "USER_LOGIN"
+    | "USER_LOGIN_FAILED"
+    | "LEAVE_APPLIED"
+    | "LEAVE_APPROVED"
+    | "LEAVE_REJECTED"
+    | "LEAVE_CANCELLED"
+    | undefined;
+  user_id?: string | undefined;
+  from?: string | undefined;
+  to?: string | undefined;
+  page: number;
+  limit: number;
+}

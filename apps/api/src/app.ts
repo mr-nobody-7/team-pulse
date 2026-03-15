@@ -4,9 +4,11 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { authRoutes } from "./routes/auth.routes.js";
+import { auditRoutes } from "./routes/audit.routes.js";
 import { leaveRoutes } from "./routes/leave.routes.js";
 import { reportsRoutes } from "./routes/reports.routes.js";
 import { teamRoutes } from "./routes/team.routes.js";
+import { userRoutes } from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
@@ -32,6 +34,8 @@ app.use("/auth", authRateLimit, authRoutes);
 app.use("/leave", leaveRoutes);
 app.use("/reports", reportsRoutes);
 app.use("/teams", teamRoutes);
+app.use("/users", userRoutes);
+app.use("/audit-logs", auditRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ success: true, message: "API running 🚀" });

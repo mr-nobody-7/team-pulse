@@ -86,7 +86,8 @@ function ReportsLoadingSkeleton() {
 }
 
 export default function ReportsPage() {
-  const { isWorkspaceAdmin } = useRole();
+  const { isManager, isWorkspaceAdmin } = useRole();
+  const canAccessReports = isWorkspaceAdmin || isManager;
   const [month, setMonth] = useState(() =>
     new Date().toISOString().slice(0, 7),
   );
@@ -98,7 +99,7 @@ export default function ReportsPage() {
       month,
       teamId: teamId === "all" ? undefined : teamId,
     },
-    { enabled: isWorkspaceAdmin },
+    { enabled: canAccessReports },
   );
 
   const usageByMonth = useMemo(
@@ -163,13 +164,13 @@ export default function ReportsPage() {
 
   return (
     <RoleGuard
-      allowedRoles={["ADMIN"]}
+      allowedRoles={["ADMIN", "MANAGER"]}
       fallback={
         <PageContainer className="flex flex-col gap-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              This section is available to workspace admins only.
+              This section is available to managers and admins only.
             </p>
           </div>
         </PageContainer>

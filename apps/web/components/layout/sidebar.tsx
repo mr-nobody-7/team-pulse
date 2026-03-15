@@ -6,14 +6,17 @@ import {
   CalendarRange,
   CheckSquare,
   LayoutDashboard,
+  Logs,
   PlusCircle,
+  Settings,
+  ShieldCheck,
+  UserCog,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import { cn } from "@/lib/utils";
 import type { UserRole } from "@/hooks/use-role";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   href: string;
@@ -69,6 +72,30 @@ const navItems: NavItem[] = [
     href: "/reports",
     label: "Reports",
     icon: BarChart3,
+    roles: ["MANAGER", "ADMIN"],
+  },
+  {
+    href: "/teams",
+    label: "Teams",
+    icon: ShieldCheck,
+    roles: ["ADMIN"],
+  },
+  {
+    href: "/users",
+    label: "Users",
+    icon: UserCog,
+    roles: ["ADMIN"],
+  },
+  {
+    href: "/settings",
+    label: "Settings",
+    icon: Settings,
+    roles: ["ADMIN"],
+  },
+  {
+    href: "/audit-logs",
+    label: "Audit Logs",
+    icon: Logs,
     roles: ["ADMIN"],
   },
 ];
@@ -103,7 +130,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
             const isActive =
               pathname === item.href ||
               (item.href !== "/dashboard" &&
-                pathname.startsWith(item.href + "/"));
+                pathname.startsWith(`${item.href}/`));
             return (
               <li key={`${item.href}-${item.label}`}>
                 <Link
@@ -129,7 +156,9 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
         <div className="border-t p-4">
           <p className="truncate text-sm font-medium">{userName}</p>
           {userEmail && (
-            <p className="truncate text-xs text-muted-foreground">{userEmail}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {userEmail}
+            </p>
           )}
         </div>
       )}

@@ -90,6 +90,55 @@ export interface Team {
   name: string;
 }
 
+export interface TeamWithMeta extends Team {
+  createdAt: string;
+}
+
+export interface WorkspaceUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "USER" | "MANAGER" | "ADMIN";
+  isActive: boolean;
+  createdAt: string;
+  workspaceId: string;
+  teamId: string | null;
+  team: Team | null;
+}
+
+export interface ListUsersResponse {
+  users: WorkspaceUser[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface AuditLog {
+  id: string;
+  action:
+    | "USER_REGISTERED"
+    | "USER_LOGIN"
+    | "USER_LOGIN_FAILED"
+    | "LEAVE_APPLIED"
+    | "LEAVE_APPROVED"
+    | "LEAVE_REJECTED"
+    | "LEAVE_CANCELLED";
+  userId: string | null;
+  workspaceId: string | null;
+  targetId: string | null;
+  targetType: string | null;
+  ipAddress: string | null;
+  metadata: Record<string, unknown> | null;
+  createdAt: string;
+}
+
+export interface ListAuditLogsResponse {
+  logs: AuditLog[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 export interface DashboardSummaryItem {

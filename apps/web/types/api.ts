@@ -48,6 +48,7 @@ export type AvailabilityStatus =
   | "HALF_DAY"
   | "BUSY"
   | "FOCUS_TIME";
+export type HolidayCategory = "COMPANY" | "NATIONAL" | "REGIONAL";
 
 export interface LeaveRequest {
   id: string;
@@ -237,4 +238,20 @@ export interface AvailabilityBoardResponse {
   total: number;
   byStatus: AvailabilityStatusCount[];
   members: AvailabilityBoardMember[];
+}
+
+export interface PublicHoliday {
+  id: string;
+  name: string;
+  date: string;
+  category: HolidayCategory;
+  region: string | null;
+  source: "SYSTEM" | "CUSTOM";
+}
+
+export interface PublicHolidayListResponse {
+  from: string;
+  to: string;
+  region: string | null;
+  holidays: PublicHoliday[];
 }

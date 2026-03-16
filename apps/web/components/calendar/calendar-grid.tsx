@@ -12,7 +12,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CalendarDay } from "./calendar-day";
 import type { CalendarLeavesMap } from "@/hooks/use-calendar-leaves";
-import type { LeaveRequest } from "@/types/api";
+import type { CalendarHolidaysMap } from "@/hooks/use-public-holidays";
+import type { LeaveRequest, PublicHoliday } from "@/types/api";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -24,14 +25,16 @@ function toMondayFirst(day: number): number {
 interface CalendarGridProps {
   currentDate: Date;
   leavesMap: CalendarLeavesMap;
+  holidaysMap: CalendarHolidaysMap;
   isLoading: boolean;
   selectedDate: Date | null;
-  onDayClick: (date: Date, leaves: LeaveRequest[]) => void;
+  onDayClick: (date: Date, leaves: LeaveRequest[], holidays: PublicHoliday[]) => void;
 }
 
 export function CalendarGrid({
   currentDate,
   leavesMap,
+  holidaysMap,
   isLoading,
   selectedDate,
   onDayClick,
@@ -104,6 +107,7 @@ export function CalendarGrid({
                   date={date}
                   currentMonth={currentDate}
                   leaves={leavesMap[key] ?? []}
+                  holidays={holidaysMap[key] ?? []}
                   isSelected={
                     selectedDate !== null &&
                     date.toDateString() === selectedDate.toDateString()

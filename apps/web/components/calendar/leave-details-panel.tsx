@@ -13,12 +13,12 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import type { LeaveRequest } from "@/types/api";
+import type { LeaveRequest, PublicHoliday } from "@/types/api";
 
 interface LeaveDetailsPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDay: { date: Date; leaves: LeaveRequest[] } | null;
+  selectedDay: { date: Date; leaves: LeaveRequest[]; holidays: PublicHoliday[] } | null;
 }
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
@@ -89,11 +89,20 @@ function LeaveCard({ leave, day }: { leave: LeaveRequest; day: Date }) {
   );
 }
 
+const HOLIDAY_CATEGORY_LABEL: Record<"COMPANY" | "NATIONAL" | "REGIONAL", string> = {
+  COMPANY: "Company",
+  NATIONAL: "National",
+  REGIONAL: "Regional",
+};
+
 export function LeaveDetailsPanel({
   open,
   onOpenChange,
   selectedDay,
 }: LeaveDetailsPanelProps) {
+  const leaveCount = selectedDay?.leaves.length ?? 0;
+  const holidayCount = selectedDay?.holidays.length ?? 0;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[80vh] flex-col gap-0 p-0 sm:max-w-md">
@@ -103,24 +112,63 @@ export function LeaveDetailsPanel({
           </DialogTitle>
           <DialogDescription>
             {selectedDay
-              ? `${selectedDay.leaves.length} ${selectedDay.leaves.length === 1 ? "person" : "people"} on leave`
+              ? `${leaveCount} ${leaveCount === 1 ? "person" : "people"} on leave · ${holidayCount} holiday event${holidayCount === 1 ? "" : "s"}`
               : ""}
           </DialogDescription>
         </DialogHeader>
 
         <Separator />
 
-        <div className="flex-1 overflow-y-auto pb-2">
+        <div className="flex-1 space-y-4 overflow-y-auto p-4">
           {selectedDay && (
-            <div className="divide-y">
-              {selectedDay.leaves.map((leave) => (
-                <LeaveCard
-                  key={leave.id}
-                  leave={leave}
-                  day={selectedDay.date}
-                />
-              ))}
-            </div>
+            <>
+              {selectedDay.holidays.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Holidays
+                  </p>
+                  <div className="space-y-2">
+                    {selectedDay.holidays.map((holiday) => (
+                      <div
+                        key={holiday.id}
+                        className="rounded-lg border border-sky-300/70 bg-sky-50 px-3 py-2 dark:border-sky-900 dark:bg-sky-950/40"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-medium text-sky-800 dark:text-sky-300">
+                            {holiday.name}
+                          </p>
+                          <Badge variant="outline" className="text-[10px]">
+                            {HOLIDAY_CATEGORY_LABEL[holiday.category]}
+                          </Badge>
+                        </div>
+                        {holiday.region && (
+                          <p className="mt-1 text-xs text-sky-700/90 dark:text-sky-400">
+                            Region: {holiday.region}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedDay.leaves.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Leaves
+                  </p>
+                  <div className="divide-y rounded-lg border">
+                    {selectedDay.leaves.map((leave) => (
+                      <LeaveCard
+                        key={leave.id}
+                        leave={leave}
+                        day={selectedDay.date}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </DialogContent>

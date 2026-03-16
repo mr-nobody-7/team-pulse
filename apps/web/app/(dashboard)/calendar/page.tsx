@@ -12,9 +12,10 @@ import { LeaveDetailsPanel } from "@/components/calendar/leave-details-panel";
 import { useAuth } from "@/contexts/auth-context";
 import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
+import { usePublicHolidays } from "@/hooks/use-public-holidays";
 import { useTeams } from "@/hooks/use-teams";
 import api from "@/lib/axios";
-import type { AvailabilityStatus, LeaveRequest } from "@/types/api";
+import type { AvailabilityStatus, LeaveRequest, PublicHoliday } from "@/types/api";
 
 export default function CalendarPage() {
   const queryClient = useQueryClient();
@@ -27,6 +28,7 @@ export default function CalendarPage() {
   const [selectedDay, setSelectedDay] = useState<{
     date: Date;
     leaves: LeaveRequest[];
+    holidays: PublicHoliday[];
   } | null>(null);
 
   // "" means "all teams"; any truthy string is a specific team id
@@ -38,6 +40,13 @@ export default function CalendarPage() {
     currentDate.getFullYear(),
     currentDate.getMonth(),
     selectedTeamId === "all" ? undefined : selectedTeamId,
+  );
+
+  const { data: holidaysMap = {}, isLoading: isHolidayLoading } = usePublicHolidays(
+    {
+      year: currentDate.getFullYear(),
+      month: currentDate.getMonth(),
+    },
   );
 
   const { data: teams = [] } = useTeams();
@@ -78,10 +87,16 @@ export default function CalendarPage() {
     setSelectedDate(now);
   };
 
-  const handleDayClick = (date: Date, leaves: LeaveRequest[]) => {
+  const handleDayClick = (
+    date: Date,
+    leaves: LeaveRequest[],
+    holidays: PublicHoliday[],
+  ) => {
     setSelectedDate(date);
-    if (leaves.length > 0) {
-      setSelectedDay({ date, leaves });
+    if (leaves.length > 0 || holidays.length > 0) {
+      setSelectedDay({ date, leaves, holidays });
+    } else {
+      setSelectedDay(null);
     }
   };
 
@@ -111,7 +126,8 @@ export default function CalendarPage() {
         <CalendarGrid
           currentDate={currentDate}
           leavesMap={leavesMap}
-          isLoading={isLoading}
+          holidaysMap={holidaysMap}
+          isLoading={isLoading || isHolidayLoading}
           onDayClick={handleDayClick}
           selectedDate={selectedDate}
         />

@@ -45,6 +45,7 @@ export function CalendarHeader({
             { label: "Sick", color: "bg-red-400" },
             { label: "Personal", color: "bg-purple-400" },
             { label: "Casual", color: "bg-amber-400" },
+            { label: "Holiday", color: "bg-sky-400" },
           ].map(({ label, color }) => (
             <span key={label} className="flex items-center gap-1 text-xs text-muted-foreground">
               <span className={`h-2.5 w-2.5 rounded-full ${color}`} />

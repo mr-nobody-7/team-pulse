@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { LeaveRequest } from "@/types/api";
+import type { LeaveRequest, PublicHoliday } from "@/types/api";
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
   VACATION: "bg-blue-500",
@@ -20,20 +20,23 @@ interface CalendarDayProps {
   date: Date;
   currentMonth: Date;
   leaves: LeaveRequest[];
+  holidays: PublicHoliday[];
   isSelected: boolean;
-  onClick: (date: Date, leaves: LeaveRequest[]) => void;
+  onClick: (date: Date, leaves: LeaveRequest[], holidays: PublicHoliday[]) => void;
 }
 
 export function CalendarDay({
   date,
   currentMonth,
   leaves,
+  holidays,
   isSelected,
   onClick,
 }: CalendarDayProps) {
   const today = isToday(date);
   const inMonth = isSameMonth(date, currentMonth);
   const hasLeaves = leaves.length > 0;
+  const hasHolidays = holidays.length > 0;
 
   // Determine density — colour the cell bg when many people are off
   const densityClass =
@@ -58,7 +61,7 @@ export function CalendarDay({
         <TooltipTrigger asChild>
           <button
             type="button"
-            onClick={() => onClick(date, leaves)}
+            onClick={() => onClick(date, leaves, holidays)}
             className={cn(
               "relative flex min-h-22 w-full flex-col rounded-lg border p-2 text-left transition-all",
               inMonth ? "bg-card" : "bg-muted/20",
@@ -68,7 +71,7 @@ export function CalendarDay({
               today && "border-primary/70 ring-1 ring-primary/25",
               isSelected && "border-primary ring-2 ring-primary/40",
             )}
-            aria-label={`${format(date, "MMMM d")}${hasLeaves ? `, ${leaves.length} on leave` : ""}`}
+            aria-label={`${format(date, "MMMM d")}${hasLeaves ? `, ${leaves.length} on leave` : ""}${hasHolidays ? `, ${holidays.length} holiday event${holidays.length === 1 ? "" : "s"}` : ""}`}
           >
             {/* Day number */}
             <span
@@ -117,21 +120,56 @@ export function CalendarDay({
                 )}
               </div>
             )}
+
+            {hasHolidays && (
+              <div className={cn(hasLeaves ? "mt-1" : "mt-1.5", "space-y-0.5")}>
+                {holidays.slice(0, 2).map((holiday) => (
+                  <div
+                    key={holiday.id}
+                    className="truncate rounded border border-sky-300 bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300"
+                  >
+                    🎉 {holiday.name}
+                  </div>
+                ))}
+                {holidays.length > 2 && (
+                  <span className="text-[10px] font-medium text-muted-foreground">
+                    +{holidays.length - 2} more holiday events
+                  </span>
+                )}
+              </div>
+            )}
           </button>
         </TooltipTrigger>
 
-        {hasLeaves && (
+        {(hasLeaves || hasHolidays) && (
           <TooltipContent side="top" className="max-w-56 space-y-1">
             <p className="font-semibold">{format(date, "MMM d")}</p>
-            <p>{leaves.length} on leave</p>
-            <ul className="space-y-0.5">
-              {leaves.slice(0, 5).map((leave) => (
-                <li key={leave.id}>
-                  {leave.user.name} · {leave.type}
-                </li>
-              ))}
-              {leaves.length > 5 && <li>+{leaves.length - 5} more</li>}
-            </ul>
+            {hasLeaves && (
+              <>
+                <p>{leaves.length} on leave</p>
+                <ul className="space-y-0.5">
+                  {leaves.slice(0, 5).map((leave) => (
+                    <li key={leave.id}>
+                      {leave.user.name} · {leave.type}
+                    </li>
+                  ))}
+                  {leaves.length > 5 && <li>+{leaves.length - 5} more</li>}
+                </ul>
+              </>
+            )}
+            {hasHolidays && (
+              <>
+                <p>{holidays.length} holiday event{holidays.length === 1 ? "" : "s"}</p>
+                <ul className="space-y-0.5">
+                  {holidays.slice(0, 4).map((holiday) => (
+                    <li key={holiday.id}>
+                      {holiday.name} · {holiday.category}
+                    </li>
+                  ))}
+                  {holidays.length > 4 && <li>+{holidays.length - 4} more</li>}
+                </ul>
+              </>
+            )}
           </TooltipContent>
         )}
       </Tooltip>

@@ -56,7 +56,8 @@ export const ModelName = {
   User: 'User',
   LeaveRequest: 'LeaveRequest',
   AuditLog: 'AuditLog',
-  WorkspaceLeaveType: 'WorkspaceLeaveType'
+  WorkspaceLeaveType: 'WorkspaceLeaveType',
+  UserAvailabilityStatus: 'UserAvailabilityStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -153,6 +154,19 @@ export const WorkspaceLeaveTypeScalarFieldEnum = {
 } as const
 
 export type WorkspaceLeaveTypeScalarFieldEnum = (typeof WorkspaceLeaveTypeScalarFieldEnum)[keyof typeof WorkspaceLeaveTypeScalarFieldEnum]
+
+
+export const UserAvailabilityStatusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  workspaceId: 'workspaceId',
+  date: 'date',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserAvailabilityStatusScalarFieldEnum = (typeof UserAvailabilityStatusScalarFieldEnum)[keyof typeof UserAvailabilityStatusScalarFieldEnum]
 
 
 export const SortOrder = {

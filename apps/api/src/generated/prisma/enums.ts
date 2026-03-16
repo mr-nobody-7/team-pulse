@@ -47,6 +47,18 @@ export const Session = {
 export type Session = (typeof Session)[keyof typeof Session]
 
 
+export const AvailabilityStatus = {
+  AVAILABLE: 'AVAILABLE',
+  ON_LEAVE: 'ON_LEAVE',
+  WORKING_REMOTELY: 'WORKING_REMOTELY',
+  HALF_DAY: 'HALF_DAY',
+  BUSY: 'BUSY',
+  FOCUS_TIME: 'FOCUS_TIME'
+} as const
+
+export type AvailabilityStatus = (typeof AvailabilityStatus)[keyof typeof AvailabilityStatus]
+
+
 export const AuditAction = {
   USER_REGISTERED: 'USER_REGISTERED',
   USER_LOGIN: 'USER_LOGIN',
@@ -58,6 +70,7 @@ export const AuditAction = {
   TEAM_UPDATED: 'TEAM_UPDATED',
   TEAM_DELETED: 'TEAM_DELETED',
   LEAVE_TYPES_UPDATED: 'LEAVE_TYPES_UPDATED',
+  USER_AVAILABILITY_UPDATED: 'USER_AVAILABILITY_UPDATED',
   LEAVE_APPLIED: 'LEAVE_APPLIED',
   LEAVE_APPROVED: 'LEAVE_APPROVED',
   LEAVE_REJECTED: 'LEAVE_REJECTED',

@@ -33,6 +33,15 @@ enum Session {
   SECOND_HALF
 }
 
+enum AvailabilityStatus {
+  AVAILABLE
+  ON_LEAVE
+  WORKING_REMOTELY
+  HALF_DAY
+  BUSY
+  FOCUS_TIME
+}
+
 enum AuditAction {
   // Authentication
   USER_REGISTERED
@@ -52,6 +61,9 @@ enum AuditAction {
   // Settings
   LEAVE_TYPES_UPDATED
 
+  // Availability
+  USER_AVAILABILITY_UPDATED
+
   // Leave management
   LEAVE_APPLIED
   LEAVE_APPROVED
@@ -67,6 +79,7 @@ model Workspace {
   users             User[]
   teams             Team[]
   leaveTypeSettings WorkspaceLeaveType[]
+  availabilityStatuses UserAvailabilityStatus[]
 }
 
 model Team {
@@ -95,6 +108,7 @@ model User {
   team                   Team?          @relation(fields: [teamId], references: [id])
   teamId                 String?
   requestedLeaveRequests LeaveRequest[]
+  availabilityStatuses   UserAvailabilityStatus[]
 
   approvedLeaveRequests LeaveRequest[] @relation("Approver")
 }
@@ -152,4 +166,20 @@ model WorkspaceLeaveType {
 
   @@unique([workspaceId, type])
   @@index([workspaceId])
+}
+
+model UserAvailabilityStatus {
+  id          String             @id @default(uuid())
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  workspace   Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
+  date        DateTime
+  status      AvailabilityStatus @default(AVAILABLE)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@unique([userId, date])
+  @@index([workspaceId, date])
+  @@index([userId, date])
 }

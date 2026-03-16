@@ -69,3 +69,8 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type WorkspaceLeaveType = Prisma.WorkspaceLeaveTypeModel
+/**
+ * Model UserAvailabilityStatus
+ * 
+ */
+export type UserAvailabilityStatus = Prisma.UserAvailabilityStatusModel

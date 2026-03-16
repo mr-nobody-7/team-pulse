@@ -42,6 +42,12 @@ enum AvailabilityStatus {
   FOCUS_TIME
 }
 
+enum HolidayCategory {
+  COMPANY
+  NATIONAL
+  REGIONAL
+}
+
 enum AuditAction {
   // Authentication
   USER_REGISTERED
@@ -76,10 +82,11 @@ model Workspace {
   name      String
   createdAt DateTime @default(now())
 
-  users             User[]
-  teams             Team[]
-  leaveTypeSettings WorkspaceLeaveType[]
+  users                User[]
+  teams                Team[]
+  leaveTypeSettings    WorkspaceLeaveType[]
   availabilityStatuses UserAvailabilityStatus[]
+  publicHolidays       PublicHoliday[]
 }
 
 model Team {
@@ -182,4 +189,20 @@ model UserAvailabilityStatus {
   @@unique([userId, date])
   @@index([workspaceId, date])
   @@index([userId, date])
+}
+
+model PublicHoliday {
+  id          String          @id @default(uuid())
+  workspace   Workspace?      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String?
+  name        String
+  date        DateTime
+  category    HolidayCategory
+  region      String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([date])
+  @@index([workspaceId, date])
+  @@index([category, region, date])
 }

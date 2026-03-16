@@ -276,6 +276,23 @@ export type EnumAvailabilityStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
 }
 
+export type EnumHolidayCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.HolidayCategory | Prisma.EnumHolidayCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel> | $Enums.HolidayCategory
+}
+
+export type EnumHolidayCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.HolidayCategory | Prisma.EnumHolidayCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumHolidayCategoryWithAggregatesFilter<$PrismaModel> | $Enums.HolidayCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -522,6 +539,23 @@ export type NestedEnumAvailabilityStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumHolidayCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.HolidayCategory | Prisma.EnumHolidayCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel> | $Enums.HolidayCategory
+}
+
+export type NestedEnumHolidayCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.HolidayCategory | Prisma.EnumHolidayCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumHolidayCategoryWithAggregatesFilter<$PrismaModel> | $Enums.HolidayCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumHolidayCategoryFilter<$PrismaModel>
 }
 
 

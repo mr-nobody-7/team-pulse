@@ -72,6 +72,14 @@ export interface SetMyAvailabilityInput {
   date?: string | undefined;
 }
 
+export type HolidayCategoryValue = "COMPANY" | "NATIONAL" | "REGIONAL";
+
+export interface ListPublicHolidaysQuery {
+  from?: string | undefined;
+  to?: string | undefined;
+  region?: string | undefined;
+}
+
 export interface ReportsAnalyticsQuery {
   month?: string | undefined;
   from?: string | undefined;

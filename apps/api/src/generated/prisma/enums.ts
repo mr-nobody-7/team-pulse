@@ -59,6 +59,15 @@ export const AvailabilityStatus = {
 export type AvailabilityStatus = (typeof AvailabilityStatus)[keyof typeof AvailabilityStatus]
 
 
+export const HolidayCategory = {
+  COMPANY: 'COMPANY',
+  NATIONAL: 'NATIONAL',
+  REGIONAL: 'REGIONAL'
+} as const
+
+export type HolidayCategory = (typeof HolidayCategory)[keyof typeof HolidayCategory]
+
+
 export const AuditAction = {
   USER_REGISTERED: 'USER_REGISTERED',
   USER_LOGIN: 'USER_LOGIN',

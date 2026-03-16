@@ -170,6 +170,7 @@ export type WorkspaceWhereInput = {
   teams?: Prisma.TeamListRelationFilter
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeListRelationFilter
   availabilityStatuses?: Prisma.UserAvailabilityStatusListRelationFilter
+  publicHolidays?: Prisma.PublicHolidayListRelationFilter
 }
 
 export type WorkspaceOrderByWithRelationInput = {
@@ -180,6 +181,7 @@ export type WorkspaceOrderByWithRelationInput = {
   teams?: Prisma.TeamOrderByRelationAggregateInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeOrderByRelationAggregateInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusOrderByRelationAggregateInput
+  publicHolidays?: Prisma.PublicHolidayOrderByRelationAggregateInput
 }
 
 export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -193,6 +195,7 @@ export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
   teams?: Prisma.TeamListRelationFilter
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeListRelationFilter
   availabilityStatuses?: Prisma.UserAvailabilityStatusListRelationFilter
+  publicHolidays?: Prisma.PublicHolidayListRelationFilter
 }, "id">
 
 export type WorkspaceOrderByWithAggregationInput = {
@@ -221,6 +224,7 @@ export type WorkspaceCreateInput = {
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateInput = {
@@ -231,6 +235,7 @@ export type WorkspaceUncheckedCreateInput = {
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUpdateInput = {
@@ -241,6 +246,7 @@ export type WorkspaceUpdateInput = {
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateInput = {
@@ -251,6 +257,7 @@ export type WorkspaceUncheckedUpdateInput = {
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateManyInput = {
@@ -292,6 +299,11 @@ export type WorkspaceMinOrderByAggregateInput = {
 export type WorkspaceScalarRelationFilter = {
   is?: Prisma.WorkspaceWhereInput
   isNot?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceNullableScalarRelationFilter = {
+  is?: Prisma.WorkspaceWhereInput | null
+  isNot?: Prisma.WorkspaceWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -358,6 +370,22 @@ export type WorkspaceUpdateOneRequiredWithoutAvailabilityStatusesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutAvailabilityStatusesInput, Prisma.WorkspaceUpdateWithoutAvailabilityStatusesInput>, Prisma.WorkspaceUncheckedUpdateWithoutAvailabilityStatusesInput>
 }
 
+export type WorkspaceCreateNestedOneWithoutPublicHolidaysInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedCreateWithoutPublicHolidaysInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutPublicHolidaysInput
+  connect?: Prisma.WorkspaceWhereUniqueInput
+}
+
+export type WorkspaceUpdateOneWithoutPublicHolidaysNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkspaceCreateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedCreateWithoutPublicHolidaysInput>
+  connectOrCreate?: Prisma.WorkspaceCreateOrConnectWithoutPublicHolidaysInput
+  upsert?: Prisma.WorkspaceUpsertWithoutPublicHolidaysInput
+  disconnect?: Prisma.WorkspaceWhereInput | boolean
+  delete?: Prisma.WorkspaceWhereInput | boolean
+  connect?: Prisma.WorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorkspaceUpdateToOneWithWhereWithoutPublicHolidaysInput, Prisma.WorkspaceUpdateWithoutPublicHolidaysInput>, Prisma.WorkspaceUncheckedUpdateWithoutPublicHolidaysInput>
+}
+
 export type WorkspaceCreateWithoutTeamsInput = {
   id?: string
   name: string
@@ -365,6 +393,7 @@ export type WorkspaceCreateWithoutTeamsInput = {
   users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutTeamsInput = {
@@ -374,6 +403,7 @@ export type WorkspaceUncheckedCreateWithoutTeamsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutTeamsInput = {
@@ -399,6 +429,7 @@ export type WorkspaceUpdateWithoutTeamsInput = {
   users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutTeamsInput = {
@@ -408,6 +439,7 @@ export type WorkspaceUncheckedUpdateWithoutTeamsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutUsersInput = {
@@ -417,6 +449,7 @@ export type WorkspaceCreateWithoutUsersInput = {
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutUsersInput = {
@@ -426,6 +459,7 @@ export type WorkspaceUncheckedCreateWithoutUsersInput = {
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutUsersInput = {
@@ -451,6 +485,7 @@ export type WorkspaceUpdateWithoutUsersInput = {
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutUsersInput = {
@@ -460,6 +495,7 @@ export type WorkspaceUncheckedUpdateWithoutUsersInput = {
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutLeaveTypeSettingsInput = {
@@ -469,6 +505,7 @@ export type WorkspaceCreateWithoutLeaveTypeSettingsInput = {
   users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput = {
@@ -478,6 +515,7 @@ export type WorkspaceUncheckedCreateWithoutLeaveTypeSettingsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutLeaveTypeSettingsInput = {
@@ -503,6 +541,7 @@ export type WorkspaceUpdateWithoutLeaveTypeSettingsInput = {
   users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput = {
@@ -512,6 +551,7 @@ export type WorkspaceUncheckedUpdateWithoutLeaveTypeSettingsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceCreateWithoutAvailabilityStatusesInput = {
@@ -521,6 +561,7 @@ export type WorkspaceCreateWithoutAvailabilityStatusesInput = {
   users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceUncheckedCreateWithoutAvailabilityStatusesInput = {
@@ -530,6 +571,7 @@ export type WorkspaceUncheckedCreateWithoutAvailabilityStatusesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
   teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedCreateNestedManyWithoutWorkspaceInput
 }
 
 export type WorkspaceCreateOrConnectWithoutAvailabilityStatusesInput = {
@@ -555,6 +597,7 @@ export type WorkspaceUpdateWithoutAvailabilityStatusesInput = {
   users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUpdateManyWithoutWorkspaceNestedInput
 }
 
 export type WorkspaceUncheckedUpdateWithoutAvailabilityStatusesInput = {
@@ -564,6 +607,63 @@ export type WorkspaceUncheckedUpdateWithoutAvailabilityStatusesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
   teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
   leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  publicHolidays?: Prisma.PublicHolidayUncheckedUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceCreateWithoutPublicHolidaysInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutWorkspaceInput
+  teams?: Prisma.TeamCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeCreateNestedManyWithoutWorkspaceInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceUncheckedCreateWithoutPublicHolidaysInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutWorkspaceInput
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutWorkspaceInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedCreateNestedManyWithoutWorkspaceInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutWorkspaceInput
+}
+
+export type WorkspaceCreateOrConnectWithoutPublicHolidaysInput = {
+  where: Prisma.WorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedCreateWithoutPublicHolidaysInput>
+}
+
+export type WorkspaceUpsertWithoutPublicHolidaysInput = {
+  update: Prisma.XOR<Prisma.WorkspaceUpdateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedUpdateWithoutPublicHolidaysInput>
+  create: Prisma.XOR<Prisma.WorkspaceCreateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedCreateWithoutPublicHolidaysInput>
+  where?: Prisma.WorkspaceWhereInput
+}
+
+export type WorkspaceUpdateToOneWithWhereWithoutPublicHolidaysInput = {
+  where?: Prisma.WorkspaceWhereInput
+  data: Prisma.XOR<Prisma.WorkspaceUpdateWithoutPublicHolidaysInput, Prisma.WorkspaceUncheckedUpdateWithoutPublicHolidaysInput>
+}
+
+export type WorkspaceUpdateWithoutPublicHolidaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutWorkspaceNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUpdateManyWithoutWorkspaceNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutWorkspaceNestedInput
+}
+
+export type WorkspaceUncheckedUpdateWithoutPublicHolidaysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutWorkspaceNestedInput
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutWorkspaceNestedInput
+  leaveTypeSettings?: Prisma.WorkspaceLeaveTypeUncheckedUpdateManyWithoutWorkspaceNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutWorkspaceNestedInput
 }
 
 
@@ -576,6 +676,7 @@ export type WorkspaceCountOutputType = {
   teams: number
   leaveTypeSettings: number
   availabilityStatuses: number
+  publicHolidays: number
 }
 
 export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -583,6 +684,7 @@ export type WorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   teams?: boolean | WorkspaceCountOutputTypeCountTeamsArgs
   leaveTypeSettings?: boolean | WorkspaceCountOutputTypeCountLeaveTypeSettingsArgs
   availabilityStatuses?: boolean | WorkspaceCountOutputTypeCountAvailabilityStatusesArgs
+  publicHolidays?: boolean | WorkspaceCountOutputTypeCountPublicHolidaysArgs
 }
 
 /**
@@ -623,6 +725,13 @@ export type WorkspaceCountOutputTypeCountAvailabilityStatusesArgs<ExtArgs extend
   where?: Prisma.UserAvailabilityStatusWhereInput
 }
 
+/**
+ * WorkspaceCountOutputType without action
+ */
+export type WorkspaceCountOutputTypeCountPublicHolidaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PublicHolidayWhereInput
+}
+
 
 export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -632,6 +741,7 @@ export type WorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   teams?: boolean | Prisma.Workspace$teamsArgs<ExtArgs>
   leaveTypeSettings?: boolean | Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>
   availabilityStatuses?: boolean | Prisma.Workspace$availabilityStatusesArgs<ExtArgs>
+  publicHolidays?: boolean | Prisma.Workspace$publicHolidaysArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workspace"]>
 
@@ -659,6 +769,7 @@ export type WorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   teams?: boolean | Prisma.Workspace$teamsArgs<ExtArgs>
   leaveTypeSettings?: boolean | Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>
   availabilityStatuses?: boolean | Prisma.Workspace$availabilityStatusesArgs<ExtArgs>
+  publicHolidays?: boolean | Prisma.Workspace$publicHolidaysArgs<ExtArgs>
   _count?: boolean | Prisma.WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -671,6 +782,7 @@ export type $WorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     teams: Prisma.$TeamPayload<ExtArgs>[]
     leaveTypeSettings: Prisma.$WorkspaceLeaveTypePayload<ExtArgs>[]
     availabilityStatuses: Prisma.$UserAvailabilityStatusPayload<ExtArgs>[]
+    publicHolidays: Prisma.$PublicHolidayPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1074,6 +1186,7 @@ export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends runtim
   teams<T extends Prisma.Workspace$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveTypeSettings<T extends Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$leaveTypeSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkspaceLeaveTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   availabilityStatuses<T extends Prisma.Workspace$availabilityStatusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$availabilityStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAvailabilityStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  publicHolidays<T extends Prisma.Workspace$publicHolidaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Workspace$publicHolidaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PublicHolidayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1587,6 +1700,30 @@ export type Workspace$availabilityStatusesArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.UserAvailabilityStatusScalarFieldEnum | Prisma.UserAvailabilityStatusScalarFieldEnum[]
+}
+
+/**
+ * Workspace.publicHolidays
+ */
+export type Workspace$publicHolidaysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PublicHoliday
+   */
+  select?: Prisma.PublicHolidaySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PublicHoliday
+   */
+  omit?: Prisma.PublicHolidayOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PublicHolidayInclude<ExtArgs> | null
+  where?: Prisma.PublicHolidayWhereInput
+  orderBy?: Prisma.PublicHolidayOrderByWithRelationInput | Prisma.PublicHolidayOrderByWithRelationInput[]
+  cursor?: Prisma.PublicHolidayWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PublicHolidayScalarFieldEnum | Prisma.PublicHolidayScalarFieldEnum[]
 }
 
 /**

@@ -98,6 +98,31 @@ export const setMyAvailabilitySchema = z.object({
   date: z.string().date().optional(),
 });
 
+export const listPublicHolidaysSchema = z
+  .object({
+    from: z.string().date().optional(),
+    to: z.string().date().optional(),
+    region: z
+      .string()
+      .trim()
+      .min(2, "region must be at least 2 characters")
+      .max(32, "region must be at most 32 characters")
+      .optional(),
+  })
+  .refine(
+    ({ from, to }) =>
+      (from === undefined && to === undefined) ||
+      (from !== undefined && to !== undefined),
+    {
+      message: "from and to must be provided together",
+      path: ["from"],
+    },
+  )
+  .refine(({ from, to }) => !from || !to || new Date(from) <= new Date(to), {
+    message: "from must be before or equal to to",
+    path: ["to"],
+  });
+
 export const reportsAnalyticsSchema = z
   .object({
     month: z

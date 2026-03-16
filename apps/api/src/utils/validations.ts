@@ -81,6 +81,23 @@ export const updateLeaveStatusSchema = z.object({
     .optional(),
 });
 
+export const availabilityBoardQuerySchema = z.object({
+  date: z.string().date().optional(),
+  team_id: z.string().optional(),
+});
+
+export const setMyAvailabilitySchema = z.object({
+  status: z.enum([
+    "AVAILABLE",
+    "ON_LEAVE",
+    "WORKING_REMOTELY",
+    "HALF_DAY",
+    "BUSY",
+    "FOCUS_TIME",
+  ]),
+  date: z.string().date().optional(),
+});
+
 export const reportsAnalyticsSchema = z
   .object({
     month: z
@@ -193,6 +210,7 @@ export const listAuditLogsSchema = z.object({
       "TEAM_UPDATED",
       "TEAM_DELETED",
       "LEAVE_TYPES_UPDATED",
+      "USER_AVAILABILITY_UPDATED",
       "LEAVE_APPLIED",
       "LEAVE_APPROVED",
       "LEAVE_REJECTED",

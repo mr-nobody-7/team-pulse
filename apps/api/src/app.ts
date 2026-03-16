@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
 import { auditRoutes } from "./routes/audit.routes.js";
 import { authRoutes } from "./routes/auth.routes.js";
+import { availabilityRoutes } from "./routes/availability.routes.js";
 import { leaveRoutes } from "./routes/leave.routes.js";
 import { reportsRoutes } from "./routes/reports.routes.js";
 import { settingsRoutes } from "./routes/settings.routes.js";
@@ -32,6 +33,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRateLimit, authRoutes);
 app.use("/leave", leaveRoutes);
+app.use("/availability", availabilityRoutes);
 app.use("/reports", reportsRoutes);
 app.use("/settings", settingsRoutes);
 app.use("/teams", teamRoutes);

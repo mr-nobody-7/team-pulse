@@ -54,6 +54,24 @@ export interface UpdateLeaveStatusInput {
   comment?: string | undefined;
 }
 
+export type AvailabilityStatusValue =
+  | "AVAILABLE"
+  | "ON_LEAVE"
+  | "WORKING_REMOTELY"
+  | "HALF_DAY"
+  | "BUSY"
+  | "FOCUS_TIME";
+
+export interface AvailabilityBoardQuery {
+  date?: string | undefined;
+  team_id?: string | undefined;
+}
+
+export interface SetMyAvailabilityInput {
+  status: AvailabilityStatusValue;
+  date?: string | undefined;
+}
+
 export interface ReportsAnalyticsQuery {
   month?: string | undefined;
   from?: string | undefined;
@@ -111,6 +129,7 @@ export interface ListAuditLogsQuery {
     | "TEAM_UPDATED"
     | "TEAM_DELETED"
     | "LEAVE_TYPES_UPDATED"
+    | "USER_AVAILABILITY_UPDATED"
     | "LEAVE_APPLIED"
     | "LEAVE_APPROVED"
     | "LEAVE_REJECTED"

@@ -41,6 +41,13 @@ export interface LoginPayload {
 export type LeaveType = "VACATION" | "SICK" | "PERSONAL" | "CASUAL";
 export type LeaveStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 export type Session = "FULL_DAY" | "FIRST_HALF" | "SECOND_HALF";
+export type AvailabilityStatus =
+  | "AVAILABLE"
+  | "ON_LEAVE"
+  | "WORKING_REMOTELY"
+  | "HALF_DAY"
+  | "BUSY"
+  | "FOCUS_TIME";
 
 export interface LeaveRequest {
   id: string;
@@ -126,6 +133,7 @@ export interface AuditLog {
     | "TEAM_UPDATED"
     | "TEAM_DELETED"
     | "LEAVE_TYPES_UPDATED"
+    | "USER_AVAILABILITY_UPDATED"
     | "LEAVE_APPLIED"
     | "LEAVE_APPROVED"
     | "LEAVE_REJECTED"
@@ -207,4 +215,26 @@ export interface LeaveTypeSetting {
 export interface LeaveTypeSettingsResponse {
   leaveTypes: LeaveTypeSetting[];
   enabledTypes: LeaveType[];
+}
+
+export interface AvailabilityStatusCount {
+  status: AvailabilityStatus;
+  count: number;
+}
+
+export interface AvailabilityBoardMember {
+  userId: string;
+  name: string;
+  email: string;
+  teamId: string | null;
+  teamName: string | null;
+  status: AvailabilityStatus;
+  isOnLeave: boolean;
+}
+
+export interface AvailabilityBoardResponse {
+  date: string;
+  total: number;
+  byStatus: AvailabilityStatusCount[];
+  members: AvailabilityBoardMember[];
 }

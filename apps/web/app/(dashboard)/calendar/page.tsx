@@ -1,19 +1,29 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useState } from "react";
+import { toast } from "sonner";
 import { PageContainer } from "@/components/layout/page-container";
+import { AvailabilityBoard } from "@/components/calendar/availability-board";
 import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { CalendarGrid } from "@/components/calendar/calendar-grid";
 import { LeaveDetailsPanel } from "@/components/calendar/leave-details-panel";
+import { useAuth } from "@/contexts/auth-context";
+import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
 import { useTeams } from "@/hooks/use-teams";
-import type { LeaveRequest } from "@/types/api";
+import api from "@/lib/axios";
+import type { AvailabilityStatus, LeaveRequest } from "@/types/api";
 
 export default function CalendarPage() {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [selectedDay, setSelectedDay] = useState<{
     date: Date;
     leaves: LeaveRequest[];
@@ -32,6 +42,30 @@ export default function CalendarPage() {
 
   const { data: teams = [] } = useTeams();
 
+  const selectedDateKey = format(selectedDate, "yyyy-MM-dd");
+
+  const { data: availabilityBoard, isLoading: isAvailabilityLoading } =
+    useAvailabilityBoard({
+      date: selectedDateKey,
+      teamId: selectedTeamId === "all" ? undefined : selectedTeamId,
+    });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async (status: AvailabilityStatus) => {
+      await api.put("/availability/me", {
+        status,
+        date: selectedDateKey,
+      });
+    },
+    onSuccess: async () => {
+      toast.success("Availability updated");
+      await queryClient.invalidateQueries({ queryKey: ["availability-board"] });
+    },
+    onError: () => {
+      toast.error("Could not update availability");
+    },
+  });
+
   const handlePrev = () =>
     setCurrentDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
 
@@ -41,11 +75,14 @@ export default function CalendarPage() {
   const handleToday = () => {
     const now = new Date();
     setCurrentDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    setSelectedDate(now);
   };
 
   const handleDayClick = (date: Date, leaves: LeaveRequest[]) => {
-    if (leaves.length === 0) return;
-    setSelectedDay({ date, leaves });
+    setSelectedDate(date);
+    if (leaves.length > 0) {
+      setSelectedDay({ date, leaves });
+    }
   };
 
   return (
@@ -76,9 +113,18 @@ export default function CalendarPage() {
           leavesMap={leavesMap}
           isLoading={isLoading}
           onDayClick={handleDayClick}
-          selectedDate={selectedDay?.date ?? null}
+          selectedDate={selectedDate}
         />
       </div>
+
+      <AvailabilityBoard
+        date={selectedDateKey}
+        board={availabilityBoard}
+        isLoading={isAvailabilityLoading}
+        currentUserId={user?.id}
+        isUpdating={updateStatusMutation.isPending}
+        onStatusChange={(status) => updateStatusMutation.mutate(status)}
+      />
 
       <LeaveDetailsPanel
         open={selectedDay !== null}

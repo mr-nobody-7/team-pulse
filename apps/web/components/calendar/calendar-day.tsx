@@ -64,9 +64,7 @@ export function CalendarDay({
               inMonth ? "bg-card" : "bg-muted/20",
               !inMonth && "opacity-50",
               densityClass,
-              hasLeaves &&
-                "cursor-pointer hover:border-primary/60 hover:shadow-sm",
-              !hasLeaves && "cursor-default",
+              "cursor-pointer hover:border-primary/60 hover:shadow-sm",
               today && "border-primary/70 ring-1 ring-primary/25",
               isSelected && "border-primary ring-2 ring-primary/40",
             )}

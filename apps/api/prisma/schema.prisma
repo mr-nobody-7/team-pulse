@@ -42,6 +42,12 @@ enum AvailabilityStatus {
   FOCUS_TIME
 }
 
+enum WorkloadLevel {
+  LIGHT
+  NORMAL
+  HEAVY
+}
+
 enum HolidayCategory {
   COMPANY
   NATIONAL
@@ -86,6 +92,7 @@ model Workspace {
   teams                Team[]
   leaveTypeSettings    WorkspaceLeaveType[]
   availabilityStatuses UserAvailabilityStatus[]
+  workloadStatuses     UserWorkloadStatus[]
   publicHolidays       PublicHoliday[]
 }
 
@@ -116,6 +123,7 @@ model User {
   teamId                 String?
   requestedLeaveRequests LeaveRequest[]
   availabilityStatuses   UserAvailabilityStatus[]
+  workloadStatuses       UserWorkloadStatus[]
 
   approvedLeaveRequests LeaveRequest[] @relation("Approver")
 }
@@ -185,6 +193,22 @@ model UserAvailabilityStatus {
   status      AvailabilityStatus @default(AVAILABLE)
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
+
+  @@unique([userId, date])
+  @@index([workspaceId, date])
+  @@index([userId, date])
+}
+
+model UserWorkloadStatus {
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
+  date        DateTime
+  workload    WorkloadLevel @default(NORMAL)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@unique([userId, date])
   @@index([workspaceId, date])

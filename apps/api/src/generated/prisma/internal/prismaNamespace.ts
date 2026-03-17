@@ -391,6 +391,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   WorkspaceLeaveType: 'WorkspaceLeaveType',
   UserAvailabilityStatus: 'UserAvailabilityStatus',
+  UserWorkloadStatus: 'UserWorkloadStatus',
   PublicHoliday: 'PublicHoliday'
 } as const
 
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "publicHoliday"
+    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "userWorkloadStatus" | "publicHoliday"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserWorkloadStatus: {
+      payload: Prisma.$UserWorkloadStatusPayload<ExtArgs>
+      fields: Prisma.UserWorkloadStatusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserWorkloadStatusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserWorkloadStatusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        findFirst: {
+          args: Prisma.UserWorkloadStatusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserWorkloadStatusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        findMany: {
+          args: Prisma.UserWorkloadStatusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>[]
+        }
+        create: {
+          args: Prisma.UserWorkloadStatusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        createMany: {
+          args: Prisma.UserWorkloadStatusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserWorkloadStatusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>[]
+        }
+        delete: {
+          args: Prisma.UserWorkloadStatusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        update: {
+          args: Prisma.UserWorkloadStatusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserWorkloadStatusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserWorkloadStatusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserWorkloadStatusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserWorkloadStatusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorkloadStatusPayload>
+        }
+        aggregate: {
+          args: Prisma.UserWorkloadStatusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserWorkloadStatus>
+        }
+        groupBy: {
+          args: Prisma.UserWorkloadStatusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorkloadStatusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserWorkloadStatusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorkloadStatusCountAggregateOutputType> | number
+        }
+      }
+    }
     PublicHoliday: {
       payload: Prisma.$PublicHolidayPayload<ExtArgs>
       fields: Prisma.PublicHolidayFieldRefs
@@ -1135,6 +1210,19 @@ export const UserAvailabilityStatusScalarFieldEnum = {
 export type UserAvailabilityStatusScalarFieldEnum = (typeof UserAvailabilityStatusScalarFieldEnum)[keyof typeof UserAvailabilityStatusScalarFieldEnum]
 
 
+export const UserWorkloadStatusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  workspaceId: 'workspaceId',
+  date: 'date',
+  workload: 'workload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserWorkloadStatusScalarFieldEnum = (typeof UserWorkloadStatusScalarFieldEnum)[keyof typeof UserWorkloadStatusScalarFieldEnum]
+
+
 export const PublicHolidayScalarFieldEnum = {
   id: 'id',
   workspaceId: 'workspaceId',
@@ -1330,6 +1418,20 @@ export type ListEnumAvailabilityStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'WorkloadLevel'
+ */
+export type EnumWorkloadLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkloadLevel'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkloadLevel[]'
+ */
+export type ListEnumWorkloadLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkloadLevel[]'>
+    
+
+
+/**
  * Reference to a field of type 'HolidayCategory'
  */
 export type EnumHolidayCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HolidayCategory'>
@@ -1458,6 +1560,7 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   workspaceLeaveType?: Prisma.WorkspaceLeaveTypeOmit
   userAvailabilityStatus?: Prisma.UserAvailabilityStatusOmit
+  userWorkloadStatus?: Prisma.UserWorkloadStatusOmit
   publicHoliday?: Prisma.PublicHolidayOmit
 }
 

@@ -53,6 +53,11 @@ export type WorkspaceLeaveType = Prisma.WorkspaceLeaveTypeModel
  */
 export type UserAvailabilityStatus = Prisma.UserAvailabilityStatusModel
 /**
+ * Model UserWorkloadStatus
+ * 
+ */
+export type UserWorkloadStatus = Prisma.UserWorkloadStatusModel
+/**
  * Model PublicHoliday
  * 
  */

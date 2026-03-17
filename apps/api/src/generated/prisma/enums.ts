@@ -59,6 +59,15 @@ export const AvailabilityStatus = {
 export type AvailabilityStatus = (typeof AvailabilityStatus)[keyof typeof AvailabilityStatus]
 
 
+export const WorkloadLevel = {
+  LIGHT: 'LIGHT',
+  NORMAL: 'NORMAL',
+  HEAVY: 'HEAVY'
+} as const
+
+export type WorkloadLevel = (typeof WorkloadLevel)[keyof typeof WorkloadLevel]
+
+
 export const HolidayCategory = {
   COMPANY: 'COMPANY',
   NATIONAL: 'NATIONAL',

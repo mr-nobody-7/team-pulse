@@ -276,6 +276,23 @@ export type EnumAvailabilityStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
 }
 
+export type EnumWorkloadLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkloadLevel | Prisma.EnumWorkloadLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel> | $Enums.WorkloadLevel
+}
+
+export type EnumWorkloadLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkloadLevel | Prisma.EnumWorkloadLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkloadLevelWithAggregatesFilter<$PrismaModel> | $Enums.WorkloadLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel>
+}
+
 export type EnumHolidayCategoryFilter<$PrismaModel = never> = {
   equals?: $Enums.HolidayCategory | Prisma.EnumHolidayCategoryFieldRefInput<$PrismaModel>
   in?: $Enums.HolidayCategory[] | Prisma.ListEnumHolidayCategoryFieldRefInput<$PrismaModel>
@@ -539,6 +556,23 @@ export type NestedEnumAvailabilityStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAvailabilityStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumWorkloadLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkloadLevel | Prisma.EnumWorkloadLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel> | $Enums.WorkloadLevel
+}
+
+export type NestedEnumWorkloadLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkloadLevel | Prisma.EnumWorkloadLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkloadLevel[] | Prisma.ListEnumWorkloadLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkloadLevelWithAggregatesFilter<$PrismaModel> | $Enums.WorkloadLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkloadLevelFilter<$PrismaModel>
 }
 
 export type NestedEnumHolidayCategoryFilter<$PrismaModel = never> = {

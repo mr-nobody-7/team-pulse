@@ -58,6 +58,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   WorkspaceLeaveType: 'WorkspaceLeaveType',
   UserAvailabilityStatus: 'UserAvailabilityStatus',
+  UserWorkloadStatus: 'UserWorkloadStatus',
   PublicHoliday: 'PublicHoliday'
 } as const
 
@@ -168,6 +169,19 @@ export const UserAvailabilityStatusScalarFieldEnum = {
 } as const
 
 export type UserAvailabilityStatusScalarFieldEnum = (typeof UserAvailabilityStatusScalarFieldEnum)[keyof typeof UserAvailabilityStatusScalarFieldEnum]
+
+
+export const UserWorkloadStatusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  workspaceId: 'workspaceId',
+  date: 'date',
+  workload: 'workload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserWorkloadStatusScalarFieldEnum = (typeof UserWorkloadStatusScalarFieldEnum)[keyof typeof UserWorkloadStatusScalarFieldEnum]
 
 
 export const PublicHolidayScalarFieldEnum = {

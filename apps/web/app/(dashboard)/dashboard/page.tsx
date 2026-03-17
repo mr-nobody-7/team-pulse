@@ -107,7 +107,8 @@ export default function DashboardPage() {
     () =>
       availabilityByDay.map((day) => ({
         ...day,
-        label: format(parseISO(day.date), "MMM d"),
+        label: format(parseISO(day.date), "EEE"),
+        fullDate: format(parseISO(day.date), "MMM d"),
       })),
     [availabilityByDay],
   );
@@ -346,8 +347,11 @@ export default function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-base font-semibold">
-                Next 7 Days Availability
+                Next 7 Days Team Availability
               </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                {summary?.availabilityScopeLabel ?? "Team"}
+              </p>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -372,7 +376,8 @@ export default function DashboardPage() {
                           {day.available} available
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {day.onLeave} on leave / {day.total} total
+                          {day.fullDate} · {day.onLeave} on leave / {day.total}{" "}
+                          total
                         </p>
                       </div>
                     </div>

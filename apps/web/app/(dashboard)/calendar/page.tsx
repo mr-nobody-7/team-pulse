@@ -4,18 +4,23 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
-import { PageContainer } from "@/components/layout/page-container";
 import { AvailabilityBoard } from "@/components/calendar/availability-board";
-import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { CalendarGrid } from "@/components/calendar/calendar-grid";
+import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { LeaveDetailsPanel } from "@/components/calendar/leave-details-panel";
+import { PageContainer } from "@/components/layout/page-container";
 import { useAuth } from "@/contexts/auth-context";
 import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
 import { usePublicHolidays } from "@/hooks/use-public-holidays";
 import { useTeams } from "@/hooks/use-teams";
 import api from "@/lib/axios";
-import type { AvailabilityStatus, LeaveRequest, PublicHoliday } from "@/types/api";
+import type {
+  AvailabilityStatus,
+  LeaveRequest,
+  PublicHoliday,
+  WorkloadLevel,
+} from "@/types/api";
 
 export default function CalendarPage() {
   const queryClient = useQueryClient();
@@ -42,12 +47,11 @@ export default function CalendarPage() {
     selectedTeamId === "all" ? undefined : selectedTeamId,
   );
 
-  const { data: holidaysMap = {}, isLoading: isHolidayLoading } = usePublicHolidays(
-    {
+  const { data: holidaysMap = {}, isLoading: isHolidayLoading } =
+    usePublicHolidays({
       year: currentDate.getFullYear(),
       month: currentDate.getMonth(),
-    },
-  );
+    });
 
   const { data: teams = [] } = useTeams();
 
@@ -60,9 +64,12 @@ export default function CalendarPage() {
     });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async (status: AvailabilityStatus) => {
+    mutationFn: async (payload: {
+      status?: AvailabilityStatus;
+      workload?: WorkloadLevel;
+    }) => {
       await api.put("/availability/me", {
-        status,
+        ...payload,
         date: selectedDateKey,
       });
     },
@@ -139,7 +146,10 @@ export default function CalendarPage() {
         isLoading={isAvailabilityLoading}
         currentUserId={user?.id}
         isUpdating={updateStatusMutation.isPending}
-        onStatusChange={(status) => updateStatusMutation.mutate(status)}
+        onStatusChange={(status) => updateStatusMutation.mutate({ status })}
+        onWorkloadChange={(workload) =>
+          updateStatusMutation.mutate({ workload })
+        }
       />
 
       <LeaveDetailsPanel

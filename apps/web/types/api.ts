@@ -48,6 +48,7 @@ export type AvailabilityStatus =
   | "HALF_DAY"
   | "BUSY"
   | "FOCUS_TIME";
+export type WorkloadLevel = "LIGHT" | "NORMAL" | "HEAVY";
 export type HolidayCategory = "COMPANY" | "NATIONAL" | "REGIONAL";
 
 export interface LeaveRequest {
@@ -184,6 +185,7 @@ export interface DashboardSummary {
   upcomingLeaves: DashboardSummaryItem[];
   leaveDistribution: DashboardLeaveDistributionItem[];
   availabilityByDay: DashboardAvailabilityItem[];
+  availabilityScopeLabel: string;
 }
 
 export interface ReportsMonthlyUsageItem {
@@ -223,6 +225,11 @@ export interface AvailabilityStatusCount {
   count: number;
 }
 
+export interface WorkloadLevelCount {
+  workload: WorkloadLevel;
+  count: number;
+}
+
 export interface AvailabilityBoardMember {
   userId: string;
   name: string;
@@ -230,6 +237,7 @@ export interface AvailabilityBoardMember {
   teamId: string | null;
   teamName: string | null;
   status: AvailabilityStatus;
+  workload: WorkloadLevel;
   isOnLeave: boolean;
 }
 
@@ -237,6 +245,7 @@ export interface AvailabilityBoardResponse {
   date: string;
   total: number;
   byStatus: AvailabilityStatusCount[];
+  byWorkload: WorkloadLevelCount[];
   members: AvailabilityBoardMember[];
 }
 

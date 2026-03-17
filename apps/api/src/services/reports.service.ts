@@ -141,6 +141,13 @@ export const getDashboardSummary = async ({
 
   const canApprove = role === "ADMIN" || role === "MANAGER";
 
+  const scopeTeamPromise = teamId
+    ? prisma.team.findFirst({
+        where: { id: teamId, workspaceId },
+        select: { name: true },
+      })
+    : Promise.resolve(null);
+
   const pendingWhere: Prisma.LeaveRequestWhereInput = {
     ...leaveScope,
     status: "PENDING",
@@ -179,6 +186,7 @@ export const getDashboardSummary = async ({
     upcomingLeaves,
     distributionRows,
     overlappingApprovedLeaves,
+    scopeTeam,
   ] = await Promise.all([
     prisma.user.count({ where: userCountWhere }),
     canApprove ? prisma.leaveRequest.count({ where: pendingWhere }) : 0,
@@ -204,7 +212,17 @@ export const getDashboardSummary = async ({
     }),
     distributionRowsPromise,
     overlappingApprovedLeavesPromise,
+    scopeTeamPromise,
   ]);
+
+  const availabilityScopeLabel =
+    role === "ADMIN"
+      ? "Workspace"
+      : scopeTeam?.name
+        ? `${scopeTeam.name} Team`
+        : role === "USER"
+          ? "Personal"
+          : "Team";
 
   const leaveDistribution = LEAVE_TYPES.map((type) => ({
     type,
@@ -239,6 +257,7 @@ export const getDashboardSummary = async ({
     upcomingLeaves,
     leaveDistribution,
     availabilityByDay,
+    availabilityScopeLabel,
   };
 };
 

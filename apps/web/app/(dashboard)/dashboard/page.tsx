@@ -19,7 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { toast } from "sonner";
-
+import { StandupBoard } from "@/components/dashboard/standup-board";
 import { PageContainer } from "@/components/layout/page-container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatCard } from "@/components/ui/stat-card";
 import { useAuth } from "@/contexts/auth-context";
+import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useDashboardSummary } from "@/hooks/use-dashboard-summary";
 import { useLeaves } from "@/hooks/use-leaves";
 import { useRole } from "@/hooks/use-role";
@@ -38,6 +39,13 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { canApprove, isManager } = useRole();
   const { data: summary, isLoading } = useDashboardSummary();
+  const todayDateKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+
+  const { data: standupBoard, isLoading: isStandupLoading } =
+    useAvailabilityBoard({
+      date: todayDateKey,
+    });
+
   const { data: pendingLeaves, isLoading: pendingLoading } = useLeaves(
     {
       status: "PENDING",
@@ -167,6 +175,17 @@ export default function DashboardPage() {
           isLoading={isLoading}
         />
       </div>
+
+      {canApprove && (
+        <div className="mt-8">
+          <StandupBoard
+            date={todayDateKey}
+            board={standupBoard}
+            isLoading={isStandupLoading}
+            scopeLabel={summary?.availabilityScopeLabel}
+          />
+        </div>
+      )}
 
       {/* Pending approvals widget — manager only */}
       {isManager && (

@@ -64,6 +64,7 @@ export const setMyAvailabilityController = async (
       metadata: {
         date: result.date,
         status: result.savedStatus,
+        workload: result.savedWorkload,
       },
     });
 

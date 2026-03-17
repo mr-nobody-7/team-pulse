@@ -4,6 +4,7 @@ import type {
   AvailabilityBoardQuery,
   AvailabilityStatusValue,
   SetMyAvailabilityInput,
+  WorkloadLevelValue,
 } from "../types/index.js";
 import { BadRequestError, NotFoundError } from "../utils/errors.js";
 
@@ -15,6 +16,8 @@ const ALL_AVAILABILITY_STATUSES: AvailabilityStatusValue[] = [
   "BUSY",
   "FOCUS_TIME",
 ];
+
+const ALL_WORKLOAD_LEVELS: WorkloadLevelValue[] = ["LIGHT", "NORMAL", "HEAVY"];
 
 function normalizeDate(date?: string) {
   const dateKey = date ?? new Date().toISOString().slice(0, 10);
@@ -89,13 +92,17 @@ export const getAvailabilityBoard = async ({
       date: dateKey,
       total: 0,
       byStatus: ALL_AVAILABILITY_STATUSES.map((status) => ({ status, count: 0 })),
+      byWorkload: ALL_WORKLOAD_LEVELS.map((workload) => ({
+        workload,
+        count: 0,
+      })),
       members: [],
     };
   }
 
   const userIds = users.map((user) => user.id);
 
-  const [statusRows, leaveRows] = await Promise.all([
+  const [statusRows, workloadRows, leaveRows] = await Promise.all([
     prisma.userAvailabilityStatus.findMany({
       where: {
         workspaceId,
@@ -105,6 +112,17 @@ export const getAvailabilityBoard = async ({
       select: {
         userId: true,
         status: true,
+      },
+    }),
+    prisma.userWorkloadStatus.findMany({
+      where: {
+        workspaceId,
+        date,
+        userId: { in: userIds },
+      },
+      select: {
+        userId: true,
+        workload: true,
       },
     }),
     prisma.leaveRequest.findMany({
@@ -121,6 +139,9 @@ export const getAvailabilityBoard = async ({
   ]);
 
   const savedStatusByUser = new Map(statusRows.map((row) => [row.userId, row.status]));
+  const savedWorkloadByUser = new Map(
+    workloadRows.map((row) => [row.userId, row.workload]),
+  );
   const onLeaveUserIds = new Set(leaveRows.map((row) => row.userId));
 
   const members = users.map((user) => {
@@ -135,6 +156,7 @@ export const getAvailabilityBoard = async ({
       teamId: user.teamId,
       teamName: user.team?.name ?? null,
       status,
+      workload: savedWorkloadByUser.get(user.id) ?? "NORMAL",
       isOnLeave: onLeaveUserIds.has(user.id),
     };
   });
@@ -154,12 +176,28 @@ export const getAvailabilityBoard = async ({
     },
   );
 
+  const countByWorkload = members.reduce<Record<WorkloadLevelValue, number>>(
+    (acc, member) => {
+      acc[member.workload] += 1;
+      return acc;
+    },
+    {
+      LIGHT: 0,
+      NORMAL: 0,
+      HEAVY: 0,
+    },
+  );
+
   return {
     date: dateKey,
     total: members.length,
     byStatus: ALL_AVAILABILITY_STATUSES.map((status) => ({
       status,
       count: countByStatus[status],
+    })),
+    byWorkload: ALL_WORKLOAD_LEVELS.map((workload) => ({
+      workload,
+      count: countByWorkload[workload],
     })),
     members,
   };
@@ -183,42 +221,108 @@ export const setMyAvailability = async (
     throw new NotFoundError("User not found");
   }
 
+  if (!input.status && !input.workload) {
+    throw new BadRequestError("At least one of status or workload is required");
+  }
+
   const { date, dateKey, dayEnd } = normalizeDate(input.date);
 
-  const saved = await prisma.userAvailabilityStatus.upsert({
-    where: {
-      userId_date: {
-        userId,
-        date,
-      },
-    },
-    create: {
-      userId,
-      workspaceId,
-      date,
-      status: input.status,
-    },
-    update: {
-      status: input.status,
-    },
-    select: {
-      status: true,
-    },
-  });
+  let savedStatus: AvailabilityStatusValue | null = null;
+  let savedWorkload: WorkloadLevelValue | null = null;
 
-  const onLeaveCount = await prisma.leaveRequest.count({
-    where: {
-      userId,
-      status: "APPROVED",
-      startDate: { lte: dayEnd },
-      endDate: { gte: date },
-    },
-  });
+  if (input.status) {
+    const availability = await prisma.userAvailabilityStatus.upsert({
+      where: {
+        userId_date: {
+          userId,
+          date,
+        },
+      },
+      create: {
+        userId,
+        workspaceId,
+        date,
+        status: input.status,
+      },
+      update: {
+        status: input.status,
+      },
+      select: {
+        status: true,
+      },
+    });
+
+    savedStatus = availability.status;
+  }
+
+  if (input.workload) {
+    const workload = await prisma.userWorkloadStatus.upsert({
+      where: {
+        userId_date: {
+          userId,
+          date,
+        },
+      },
+      create: {
+        userId,
+        workspaceId,
+        date,
+        workload: input.workload,
+      },
+      update: {
+        workload: input.workload,
+      },
+      select: {
+        workload: true,
+      },
+    });
+
+    savedWorkload = workload.workload;
+  }
+
+  const [currentStatus, currentWorkload, onLeaveCount] = await Promise.all([
+    savedStatus
+      ? Promise.resolve({ status: savedStatus })
+      : prisma.userAvailabilityStatus.findUnique({
+          where: {
+            userId_date: {
+              userId,
+              date,
+            },
+          },
+          select: { status: true },
+        }),
+    savedWorkload
+      ? Promise.resolve({ workload: savedWorkload })
+      : prisma.userWorkloadStatus.findUnique({
+          where: {
+            userId_date: {
+              userId,
+              date,
+            },
+          },
+          select: { workload: true },
+        }),
+    prisma.leaveRequest.count({
+      where: {
+        userId,
+        status: "APPROVED",
+        startDate: { lte: dayEnd },
+        endDate: { gte: date },
+      },
+    }),
+  ]);
+
+  const effectiveStatus =
+    onLeaveCount > 0 ? "ON_LEAVE" : (currentStatus?.status ?? "AVAILABLE");
+  const effectiveWorkload = currentWorkload?.workload ?? "NORMAL";
 
   return {
     date: dateKey,
-    status: onLeaveCount > 0 ? "ON_LEAVE" : saved.status,
-    savedStatus: saved.status,
+    status: effectiveStatus,
+    savedStatus,
+    workload: effectiveWorkload,
+    savedWorkload,
     isOnLeave: onLeaveCount > 0,
   };
 };

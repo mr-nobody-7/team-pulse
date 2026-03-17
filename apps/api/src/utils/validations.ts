@@ -87,15 +87,21 @@ export const availabilityBoardQuerySchema = z.object({
 });
 
 export const setMyAvailabilitySchema = z.object({
-  status: z.enum([
-    "AVAILABLE",
-    "ON_LEAVE",
-    "WORKING_REMOTELY",
-    "HALF_DAY",
-    "BUSY",
-    "FOCUS_TIME",
-  ]),
+  status: z
+    .enum([
+      "AVAILABLE",
+      "ON_LEAVE",
+      "WORKING_REMOTELY",
+      "HALF_DAY",
+      "BUSY",
+      "FOCUS_TIME",
+    ])
+    .optional(),
+  workload: z.enum(["LIGHT", "NORMAL", "HEAVY"]).optional(),
   date: z.string().date().optional(),
+}).refine((value) => value.status !== undefined || value.workload !== undefined, {
+  message: "At least one of status or workload is required",
+  path: ["status"],
 });
 
 export const listPublicHolidaysSchema = z

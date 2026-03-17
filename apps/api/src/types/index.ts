@@ -62,13 +62,16 @@ export type AvailabilityStatusValue =
   | "BUSY"
   | "FOCUS_TIME";
 
+export type WorkloadLevelValue = "LIGHT" | "NORMAL" | "HEAVY";
+
 export interface AvailabilityBoardQuery {
   date?: string | undefined;
   team_id?: string | undefined;
 }
 
 export interface SetMyAvailabilityInput {
-  status: AvailabilityStatusValue;
+  status?: AvailabilityStatusValue | undefined;
+  workload?: WorkloadLevelValue | undefined;
   date?: string | undefined;
 }
 

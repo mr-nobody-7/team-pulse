@@ -21,6 +21,7 @@ interface CalendarHeaderProps {
   teams?: Team[];
   selectedTeamId: string;
   onTeamChange: (teamId: string) => void;
+  showHeatmapLegend?: boolean;
 }
 
 export function CalendarHeader({
@@ -31,6 +32,7 @@ export function CalendarHeader({
   teams = [],
   selectedTeamId,
   onTeamChange,
+  showHeatmapLegend = false,
 }: CalendarHeaderProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -47,11 +49,33 @@ export function CalendarHeader({
             { label: "Casual", color: "bg-amber-400" },
             { label: "Holiday", color: "bg-sky-400" },
           ].map(({ label, color }) => (
-            <span key={label} className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span
+              key={label}
+              className="flex items-center gap-1 text-xs text-muted-foreground"
+            >
               <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
               {label}
             </span>
           ))}
+
+          {showHeatmapLegend && (
+            <>
+              <span className="mx-1 h-4 w-px bg-border" />
+              {[
+                { label: "Capacity full", color: "bg-emerald-400" },
+                { label: "Capacity medium", color: "bg-amber-400" },
+                { label: "Capacity low", color: "bg-red-400" },
+              ].map(({ label, color }) => (
+                <span
+                  key={label}
+                  className="flex items-center gap-1 text-xs text-muted-foreground"
+                >
+                  <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
+                  {label}
+                </span>
+              ))}
+            </>
+          )}
         </div>
       </div>
 
@@ -74,10 +98,20 @@ export function CalendarHeader({
         <Button variant="outline" size="sm" onClick={onToday}>
           Today
         </Button>
-        <Button variant="ghost" size="icon" onClick={onPrev} aria-label="Previous month">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onPrev}
+          aria-label="Previous month"
+        >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={onNext} aria-label="Next month">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onNext}
+          aria-label="Next month"
+        >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

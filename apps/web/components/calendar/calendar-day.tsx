@@ -1,13 +1,13 @@
 import { format, isSameMonth, isToday } from "date-fns";
-
-import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import type { LeaveRequest, PublicHoliday } from "@/types/api";
+import type { CapacityHeatmapCell } from "./capacity-heatmap";
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
   VACATION: "bg-blue-500",
@@ -21,8 +21,14 @@ interface CalendarDayProps {
   currentMonth: Date;
   leaves: LeaveRequest[];
   holidays: PublicHoliday[];
+  capacity?: CapacityHeatmapCell | undefined;
+  showHeatmap?: boolean;
   isSelected: boolean;
-  onClick: (date: Date, leaves: LeaveRequest[], holidays: PublicHoliday[]) => void;
+  onClick: (
+    date: Date,
+    leaves: LeaveRequest[],
+    holidays: PublicHoliday[],
+  ) => void;
 }
 
 export function CalendarDay({
@@ -30,6 +36,8 @@ export function CalendarDay({
   currentMonth,
   leaves,
   holidays,
+  capacity,
+  showHeatmap = false,
   isSelected,
   onClick,
 }: CalendarDayProps) {
@@ -38,7 +46,7 @@ export function CalendarDay({
   const hasLeaves = leaves.length > 0;
   const hasHolidays = holidays.length > 0;
 
-  // Determine density — colour the cell bg when many people are off
+  // Density fallback for non-heatmap views
   const densityClass =
     leaves.length >= 5
       ? "bg-red-50 dark:bg-red-950/20"
@@ -48,12 +56,27 @@ export function CalendarDay({
           ? "bg-green-50/60 dark:bg-green-950/20"
           : "";
 
+  const heatmapClass =
+    showHeatmap && inMonth && capacity
+      ? capacity.level === "LOW"
+        ? "bg-red-100 dark:bg-red-950/30"
+        : capacity.level === "MEDIUM"
+          ? "bg-amber-100 dark:bg-amber-950/30"
+          : "bg-emerald-100 dark:bg-emerald-950/30"
+      : "";
+
   const countBadgeClass =
-    leaves.length >= 5
-      ? "bg-red-600 text-white"
-      : leaves.length >= 3
-        ? "bg-amber-500 text-white"
-        : "bg-green-600 text-white";
+    showHeatmap && capacity
+      ? capacity.level === "LOW"
+        ? "bg-red-600 text-white"
+        : capacity.level === "MEDIUM"
+          ? "bg-amber-500 text-white"
+          : "bg-emerald-600 text-white"
+      : leaves.length >= 5
+        ? "bg-red-600 text-white"
+        : leaves.length >= 3
+          ? "bg-amber-500 text-white"
+          : "bg-green-600 text-white";
 
   return (
     <TooltipProvider>
@@ -66,12 +89,12 @@ export function CalendarDay({
               "relative flex min-h-22 w-full flex-col rounded-lg border p-2 text-left transition-all",
               inMonth ? "bg-card" : "bg-muted/20",
               !inMonth && "opacity-50",
-              densityClass,
+              heatmapClass || densityClass,
               "cursor-pointer hover:border-primary/60 hover:shadow-sm",
               today && "border-primary/70 ring-1 ring-primary/25",
               isSelected && "border-primary ring-2 ring-primary/40",
             )}
-            aria-label={`${format(date, "MMMM d")}${hasLeaves ? `, ${leaves.length} on leave` : ""}${hasHolidays ? `, ${holidays.length} holiday event${holidays.length === 1 ? "" : "s"}` : ""}`}
+            aria-label={`${format(date, "MMMM d")}${hasLeaves ? `, ${leaves.length} on leave` : ""}${showHeatmap && capacity ? `, capacity ${capacity.capacityPercent}%` : ""}${hasHolidays ? `, ${holidays.length} holiday event${holidays.length === 1 ? "" : "s"}` : ""}`}
           >
             {/* Day number */}
             <span
@@ -96,6 +119,12 @@ export function CalendarDay({
                 )}
               >
                 {leaves.length}
+              </span>
+            )}
+
+            {showHeatmap && capacity && (
+              <span className="mt-1 text-[10px] font-medium text-muted-foreground">
+                Capacity {capacity.capacityPercent}%
               </span>
             )}
 
@@ -147,6 +176,12 @@ export function CalendarDay({
             {hasLeaves && (
               <>
                 <p>{leaves.length} on leave</p>
+                {showHeatmap && capacity && (
+                  <p>
+                    Capacity {capacity.capacityPercent}% ·{" "}
+                    {capacity.availableCount}/{capacity.totalCount} available
+                  </p>
+                )}
                 <ul className="space-y-0.5">
                   {leaves.slice(0, 5).map((leave) => (
                     <li key={leave.id}>
@@ -159,7 +194,10 @@ export function CalendarDay({
             )}
             {hasHolidays && (
               <>
-                <p>{holidays.length} holiday event{holidays.length === 1 ? "" : "s"}</p>
+                <p>
+                  {holidays.length} holiday event
+                  {holidays.length === 1 ? "" : "s"}
+                </p>
                 <ul className="space-y-0.5">
                   {holidays.slice(0, 4).map((holiday) => (
                     <li key={holiday.id}>

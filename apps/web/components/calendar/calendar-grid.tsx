@@ -7,13 +7,16 @@ import {
   startOfMonth,
   subDays,
 } from "date-fns";
-
-import { Spinner } from "@/components/ui/spinner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarDay } from "./calendar-day";
+import { Spinner } from "@/components/ui/spinner";
 import type { CalendarLeavesMap } from "@/hooks/use-calendar-leaves";
 import type { CalendarHolidaysMap } from "@/hooks/use-public-holidays";
 import type { LeaveRequest, PublicHoliday } from "@/types/api";
+import { CalendarDay } from "./calendar-day";
+import {
+  buildCapacityHeatmap,
+  toCapacityHeatmapCell,
+} from "./capacity-heatmap";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -26,15 +29,23 @@ interface CalendarGridProps {
   currentDate: Date;
   leavesMap: CalendarLeavesMap;
   holidaysMap: CalendarHolidaysMap;
+  totalMembers?: number;
+  showHeatmap?: boolean;
   isLoading: boolean;
   selectedDate: Date | null;
-  onDayClick: (date: Date, leaves: LeaveRequest[], holidays: PublicHoliday[]) => void;
+  onDayClick: (
+    date: Date,
+    leaves: LeaveRequest[],
+    holidays: PublicHoliday[],
+  ) => void;
 }
 
 export function CalendarGrid({
   currentDate,
   leavesMap,
   holidaysMap,
+  totalMembers = 0,
+  showHeatmap = false,
   isLoading,
   selectedDate,
   onDayClick,
@@ -60,6 +71,9 @@ export function CalendarGrid({
 
   const allDays = [...leadingDays, ...monthDays, ...trailingDays];
   const showSkeleton = isLoading && Object.keys(leavesMap).length === 0;
+  const capacityMap = showHeatmap
+    ? buildCapacityHeatmap(leavesMap, totalMembers)
+    : {};
 
   return (
     <div className="relative rounded-xl border bg-card">
@@ -101,13 +115,22 @@ export function CalendarGrid({
             ))
           : allDays.map((date) => {
               const key = format(date, "yyyy-MM-dd");
+              const leavesForDay = leavesMap[key] ?? [];
+              const capacityForDay =
+                showHeatmap && totalMembers > 0
+                  ? (capacityMap[key] ??
+                    toCapacityHeatmapCell(leavesForDay.length, totalMembers))
+                  : undefined;
+
               return (
                 <CalendarDay
                   key={key}
                   date={date}
                   currentMonth={currentDate}
-                  leaves={leavesMap[key] ?? []}
+                  leaves={leavesForDay}
                   holidays={holidaysMap[key] ?? []}
+                  capacity={capacityForDay}
+                  showHeatmap={showHeatmap}
                   isSelected={
                     selectedDate !== null &&
                     date.toDateString() === selectedDate.toDateString()

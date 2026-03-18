@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
 import { usePublicHolidays } from "@/hooks/use-public-holidays";
+import { useRole } from "@/hooks/use-role";
 import { useTeams } from "@/hooks/use-teams";
 import api from "@/lib/axios";
 import type {
@@ -25,6 +26,7 @@ import type {
 export default function CalendarPage() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { canApprove } = useRole();
   const [currentDate, setCurrentDate] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -62,6 +64,9 @@ export default function CalendarPage() {
       date: selectedDateKey,
       teamId: selectedTeamId === "all" ? undefined : selectedTeamId,
     });
+
+  const showCapacityHeatmap = canApprove;
+  const scopedTotalMembers = availabilityBoard?.total ?? 0;
 
   const updateStatusMutation = useMutation({
     mutationFn: async (payload: {
@@ -124,6 +129,7 @@ export default function CalendarPage() {
         teams={teams}
         selectedTeamId={selectedTeamId}
         onTeamChange={setSelectedTeamId}
+        showHeatmapLegend={showCapacityHeatmap}
       />
 
       <div
@@ -134,6 +140,8 @@ export default function CalendarPage() {
           currentDate={currentDate}
           leavesMap={leavesMap}
           holidaysMap={holidaysMap}
+          totalMembers={scopedTotalMembers}
+          showHeatmap={showCapacityHeatmap}
           isLoading={isLoading || isHolidayLoading}
           onDayClick={handleDayClick}
           selectedDate={selectedDate}

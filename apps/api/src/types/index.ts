@@ -54,6 +54,17 @@ export interface UpdateLeaveStatusInput {
   comment?: string | undefined;
 }
 
+export interface LeaveCapacityWarning {
+  teamId: string;
+  teamName: string;
+  teamSize: number;
+  projectedOffCount: number;
+  projectedAvailableCount: number;
+  projectedCapacityPercent: number;
+  shouldWarn: boolean;
+  message: string;
+}
+
 export type AvailabilityStatusValue =
   | "AVAILABLE"
   | "ON_LEAVE"

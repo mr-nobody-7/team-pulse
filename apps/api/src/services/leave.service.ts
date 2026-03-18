@@ -2,6 +2,7 @@ import type { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/db.js";
 import type {
   ApplyLeaveInput,
+  LeaveCapacityWarning,
   ListLeaveQuery,
   UpdateLeaveStatusInput,
 } from "../types/index.js";
@@ -39,8 +40,115 @@ function toEndSlot(date: Date, session: SessionValue): number {
   return session === "FIRST_HALF" ? day * 2 : day * 2 + 1;
 }
 
-// ── Team conflict threshold (warn when ≥ this fraction of the team is off) ───
-const TEAM_CONFLICT_THRESHOLD = 0.5; // 50 %
+const TEAM_MIN_CAPACITY_WARNING_PERCENT = 50;
+
+function startOfUtcDay(date: Date): Date {
+  const copy = new Date(date);
+  copy.setUTCHours(0, 0, 0, 0);
+  return copy;
+}
+
+function endOfUtcDay(date: Date): Date {
+  const copy = new Date(date);
+  copy.setUTCHours(23, 59, 59, 999);
+  return copy;
+}
+
+function getUtcDaysBetween(startDate: Date, endDate: Date): Date[] {
+  const start = startOfUtcDay(startDate);
+  const end = startOfUtcDay(endDate);
+  const days: Date[] = [];
+
+  for (
+    let cursor = new Date(start);
+    cursor <= end;
+    cursor = new Date(cursor.getTime() + 86_400_000)
+  ) {
+    days.push(new Date(cursor));
+  }
+
+  return days;
+}
+
+function leaveCoversDay(
+  leave: { startDate: Date; endDate: Date },
+  day: Date,
+): boolean {
+  const dayStart = startOfUtcDay(day);
+  const dayEnd = endOfUtcDay(day);
+  return leave.startDate <= dayEnd && leave.endDate >= dayStart;
+}
+
+async function buildLeaveCapacityWarning(
+  workspaceId: string,
+  teamId: string,
+  startDate: Date,
+  endDate: Date,
+  options?: {
+    excludeLeaveId?: string | undefined;
+    includeCurrentLeaveInProjection?: boolean | undefined;
+  },
+): Promise<LeaveCapacityWarning> {
+  const [team, teamSize, overlappingLeaves] = await Promise.all([
+    prisma.team.findFirst({
+      where: { id: teamId, workspaceId },
+      select: { name: true },
+    }),
+    prisma.user.count({
+      where: { workspaceId, teamId, isActive: true },
+    }),
+    prisma.leaveRequest.findMany({
+      where: {
+        teamId,
+        status: { notIn: ["CANCELLED", "REJECTED"] },
+        startDate: { lte: endDate },
+        endDate: { gte: startDate },
+        ...(options?.excludeLeaveId
+          ? { id: { not: options.excludeLeaveId } }
+          : {}),
+      },
+      select: {
+        startDate: true,
+        endDate: true,
+      },
+    }),
+  ]);
+
+  const allDays = getUtcDaysBetween(startDate, endDate);
+  const includeCurrentLeave = options?.includeCurrentLeaveInProjection ?? false;
+
+  let projectedOffCount = includeCurrentLeave ? 1 : 0;
+
+  for (const day of allDays) {
+    const offCountForDay =
+      overlappingLeaves.filter((leave) => leaveCoversDay(leave, day)).length +
+      (includeCurrentLeave ? 1 : 0);
+
+    if (offCountForDay > projectedOffCount) {
+      projectedOffCount = offCountForDay;
+    }
+  }
+
+  projectedOffCount = Math.min(projectedOffCount, teamSize);
+  const projectedAvailableCount = Math.max(teamSize - projectedOffCount, 0);
+  const projectedCapacityPercent =
+    teamSize > 0 ? Math.round((projectedAvailableCount / teamSize) * 100) : 0;
+
+  const shouldWarn =
+    projectedCapacityPercent <= TEAM_MIN_CAPACITY_WARNING_PERCENT;
+  const teamName = team?.name ?? "Team";
+
+  return {
+    teamId,
+    teamName,
+    teamSize,
+    projectedOffCount,
+    projectedAvailableCount,
+    projectedCapacityPercent,
+    shouldWarn,
+    message: `⚠ ${teamName} team capacity will drop to ${projectedCapacityPercent}% (${projectedAvailableCount}/${teamSize} available).`,
+  };
+}
 
 // ── Service ───────────────────────────────────────────────────────────────────
 
@@ -130,25 +238,16 @@ export const applyLeave = async (
     }
   }
 
-  // ── Conflict detection: team-level warning ──────────────────────────────────
-  const [teamSize, overlappingTeamLeaves] = await Promise.all([
-    prisma.user.count({ where: { teamId, isActive: true } }),
-    prisma.leaveRequest.count({
-      where: {
-        teamId,
-        userId: { not: userId },
-        status: { notIn: ["CANCELLED", "REJECTED"] },
-        startDate: { lte: endDate },
-        endDate: { gte: startDate },
-      },
-    }),
-  ]);
+  const capacityWarning = await buildLeaveCapacityWarning(
+    workspaceId,
+    teamId,
+    startDate,
+    endDate,
+    { includeCurrentLeaveInProjection: true },
+  );
 
-  const overlapFraction = teamSize > 0 ? overlappingTeamLeaves / teamSize : 0;
-  const conflictDetected = overlapFraction >= TEAM_CONFLICT_THRESHOLD;
-  const warningMessage = conflictDetected
-    ? `High team overlap: ${overlappingTeamLeaves} of ${teamSize} team member(s) (${Math.round(overlapFraction * 100)}%) are already on leave during this period.`
-    : undefined;
+  const conflictDetected = capacityWarning.shouldWarn;
+  const warningMessage = conflictDetected ? capacityWarning.message : undefined;
 
   // ── Create leave request ────────────────────────────────────────────────────
   // approverId and comment are intentionally omitted — set only by an approver.
@@ -166,7 +265,12 @@ export const applyLeave = async (
     },
   });
 
-  return { leaveRequest, warning: conflictDetected, warningMessage };
+  return {
+    leaveRequest,
+    warning: conflictDetected,
+    warningMessage,
+    capacityWarning,
+  };
 };
 
 // ── List leave requests ───────────────────────────────────────────────────────
@@ -233,7 +337,34 @@ export const listLeave = async (
     }),
   ]);
 
-  return { leaves, total, page, limit };
+  const shouldIncludeCapacityWarnings =
+    status === "PENDING" && (role === "MANAGER" || role === "ADMIN");
+
+  if (!shouldIncludeCapacityWarnings) {
+    return { leaves, total, page, limit };
+  }
+
+  const leavesWithCapacityWarnings = await Promise.all(
+    leaves.map(async (leave) => {
+      const capacityWarning = await buildLeaveCapacityWarning(
+        workspaceId,
+        leave.teamId,
+        leave.startDate,
+        leave.endDate,
+        {
+          excludeLeaveId: leave.id,
+          includeCurrentLeaveInProjection: leave.status === "PENDING",
+        },
+      );
+
+      return {
+        ...leave,
+        capacityWarning: capacityWarning.shouldWarn ? capacityWarning : null,
+      };
+    }),
+  );
+
+  return { leaves: leavesWithCapacityWarnings, total, page, limit };
 };
 
 // ── Approve / Reject leave ────────────────────────────────────────────────────

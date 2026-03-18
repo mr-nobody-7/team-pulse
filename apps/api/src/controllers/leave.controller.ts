@@ -1,9 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
-import { sendSuccess } from "../utils/response.js";
-import { applyLeave, cancelLeave, listLeave, updateLeaveStatus } from "../services/leave.service.js";
+import {
+  applyLeave,
+  cancelLeave,
+  listLeave,
+  updateLeaveStatus,
+} from "../services/leave.service.js";
 import { createAuditLog } from "../utils/audit.js";
-import { listLeaveSchema } from "../utils/validations.js";
 import { BadRequestError } from "../utils/errors.js";
+import { sendSuccess } from "../utils/response.js";
+import { listLeaveSchema } from "../utils/validations.js";
 
 export const applyLeaveController = async (
   req: Request,
@@ -31,6 +36,11 @@ export const applyLeaveController = async (
         endSession: result.leaveRequest.endSession,
         teamConflictWarning: result.warning,
         warningMessage: result.warningMessage ?? null,
+        projectedTeamCapacityPercent:
+          result.capacityWarning.projectedCapacityPercent,
+        projectedTeamAvailableCount:
+          result.capacityWarning.projectedAvailableCount,
+        projectedTeamSize: result.capacityWarning.teamSize,
       },
     });
 
@@ -84,7 +94,7 @@ export const updateLeaveStatusController = async (
 ) => {
   try {
     const { userId, workspaceId, role, teamId } = req.user!;
-    const rawId = req.params["id"];
+    const rawId = req.params.id;
     const leaveId = Array.isArray(rawId) ? rawId[0] : rawId;
 
     if (!leaveId) {
@@ -92,7 +102,10 @@ export const updateLeaveStatusController = async (
     }
 
     // req.body is already validated + typed by the validate() middleware
-    const input = req.body as { status: "APPROVED" | "REJECTED"; comment?: string | undefined };
+    const input = req.body as {
+      status: "APPROVED" | "REJECTED";
+      comment?: string | undefined;
+    };
 
     const updated = await updateLeaveStatus(
       leaveId,
@@ -134,7 +147,7 @@ export const cancelLeaveController = async (
 ) => {
   try {
     const { userId, workspaceId } = req.user!;
-    const rawId = req.params["id"];
+    const rawId = req.params.id;
     const leaveId = Array.isArray(rawId) ? rawId[0] : rawId;
 
     if (!leaveId) {

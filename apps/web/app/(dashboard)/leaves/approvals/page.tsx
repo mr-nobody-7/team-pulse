@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
+import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -120,6 +121,15 @@ export default function ApprovalsPage() {
                           }))
                         }
                       />
+
+                      {leave.capacityWarning && (
+                        <div className="mt-2 rounded-md border border-amber-300/70 bg-amber-50/70 p-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+                          <p className="flex items-start gap-1.5">
+                            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            <span>{leave.capacityWarning.message}</span>
+                          </p>
+                        </div>
+                      )}
 
                       <div className="mt-2 flex gap-2">
                         <Button

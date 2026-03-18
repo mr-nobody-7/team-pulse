@@ -51,6 +51,17 @@ export type AvailabilityStatus =
 export type WorkloadLevel = "LIGHT" | "NORMAL" | "HEAVY";
 export type HolidayCategory = "COMPANY" | "NATIONAL" | "REGIONAL";
 
+export interface LeaveCapacityWarning {
+  teamId: string;
+  teamName: string;
+  teamSize: number;
+  projectedOffCount: number;
+  projectedAvailableCount: number;
+  projectedCapacityPercent: number;
+  shouldWarn: boolean;
+  message: string;
+}
+
 export interface LeaveRequest {
   id: string;
   userId: string;
@@ -67,6 +78,7 @@ export interface LeaveRequest {
   created_at: string;
   user: { id: string; name: string; email: string };
   approver: { id: string; name: string } | null;
+  capacityWarning?: LeaveCapacityWarning | null;
 }
 
 export interface ApplyLeavePayload {

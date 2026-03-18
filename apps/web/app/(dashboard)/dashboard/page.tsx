@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
 import {
+  AlertTriangle,
   CalendarCheck2,
   CalendarDays,
   ClipboardList,
@@ -229,6 +230,12 @@ export default function DashboardPage() {
                               {format(parseISO(leave.startDate), "MMM d")} →{" "}
                               {format(parseISO(leave.endDate), "MMM d")}
                             </span>
+                            {leave.capacityWarning && (
+                              <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-amber-700 dark:text-amber-300">
+                                <AlertTriangle className="h-3.5 w-3.5" />
+                                {leave.capacityWarning.message}
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex items-center gap-2">

@@ -40,7 +40,25 @@ function toEndSlot(date: Date, session: SessionValue): number {
   return session === "FIRST_HALF" ? day * 2 : day * 2 + 1;
 }
 
-const TEAM_MIN_CAPACITY_WARNING_PERCENT = 50;
+const DEFAULT_TEAM_MIN_CAPACITY_WARNING_PERCENT = 50;
+
+function resolveTeamCapacityWarningThresholdPercent(): number {
+  const raw = process.env.TEAM_MIN_CAPACITY_WARNING_PERCENT;
+
+  if (!raw) {
+    return DEFAULT_TEAM_MIN_CAPACITY_WARNING_PERCENT;
+  }
+
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) {
+    return DEFAULT_TEAM_MIN_CAPACITY_WARNING_PERCENT;
+  }
+
+  return Math.min(Math.max(Math.round(parsed), 0), 100);
+}
+
+const TEAM_MIN_CAPACITY_WARNING_PERCENT =
+  resolveTeamCapacityWarningThresholdPercent();
 
 function startOfUtcDay(date: Date): Date {
   const copy = new Date(date);

@@ -22,6 +22,7 @@ interface CalendarHeaderProps {
   selectedTeamId: string;
   onTeamChange: (teamId: string) => void;
   showHeatmapLegend?: boolean;
+  showAllTeamsOption?: boolean;
 }
 
 export function CalendarHeader({
@@ -33,6 +34,7 @@ export function CalendarHeader({
   selectedTeamId,
   onTeamChange,
   showHeatmapLegend = false,
+  showAllTeamsOption = true,
 }: CalendarHeaderProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -83,10 +85,12 @@ export function CalendarHeader({
         {/* Team filter */}
         <Select value={selectedTeamId} onValueChange={onTeamChange}>
           <SelectTrigger size="sm" className="w-36">
-            <SelectValue placeholder="All teams" />
+            <SelectValue placeholder="Team" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All teams</SelectItem>
+            {showAllTeamsOption && (
+              <SelectItem value="all">All teams</SelectItem>
+            )}
             {teams.map((team) => (
               <SelectItem key={team.id} value={team.id}>
                 {team.name}

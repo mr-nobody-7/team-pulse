@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AvailabilityBoard } from "@/components/calendar/availability-board";
 import { CalendarGrid } from "@/components/calendar/calendar-grid";
@@ -26,7 +26,7 @@ import type {
 export default function CalendarPage() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { canApprove } = useRole();
+  const { role, canApprove } = useRole();
   const [currentDate, setCurrentDate] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -41,12 +41,51 @@ export default function CalendarPage() {
   // "" means "all teams"; any truthy string is a specific team id
   const [selectedTeamId, setSelectedTeamId] = useState("all");
 
+  useEffect(() => {
+    if (role !== "MANAGER") {
+      return;
+    }
+
+    const managerTeamId = user?.teamId;
+
+    if (!managerTeamId) {
+      setSelectedTeamId("all");
+      return;
+    }
+
+    setSelectedTeamId((current) =>
+      current === managerTeamId ? current : managerTeamId,
+    );
+  }, [role, user?.teamId]);
+
   const monthKey = `${currentDate.getFullYear()}-${currentDate.getMonth()}`;
+
+  const { data: teams = [] } = useTeams();
+
+  const visibleTeams = useMemo(() => {
+    if (role !== "MANAGER") {
+      return teams;
+    }
+
+    if (!user?.teamId) {
+      return [];
+    }
+
+    return teams.filter((team) => team.id === user.teamId);
+  }, [role, teams, user?.teamId]);
+
+  const canSelectAllTeams = role === "ADMIN";
+  const effectiveTeamId =
+    role === "MANAGER"
+      ? (user?.teamId ?? undefined)
+      : selectedTeamId === "all"
+        ? undefined
+        : selectedTeamId;
 
   const { data: leavesMap = {}, isLoading } = useCalendarLeaves(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    selectedTeamId === "all" ? undefined : selectedTeamId,
+    effectiveTeamId,
   );
 
   const { data: holidaysMap = {}, isLoading: isHolidayLoading } =
@@ -55,14 +94,12 @@ export default function CalendarPage() {
       month: currentDate.getMonth(),
     });
 
-  const { data: teams = [] } = useTeams();
-
   const selectedDateKey = format(selectedDate, "yyyy-MM-dd");
 
   const { data: availabilityBoard, isLoading: isAvailabilityLoading } =
     useAvailabilityBoard({
       date: selectedDateKey,
-      teamId: selectedTeamId === "all" ? undefined : selectedTeamId,
+      teamId: effectiveTeamId,
     });
 
   const showCapacityHeatmap = canApprove;
@@ -126,10 +163,13 @@ export default function CalendarPage() {
         onPrev={handlePrev}
         onNext={handleNext}
         onToday={handleToday}
-        teams={teams}
-        selectedTeamId={selectedTeamId}
+        teams={visibleTeams}
+        selectedTeamId={
+          role === "MANAGER" ? (user?.teamId ?? "all") : selectedTeamId
+        }
         onTeamChange={setSelectedTeamId}
         showHeatmapLegend={showCapacityHeatmap}
+        showAllTeamsOption={canSelectAllTeams}
       />
 
       <div

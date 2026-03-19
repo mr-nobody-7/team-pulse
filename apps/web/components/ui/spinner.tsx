@@ -13,8 +13,7 @@ const sizeMap: Record<NonNullable<SpinnerProps["size"]>, string> = {
 
 export function Spinner({ className, size = "md" }: SpinnerProps) {
   return (
-    <div
-      role="status"
+    <output
       aria-label="Loading"
       className={cn(
         "animate-spin rounded-full border-2 border-muted border-t-primary",

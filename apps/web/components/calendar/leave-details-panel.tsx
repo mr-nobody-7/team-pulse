@@ -1,7 +1,8 @@
 "use client";
 
 import { format } from "date-fns";
-
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -9,16 +10,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { LeaveRequest, PublicHoliday } from "@/types/api";
 
 interface LeaveDetailsPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDay: { date: Date; leaves: LeaveRequest[]; holidays: PublicHoliday[] } | null;
+  selectedDay: {
+    date: Date;
+    leaves: LeaveRequest[];
+    holidays: PublicHoliday[];
+  } | null;
 }
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
@@ -89,7 +92,10 @@ function LeaveCard({ leave, day }: { leave: LeaveRequest; day: Date }) {
   );
 }
 
-const HOLIDAY_CATEGORY_LABEL: Record<"COMPANY" | "NATIONAL" | "REGIONAL", string> = {
+const HOLIDAY_CATEGORY_LABEL: Record<
+  "COMPANY" | "NATIONAL" | "REGIONAL",
+  string
+> = {
   COMPANY: "Company",
   NATIONAL: "National",
   REGIONAL: "Regional",

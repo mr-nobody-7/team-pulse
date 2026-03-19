@@ -1,10 +1,9 @@
 "use client";
 
-import { createContext, useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { getMe, logout as logoutApi } from "@/services/auth.service";
+import { createContext, useContext } from "react";
 import type { MeData } from "@/services/auth.service";
+import { getMe, logout as logoutApi } from "@/services/auth.service";
 
 type MeUser = MeData["user"];
 

@@ -4,9 +4,8 @@ import api from "@/lib/axios";
 import type { ApiResponse, DashboardSummary } from "@/types/api";
 
 async function fetchDashboardSummary(): Promise<DashboardSummary> {
-  const { data } = await api.get<ApiResponse<DashboardSummary>>(
-    "/reports/summary",
-  );
+  const { data } =
+    await api.get<ApiResponse<DashboardSummary>>("/reports/summary");
 
   return data.data;
 }

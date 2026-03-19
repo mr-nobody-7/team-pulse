@@ -44,11 +44,11 @@ export function StatCard({
           </div>
         ) : (
           <>
-            <p className="text-3xl font-bold tracking-tight">
-              {value ?? "—"}
-            </p>
+            <p className="text-3xl font-bold tracking-tight">{value ?? "—"}</p>
             {description && (
-              <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {description}
+              </p>
             )}
           </>
         )}

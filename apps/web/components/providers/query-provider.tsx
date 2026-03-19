@@ -1,14 +1,14 @@
 "use client";
 
-import { isAxiosError } from "axios";
 import {
   MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { isAxiosError } from "axios";
 import { useState } from "react";
+import { toast } from "sonner";
 
 function makeQueryClient() {
   return new QueryClient({

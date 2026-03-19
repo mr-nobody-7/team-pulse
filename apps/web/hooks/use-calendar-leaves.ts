@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   addDays,
   eachDayOfInterval,
@@ -6,7 +7,6 @@ import {
   parseISO,
   startOfMonth,
 } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/axios";
 import type { ApiResponse, LeaveRequest, ListLeaveResponse } from "@/types/api";
@@ -14,21 +14,47 @@ import type { ApiResponse, LeaveRequest, ListLeaveResponse } from "@/types/api";
 /** Map keyed by "yyyy-MM-dd" → all leaves that cover that day */
 export type CalendarLeavesMap = Record<string, LeaveRequest[]>;
 
+const LEAVE_PAGE_SIZE = 50;
+
+async function fetchApprovedLeaves(teamId?: string): Promise<LeaveRequest[]> {
+  const leaves: LeaveRequest[] = [];
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages) {
+    const { data } = await api.get<ApiResponse<ListLeaveResponse>>("/leave", {
+      params: {
+        status: "APPROVED",
+        page,
+        limit: LEAVE_PAGE_SIZE,
+        ...(teamId ? { team_id: teamId } : {}),
+      },
+    });
+
+    const payload = data.data;
+    leaves.push(...payload.leaves);
+
+    const safeLimit = payload.limit > 0 ? payload.limit : LEAVE_PAGE_SIZE;
+    totalPages = Math.max(1, Math.ceil(payload.total / safeLimit));
+
+    if (payload.leaves.length === 0) {
+      break;
+    }
+
+    page += 1;
+  }
+
+  return leaves;
+}
+
 async function fetchMonthLeaves(
   year: number,
   month: number,
   teamId?: string,
 ): Promise<CalendarLeavesMap> {
-  // The API has no date-range filter, so we fetch all approved leaves
-  // in one call (high limit) and filter/expand client-side.
-  const { data } = await api.get<ApiResponse<ListLeaveResponse>>("/leave", {
-    params: {
-      status: "APPROVED",
-      page: 1,
-      limit: 500,
-      ...(teamId ? { team_id: teamId } : {}),
-    },
-  });
+  // The API has no date-range filter, so we fetch approved leaves across pages
+  // and filter/expand client-side for the visible grid window.
+  const leaves = await fetchApprovedLeaves(teamId);
 
   const monthStart = startOfMonth(new Date(year, month));
   const monthEnd = endOfMonth(new Date(year, month));
@@ -38,7 +64,7 @@ async function fetchMonthLeaves(
 
   const map: CalendarLeavesMap = {};
 
-  for (const leave of data.data.leaves) {
+  for (const leave of leaves) {
     const leaveStart = parseISO(leave.startDate);
     const leaveEnd = parseISO(leave.endDate);
 

@@ -51,3 +51,4 @@ Last Updated: 2026-03-19
 |---|---|---|---|
 | 1 | Checklist created | N/A | _pending_ |
 | 2 | Biome autofix pass in `apps/web` + spinner a11y semantic fix | `pnpm check`, `pnpm lint`, `pnpm build`, API/Web `tsc --noEmit` | _pending_ |
+| 3 | Tailwind shorthand diagnostics fixed (`navbar`, `select`, `availability-board`) | `pnpm check`, `pnpm lint`, VS Code diagnostics clean for touched files | _pending_ |

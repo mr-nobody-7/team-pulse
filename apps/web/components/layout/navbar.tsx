@@ -44,7 +44,7 @@ export function Navbar({ userName, userEmail, onLogout }: NavbarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
       {/* Left slot — page title / breadcrumbs added per-page via portal */}
       <div />
 

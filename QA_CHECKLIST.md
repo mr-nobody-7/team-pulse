@@ -1,6 +1,6 @@
 # Team Pulse QA Checklist
 
-Last Updated: 2026-03-19
+Last Updated: 2026-03-20
 
 ## 1) Baseline Quality Gates
 
@@ -52,3 +52,10 @@ Last Updated: 2026-03-19
 | 1 | Checklist created | N/A | _pending_ |
 | 2 | Biome autofix pass in `apps/web` + spinner a11y semantic fix | `pnpm check`, `pnpm lint`, `pnpm build`, API/Web `tsc --noEmit` | _pending_ |
 | 3 | Tailwind shorthand diagnostics fixed (`navbar`, `select`, `availability-board`) | `pnpm check`, `pnpm lint`, VS Code diagnostics clean for touched files | _pending_ |
+| 4 | API error mapping improved for DB connectivity failures (`500` → `503`) | `pnpm -C apps/api exec tsc --noEmit`, `pnpm check`, runtime `POST /auth/register` returns `503` when DB is unreachable | _pending_ |
+
+## 5) Runtime QA Blockers
+
+| Blocker | Impact | Evidence | Status |
+|---|---|---|---|
+| Neon/Postgres DNS/connectivity failure (`EAI_AGAIN`) from local environment | Prevents live end-to-end verification for auth/leave/reports/audit flows | `POST /auth/register` fails before business logic due DB connectivity; now returns `503 Database temporarily unavailable` | 🚧 Open |

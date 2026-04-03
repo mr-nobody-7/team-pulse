@@ -7,6 +7,13 @@ import {
 import { sendSuccess } from "../utils/response.js";
 import { createAuditLog } from "../utils/audit.js";
 
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: IS_PRODUCTION,
+  sameSite: IS_PRODUCTION ? "none" : "strict",
+} as const;
+
 export const registerController = async (
   req: Request,
   res: Response,
@@ -54,9 +61,7 @@ export const loginController = async (
     });
 
     res.cookie("token", result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      ...AUTH_COOKIE_OPTIONS,
       maxAge: 60 * 60 * 1000 * 24 * 7, // 1 week
     });
     sendSuccess(res, { user: result.user }, "User logged in successfully");
@@ -86,10 +91,6 @@ export const meController = async (
 };
 
 export const logoutController = (_req: Request, res: Response) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
+  res.clearCookie("token", AUTH_COOKIE_OPTIONS);
   sendSuccess(res, null, "Logged out successfully");
 };

@@ -17,11 +17,45 @@ import { userRoutes } from "./routes/user.routes.js";
 
 export const app = express();
 
+function normalizeOrigin(origin: string): string {
+  return origin.trim().replace(/\/$/, "");
+}
+
+function resolveAllowedOrigins(): string[] {
+  const fromClientUrl = process.env.CLIENT_URL ?? "";
+  const fromClientUrls = process.env.CLIENT_URLS ?? "";
+
+  const configured = `${fromClientUrl},${fromClientUrls}`
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map(normalizeOrigin);
+
+  const defaults = ["http://localhost:3000"];
+  return Array.from(new Set([...defaults, ...configured]));
+}
+
+const allowedOrigins = resolveAllowedOrigins();
+
 app.set("trust proxy", 1);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL ?? "http://localhost:3000",
+    origin: (origin, callback) => {
+      // Allow server-to-server requests with no Origin header.
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      const normalized = normalizeOrigin(origin);
+      if (allowedOrigins.includes(normalized)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   }),
 );

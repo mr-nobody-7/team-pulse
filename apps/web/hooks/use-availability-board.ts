@@ -33,10 +33,15 @@ export function useAvailabilityBoard(
   { date, teamId }: UseAvailabilityBoardParams,
   options: UseAvailabilityBoardOptions = {},
 ) {
+  const normalizedDate = date ?? "";
+  const normalizedTeamId = teamId ?? "all";
+
   return useQuery({
-    queryKey: ["availability-board", date ?? "", teamId ?? "all"],
+    queryKey: ["availability-board", normalizedDate, normalizedTeamId],
     queryFn: () => fetchAvailabilityBoard({ date, teamId }),
     enabled: options.enabled ?? true,
     staleTime: 60_000,
+    gcTime: 10 * 60_000,
+    placeholderData: (previousData) => previousData,
   });
 }

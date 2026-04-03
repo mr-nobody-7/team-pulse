@@ -39,16 +39,23 @@ export function useReportsAnalytics(
   { month, from, to, teamId }: UseReportsAnalyticsParams,
   options: UseReportsAnalyticsOptions = {},
 ) {
+  const normalizedMonth = month ?? "";
+  const normalizedFrom = from ?? "";
+  const normalizedTo = to ?? "";
+  const normalizedTeamId = teamId ?? "all";
+
   return useQuery({
     queryKey: [
       "reports-analytics",
-      month ?? "",
-      from ?? "",
-      to ?? "",
-      teamId ?? "all",
+      normalizedMonth,
+      normalizedFrom,
+      normalizedTo,
+      normalizedTeamId,
     ],
     queryFn: () => fetchReportsAnalytics({ month, from, to, teamId }),
     staleTime: 5 * 60_000,
+    gcTime: 15 * 60_000,
     enabled: options.enabled ?? true,
+    placeholderData: (previousData) => previousData,
   });
 }

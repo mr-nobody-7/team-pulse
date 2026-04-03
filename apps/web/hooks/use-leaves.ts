@@ -11,6 +11,9 @@ interface UseLeavesOptions {
   staleTime?: number;
 }
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 20;
+
 async function fetchLeaves(
   params: ListLeaveParams,
 ): Promise<ListLeaveResponse> {
@@ -33,10 +36,23 @@ export function useLeaves(
   const normalized: UseLeavesOptions =
     typeof options === "boolean" ? { enabled: options } : options;
 
+  const page = params.page ?? DEFAULT_PAGE;
+  const limit = params.limit ?? DEFAULT_LIMIT;
+  const status = params.status ?? "ALL";
+  const teamId = params.team_id ?? "all";
+
   return useQuery({
-    queryKey: ["leaves", params],
-    queryFn: () => fetchLeaves(params),
+    queryKey: ["leaves", status, teamId, page, limit],
+    queryFn: () =>
+      fetchLeaves({
+        ...(params.status ? { status: params.status } : {}),
+        ...(params.team_id ? { team_id: params.team_id } : {}),
+        page,
+        limit,
+      }),
     enabled: normalized.enabled ?? true,
     staleTime: normalized.staleTime ?? 60_000,
+    gcTime: 15 * 60_000,
+    placeholderData: (previousData) => previousData,
   });
 }

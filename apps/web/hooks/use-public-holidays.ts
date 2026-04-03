@@ -63,9 +63,12 @@ export function usePublicHolidays({
   month,
   region,
 }: UsePublicHolidaysParams) {
+  const normalizedRegion = region ?? "";
+
   return useQuery({
-    queryKey: ["public-holidays", year, month, region ?? ""],
+    queryKey: ["public-holidays", year, month, normalizedRegion],
     queryFn: () => fetchPublicHolidays({ year, month, region }),
     staleTime: 12 * 60 * 60_000,
+    gcTime: 24 * 60 * 60_000,
   });
 }

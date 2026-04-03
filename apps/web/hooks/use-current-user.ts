@@ -11,5 +11,7 @@ export function useCurrentUser() {
     queryKey: ["auth", "me"],
     queryFn: getMe,
     retry: false,
+    staleTime: 5 * 60_000,
+    gcTime: 15 * 60_000,
   });
 }

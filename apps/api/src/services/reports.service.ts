@@ -105,6 +105,18 @@ function overlapsRange(
   return start <= rangeEnd && end >= rangeStart;
 }
 
+function dayDiffUtc(from: Date, to: Date): number {
+  const fromStart = startOfUtcDay(from).getTime();
+  const toStart = startOfUtcDay(to).getTime();
+  return Math.floor((toStart - fromStart) / 86_400_000);
+}
+
+function clampDateToRange(date: Date, min: Date, max: Date): Date {
+  if (date < min) return min;
+  if (date > max) return max;
+  return date;
+}
+
 export const getDashboardSummary = async ({
   userId,
   workspaceId,
@@ -159,7 +171,8 @@ export const getDashboardSummary = async ({
   };
 
   const availabilityRangeStart = new Date(today);
-  const availabilityRangeEnd = new Date(next7Days);
+  const availabilityRangeEnd = new Date(today);
+  availabilityRangeEnd.setUTCDate(availabilityRangeEnd.getUTCDate() + 6);
 
   const distributionRowsPromise = prisma.leaveRequest.groupBy({
     by: ["type"],
@@ -229,18 +242,42 @@ export const getDashboardSummary = async ({
     count: distributionRows.find((row) => row.type === type)?._count._all ?? 0,
   }));
 
+  const dayDiff = Array.from({ length: 8 }, () => 0);
+  for (const leave of overlappingApprovedLeaves) {
+    const clampedStart = clampDateToRange(
+      startOfUtcDay(leave.startDate),
+      availabilityRangeStart,
+      availabilityRangeEnd,
+    );
+    const clampedEnd = clampDateToRange(
+      startOfUtcDay(leave.endDate),
+      availabilityRangeStart,
+      availabilityRangeEnd,
+    );
+
+    if (clampedStart > clampedEnd) {
+      continue;
+    }
+
+    const startIndex = dayDiffUtc(availabilityRangeStart, clampedStart);
+    const endIndex = dayDiffUtc(availabilityRangeStart, clampedEnd);
+
+    dayDiff[startIndex] = (dayDiff[startIndex] ?? 0) + 1;
+    if (endIndex + 1 < dayDiff.length) {
+      dayDiff[endIndex + 1] = (dayDiff[endIndex + 1] ?? 0) - 1;
+    }
+  }
+
   const availabilityByDay = Array.from({ length: 7 }, (_, offset) => {
+    if (offset > 0) {
+      dayDiff[offset] = (dayDiff[offset] ?? 0) + (dayDiff[offset - 1] ?? 0);
+    }
+
     const date = new Date(today);
     date.setUTCDate(date.getUTCDate() + offset);
     date.setUTCHours(0, 0, 0, 0);
 
-    const onLeaveCount = overlappingApprovedLeaves.filter((leave) => {
-      const start = new Date(leave.startDate);
-      const end = new Date(leave.endDate);
-      start.setUTCHours(0, 0, 0, 0);
-      end.setUTCHours(0, 0, 0, 0);
-      return start <= date && end >= date;
-    }).length;
+    const onLeaveCount = Math.max(dayDiff[offset] ?? 0, 0);
 
     return {
       date: date.toISOString(),
@@ -321,33 +358,54 @@ export const getReportsAnalytics = async ({
 
   const teamNameById = new Map(teams.map((team) => [team.id, team.name]));
 
+  const monthDiff = Array.from({ length: 13 }, () => 0);
+  const leaveTypeCounts = new Map<(typeof LEAVE_TYPES)[number], number>(
+    LEAVE_TYPES.map((type) => [type, 0]),
+  );
+  const teamCounts = new Map<string, number>();
+
+  for (const leave of leaves) {
+    const startMonthIndex = Math.max(
+      0,
+      leave.startDate.getUTCFullYear() < usageYear
+        ? 0
+        : leave.startDate.getUTCMonth(),
+    );
+    const endMonthIndex = Math.min(
+      11,
+      leave.endDate.getUTCFullYear() > usageYear ? 11 : leave.endDate.getUTCMonth(),
+    );
+
+    if (startMonthIndex <= endMonthIndex) {
+      monthDiff[startMonthIndex] = (monthDiff[startMonthIndex] ?? 0) + 1;
+      if (endMonthIndex + 1 < monthDiff.length) {
+        monthDiff[endMonthIndex + 1] = (monthDiff[endMonthIndex + 1] ?? 0) - 1;
+      }
+    }
+
+    if (!overlapsRange(leave.startDate, leave.endDate, rangeStart, rangeEnd)) {
+      continue;
+    }
+
+    leaveTypeCounts.set(leave.type, (leaveTypeCounts.get(leave.type) ?? 0) + 1);
+    teamCounts.set(leave.teamId, (teamCounts.get(leave.teamId) ?? 0) + 1);
+  }
+
+  let runningMonthCount = 0;
   const usageByMonth = Array.from({ length: 12 }, (_, monthIndex) => {
+    runningMonthCount += monthDiff[monthIndex] ?? 0;
+
     const start = new Date(Date.UTC(usageYear, monthIndex, 1));
-    const end = endOfMonthUtc(start);
-
-    const count = leaves.filter((leave) =>
-      overlapsRange(leave.startDate, leave.endDate, start, end),
-    ).length;
-
     return {
       month: `${start.getUTCFullYear()}-${String(start.getUTCMonth() + 1).padStart(2, "0")}`,
-      count,
+      count: runningMonthCount,
     };
   });
 
-  const monthScopedLeaves = leaves.filter((leave) =>
-    overlapsRange(leave.startDate, leave.endDate, rangeStart, rangeEnd),
-  );
-
   const leaveByType = LEAVE_TYPES.map((type) => ({
     type,
-    count: monthScopedLeaves.filter((leave) => leave.type === type).length,
+    count: leaveTypeCounts.get(type) ?? 0,
   }));
-
-  const teamCounts = new Map<string, number>();
-  for (const leave of monthScopedLeaves) {
-    teamCounts.set(leave.teamId, (teamCounts.get(leave.teamId) ?? 0) + 1);
-  }
 
   const leaveByTeam = Array.from(teamCounts.entries())
     .map(([teamKey, count]) => ({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import type { MeData } from "@/services/auth.service";
 import { getMe, logout as logoutApi } from "@/services/auth.service";
 
@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const {
     data: user,
     isLoading,
-    refetch,
+    refetch: refetchAuth,
   } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: getMe,
@@ -31,24 +31,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     staleTime: 5 * 60_000, // 5 minutes — avoid redundant /me calls
   });
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await logoutApi();
     queryClient.clear();
-  };
+  }, [queryClient]);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user: user ?? null,
-        isLoading,
-        isAuthenticated: !!user,
-        logout,
-        refetch,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const refetch = useCallback(() => {
+    void refetchAuth();
+  }, [refetchAuth]);
+
+  const value = useMemo(
+    () => ({
+      user: user ?? null,
+      isLoading,
+      isAuthenticated: !!user,
+      logout,
+      refetch,
+    }),
+    [isLoading, logout, refetch, user],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContextValue {

@@ -7,8 +7,10 @@ import {
   startOfMonth,
   subDays,
 } from "date-fns";
+import { useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import type { CalendarLeavesMap } from "@/hooks/use-calendar-leaves";
 import type { CalendarHolidaysMap } from "@/hooks/use-public-holidays";
 import type { LeaveRequest, PublicHoliday } from "@/types/api";
@@ -50,30 +52,34 @@ export function CalendarGrid({
   selectedDate,
   onDayClick,
 }: CalendarGridProps) {
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(currentDate);
+  const allDays = useMemo(() => {
+    const monthStart = startOfMonth(currentDate);
+    const monthEnd = endOfMonth(currentDate);
 
-  // Leading padding: days from the previous month to fill the first row
-  const leadingEmpty = toMondayFirst(getDay(monthStart));
-  const leadingDays = Array.from({ length: leadingEmpty }, (_, i) =>
-    subDays(monthStart, leadingEmpty - i),
-  );
+    // Leading padding: days from the previous month to fill the first row
+    const leadingEmpty = toMondayFirst(getDay(monthStart));
+    const leadingDays = Array.from({ length: leadingEmpty }, (_, i) =>
+      subDays(monthStart, leadingEmpty - i),
+    );
 
-  // All days in the current month
-  const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    // All days in the current month
+    const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-  // Trailing padding: days from the next month to complete the last row
-  const total = leadingEmpty + monthDays.length;
-  const trailingEmpty = total % 7 === 0 ? 0 : 7 - (total % 7);
-  const trailingDays = Array.from({ length: trailingEmpty }, (_, i) =>
-    addDays(monthEnd, i + 1),
-  );
+    // Trailing padding: days from the next month to complete the last row
+    const total = leadingEmpty + monthDays.length;
+    const trailingEmpty = total % 7 === 0 ? 0 : 7 - (total % 7);
+    const trailingDays = Array.from({ length: trailingEmpty }, (_, i) =>
+      addDays(monthEnd, i + 1),
+    );
 
-  const allDays = [...leadingDays, ...monthDays, ...trailingDays];
+    return [...leadingDays, ...monthDays, ...trailingDays];
+  }, [currentDate]);
+
   const showSkeleton = isLoading && Object.keys(leavesMap).length === 0;
-  const capacityMap = showHeatmap
-    ? buildCapacityHeatmap(leavesMap, totalMembers)
-    : {};
+  const capacityMap = useMemo(
+    () => (showHeatmap ? buildCapacityHeatmap(leavesMap, totalMembers) : {}),
+    [leavesMap, showHeatmap, totalMembers],
+  );
 
   return (
     <div className="relative rounded-xl border bg-card">
@@ -99,47 +105,49 @@ export function CalendarGrid({
       </div>
 
       {/* Day grid — gap-px with bg-border gives thin borders between cells */}
-      <div className="grid grid-cols-7 gap-px bg-border p-px">
-        {showSkeleton
-          ? Array.from({ length: 42 }, (_, idx) => (
-              <div
-                key={`skeleton-${idx + 1}`}
-                className="flex min-h-22 flex-col rounded-lg bg-card p-2"
-              >
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <div className="mt-2 space-y-1">
-                  <Skeleton className="h-3 w-14" />
-                  <Skeleton className="h-3 w-10" />
+      <TooltipProvider>
+        <div className="grid grid-cols-7 gap-px bg-border p-px">
+          {showSkeleton
+            ? Array.from({ length: 42 }, (_, idx) => (
+                <div
+                  key={`skeleton-${idx + 1}`}
+                  className="flex min-h-22 flex-col rounded-lg bg-card p-2"
+                >
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <div className="mt-2 space-y-1">
+                    <Skeleton className="h-3 w-14" />
+                    <Skeleton className="h-3 w-10" />
+                  </div>
                 </div>
-              </div>
-            ))
-          : allDays.map((date) => {
-              const key = format(date, "yyyy-MM-dd");
-              const leavesForDay = leavesMap[key] ?? [];
-              const capacityForDay =
-                showHeatmap && totalMembers > 0
-                  ? (capacityMap[key] ??
-                    toCapacityHeatmapCell(leavesForDay.length, totalMembers))
-                  : undefined;
+              ))
+            : allDays.map((date) => {
+                const key = format(date, "yyyy-MM-dd");
+                const leavesForDay = leavesMap[key] ?? [];
+                const capacityForDay =
+                  showHeatmap && totalMembers > 0
+                    ? (capacityMap[key] ??
+                      toCapacityHeatmapCell(leavesForDay.length, totalMembers))
+                    : undefined;
 
-              return (
-                <CalendarDay
-                  key={key}
-                  date={date}
-                  currentMonth={currentDate}
-                  leaves={leavesForDay}
-                  holidays={holidaysMap[key] ?? []}
-                  capacity={capacityForDay}
-                  showHeatmap={showHeatmap}
-                  isSelected={
-                    selectedDate !== null &&
-                    date.toDateString() === selectedDate.toDateString()
-                  }
-                  onClick={onDayClick}
-                />
-              );
-            })}
-      </div>
+                return (
+                  <CalendarDay
+                    key={key}
+                    date={date}
+                    currentMonth={currentDate}
+                    leaves={leavesForDay}
+                    holidays={holidaysMap[key] ?? []}
+                    capacity={capacityForDay}
+                    showHeatmap={showHeatmap}
+                    isSelected={
+                      selectedDate !== null &&
+                      date.toDateString() === selectedDate.toDateString()
+                    }
+                    onClick={onDayClick}
+                  />
+                );
+              })}
+        </div>
+      </TooltipProvider>
     </div>
   );
 }

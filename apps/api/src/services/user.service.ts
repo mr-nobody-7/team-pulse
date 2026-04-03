@@ -47,20 +47,22 @@ export const listUsers = async (workspaceId: string, query: ListUsersQuery) => {
 };
 
 export const createUser = async (workspaceId: string, input: CreateUserInput) => {
-  if (input.team_id) {
-    const team = await prisma.team.findFirst({
-      where: { id: input.team_id, workspaceId },
+  const [team, existing] = await Promise.all([
+    input.team_id
+      ? prisma.team.findFirst({
+          where: { id: input.team_id, workspaceId },
+          select: { id: true },
+        })
+      : Promise.resolve(null),
+    prisma.user.findUnique({
+      where: { email: input.email },
       select: { id: true },
-    });
-    if (!team) {
-      throw new BadRequestError("Invalid team selected");
-    }
-  }
+    }),
+  ]);
 
-  const existing = await prisma.user.findUnique({
-    where: { email: input.email },
-    select: { id: true },
-  });
+  if (input.team_id && !team) {
+    throw new BadRequestError("Invalid team selected");
+  }
 
   if (existing) {
     throw new ConflictError("Email already in use");
@@ -96,38 +98,38 @@ export const updateUser = async (
   userId: string,
   input: UpdateUserInput,
 ) => {
-  const user = await prisma.user.findFirst({
-    where: { id: userId, workspaceId },
-    select: { id: true },
-  });
+  const [user, existing, team] = await Promise.all([
+    prisma.user.findFirst({
+      where: { id: userId, workspaceId },
+      select: { id: true },
+    }),
+    input.email
+      ? prisma.user.findFirst({
+          where: {
+            email: input.email,
+            id: { not: userId },
+          },
+          select: { id: true },
+        })
+      : Promise.resolve(null),
+    input.team_id
+      ? prisma.team.findFirst({
+          where: { id: input.team_id, workspaceId },
+          select: { id: true },
+        })
+      : Promise.resolve(null),
+  ]);
 
   if (!user) {
     throw new NotFoundError("User not found");
   }
 
-  if (input.email) {
-    const existing = await prisma.user.findFirst({
-      where: {
-        email: input.email,
-        id: { not: userId },
-      },
-      select: { id: true },
-    });
-
-    if (existing) {
-      throw new ConflictError("Email already in use");
-    }
+  if (input.email && existing) {
+    throw new ConflictError("Email already in use");
   }
 
-  if (input.team_id) {
-    const team = await prisma.team.findFirst({
-      where: { id: input.team_id, workspaceId },
-      select: { id: true },
-    });
-
-    if (!team) {
-      throw new BadRequestError("Invalid team selected");
-    }
+  if (input.team_id && !team) {
+    throw new BadRequestError("Invalid team selected");
   }
 
   return prisma.user.update({

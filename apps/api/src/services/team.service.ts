@@ -30,23 +30,24 @@ export const updateTeam = async (
   teamId: string,
   name: string,
 ) => {
-  const team = await prisma.team.findFirst({
-    where: { id: teamId, workspaceId },
-    select: { id: true },
-  });
+  const [team, duplicate] = await Promise.all([
+    prisma.team.findFirst({
+      where: { id: teamId, workspaceId },
+      select: { id: true },
+    }),
+    prisma.team.findFirst({
+      where: {
+        workspaceId,
+        id: { not: teamId },
+        name: { equals: name, mode: "insensitive" },
+      },
+      select: { id: true },
+    }),
+  ]);
 
   if (!team) {
     throw new NotFoundError("Team not found");
   }
-
-  const duplicate = await prisma.team.findFirst({
-    where: {
-      workspaceId,
-      id: { not: teamId },
-      name: { equals: name, mode: "insensitive" },
-    },
-    select: { id: true },
-  });
 
   if (duplicate) {
     throw new ConflictError("Another team with this name already exists");
@@ -60,18 +61,19 @@ export const updateTeam = async (
 };
 
 export const deleteTeam = async (workspaceId: string, teamId: string) => {
-  const team = await prisma.team.findFirst({
-    where: { id: teamId, workspaceId },
-    select: { id: true },
-  });
+  const [team, activeUsers] = await Promise.all([
+    prisma.team.findFirst({
+      where: { id: teamId, workspaceId },
+      select: { id: true },
+    }),
+    prisma.user.count({
+      where: { workspaceId, teamId, isActive: true },
+    }),
+  ]);
 
   if (!team) {
     throw new NotFoundError("Team not found");
   }
-
-  const activeUsers = await prisma.user.count({
-    where: { workspaceId, teamId, isActive: true },
-  });
 
   if (activeUsers > 0) {
     throw new BadRequestError("Cannot delete team with active users");

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: team-pulse-api
+    runtime: node
+    rootDir: apps/api
+    buildCommand: pnpm run build:render
+    startCommand: pnpm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TEAM_MIN_CAPACITY_WARNING_PERCENT
+        value: "50"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false

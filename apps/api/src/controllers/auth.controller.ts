@@ -6,6 +6,8 @@ import {
 } from "../services/auth.service.js";
 import { sendSuccess } from "../utils/response.js";
 import { createAuditLog } from "../utils/audit.js";
+import { generateToken } from "../utils/jwt.js";
+import type { GoogleAuthUser } from "../auth/strategies/google.strategy.js";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const AUTH_COOKIE_OPTIONS = {
@@ -13,6 +15,18 @@ const AUTH_COOKIE_OPTIONS = {
   secure: IS_PRODUCTION,
   sameSite: IS_PRODUCTION ? "none" : "strict",
 } as const;
+
+function resolveDashboardRedirectUrl(): string {
+  const frontendUrl = process.env.CLIENT_URL ?? "http://localhost:3000";
+  return new URL("/dashboard", frontendUrl).toString();
+}
+
+function issueAuthCookie(res: Response, token: string) {
+  res.cookie("token", token, {
+    ...AUTH_COOKIE_OPTIONS,
+    maxAge: 60 * 60 * 1000 * 24 * 7,
+  });
+}
 
 export const registerController = async (
   req: Request,
@@ -60,10 +74,7 @@ export const loginController = async (
       metadata: { email: result.user.email },
     });
 
-    res.cookie("token", result.token, {
-      ...AUTH_COOKIE_OPTIONS,
-      maxAge: 60 * 60 * 1000 * 24 * 7, // 1 week
-    });
+    issueAuthCookie(res, result.token);
     sendSuccess(res, { user: result.user }, "User logged in successfully");
   } catch (error) {
     // Record failed login attempts regardless of why they failed
@@ -75,6 +86,51 @@ export const loginController = async (
     next(error);
   }
 };
+
+export const googleCallbackController = (req: Request, res: Response) => {
+  const oauthUser = (req as Request & { user?: GoogleAuthUser }).user;
+
+  if (!oauthUser) {
+    res.redirect(resolveDashboardRedirectUrl());
+    return;
+  }
+
+  const token = generateToken({
+    userId: oauthUser.userId,
+    workspaceId: oauthUser.workspaceId,
+    role: oauthUser.role,
+    teamId: oauthUser.teamId,
+  });
+
+  issueAuthCookie(res, token);
+
+  createAuditLog({
+    action: "USER_LOGIN",
+    userId: oauthUser.userId,
+    workspaceId: oauthUser.workspaceId,
+    targetId: oauthUser.userId,
+    targetType: "User",
+    ipAddress: req.ip,
+    metadata: {
+      email: oauthUser.email,
+      provider: "google",
+    },
+  });
+
+  res.redirect(resolveDashboardRedirectUrl());
+};
+
+export const googleFailureController = (req: Request, res: Response) => {
+  createAuditLog({
+    action: "USER_LOGIN_FAILED",
+    ipAddress: req.ip,
+    metadata: { provider: "google" },
+  });
+
+  const frontendUrl = process.env.CLIENT_URL ?? "http://localhost:3000";
+  res.redirect(new URL("/login?error=google_oauth_failed", frontendUrl).toString());
+};
+
 export const meController = async (
   req: Request,
   res: Response,

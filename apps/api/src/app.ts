@@ -3,6 +3,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import passport from "passport";
+import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
 import { auditRoutes } from "./routes/audit.routes.js";
@@ -16,6 +18,8 @@ import { teamRoutes } from "./routes/team.routes.js";
 import { userRoutes } from "./routes/user.routes.js";
 
 export const app = express();
+
+configureGoogleStrategy();
 
 function normalizeOrigin(origin: string): string {
   return origin.trim().replace(/\/$/, "");
@@ -65,6 +69,7 @@ app.use(apiRateLimit);
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(passport.initialize());
 
 app.use("/auth", authRateLimit, authRoutes);
 app.use("/leave", leaveRoutes);

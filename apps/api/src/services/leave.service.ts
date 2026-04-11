@@ -13,6 +13,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/errors.js";
+import { sendMail } from "./mail.service.js";
 import { isLeaveTypeEnabledForWorkspace } from "./settings.service.js";
 
 // ── Session ordering helpers ──────────────────────────────────────────────────
@@ -59,6 +60,138 @@ function resolveTeamCapacityWarningThresholdPercent(): number {
 
 const TEAM_MIN_CAPACITY_WARNING_PERCENT =
   resolveTeamCapacityWarningThresholdPercent();
+
+function formatDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function buildLeaveSubmittedHtml(params: {
+  approverName?: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  note?: string | null;
+}): string {
+  const noteSection = params.note
+    ? `<p><strong>Note:</strong> ${params.note}</p>`
+    : "";
+
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+      <h2 style="margin: 0 0 12px;">New Leave Request Submitted</h2>
+      <p>Hi ${params.approverName ?? "Manager"},</p>
+      <p>A new leave request has been submitted and needs your review.</p>
+      <p><strong>Employee:</strong> ${params.employeeName}</p>
+      <p><strong>Leave type:</strong> ${params.leaveType}</p>
+      <p><strong>Dates:</strong> ${formatDate(params.startDate)} to ${formatDate(params.endDate)}</p>
+      ${noteSection}
+      <p>Please review it in Team Pulse.</p>
+    </div>
+  `;
+}
+
+function buildLeaveApprovedHtml(params: {
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  approvedBy: string;
+}): string {
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+      <h2 style="margin: 0 0 12px;">Your Leave Request Was Approved</h2>
+      <p>Hi ${params.employeeName},</p>
+      <p>Your leave request has been approved.</p>
+      <p><strong>Leave type:</strong> ${params.leaveType}</p>
+      <p><strong>Dates:</strong> ${formatDate(params.startDate)} to ${formatDate(params.endDate)}</p>
+      <p><strong>Approved by:</strong> ${params.approvedBy}</p>
+      <p>Thanks for keeping your team informed.</p>
+    </div>
+  `;
+}
+
+function buildLeaveRejectedHtml(params: {
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  rejectedBy: string;
+  comment?: string | null;
+}): string {
+  const commentSection = params.comment
+    ? `<p><strong>Comment:</strong> ${params.comment}</p>`
+    : "";
+
+  return `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+      <h2 style="margin: 0 0 12px;">Your Leave Request Was Rejected</h2>
+      <p>Hi ${params.employeeName},</p>
+      <p>Your leave request has been rejected.</p>
+      <p><strong>Leave type:</strong> ${params.leaveType}</p>
+      <p><strong>Dates:</strong> ${formatDate(params.startDate)} to ${formatDate(params.endDate)}</p>
+      <p><strong>Rejected by:</strong> ${params.rejectedBy}</p>
+      ${commentSection}
+      <p>Please contact your manager if you need clarification.</p>
+    </div>
+  `;
+}
+
+function notifyLeaveSubmitted(params: {
+  managerEmail: string;
+  managerName?: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  note?: string | null;
+}) {
+  const html = buildLeaveSubmittedHtml({
+    ...(params.managerName ? { approverName: params.managerName } : {}),
+    employeeName: params.employeeName,
+    leaveType: params.leaveType,
+    startDate: params.startDate,
+    endDate: params.endDate,
+    ...(params.note !== undefined ? { note: params.note } : {}),
+  });
+
+  void sendMail(
+    params.managerEmail,
+    "New leave request submitted",
+    html,
+  ).catch((err: unknown) => console.error("Mail error:", err));
+}
+
+function notifyLeaveApproved(params: {
+  employeeEmail: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  approvedBy: string;
+}) {
+  const html = buildLeaveApprovedHtml(params);
+
+  void sendMail(params.employeeEmail, "Your leave request was approved", html).catch(
+    (err: unknown) => console.error("Mail error:", err),
+  );
+}
+
+function notifyLeaveRejected(params: {
+  employeeEmail: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: Date;
+  endDate: Date;
+  rejectedBy: string;
+  comment?: string | null;
+}) {
+  const html = buildLeaveRejectedHtml(params);
+
+  void sendMail(params.employeeEmail, "Your leave request was rejected", html).catch(
+    (err: unknown) => console.error("Mail error:", err),
+  );
+}
 
 function startOfUtcDay(date: Date): Date {
   const copy = new Date(date);
@@ -283,6 +416,33 @@ export const applyLeave = async (
     },
   });
 
+  const [requester, approvers] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    }),
+    prisma.user.findMany({
+      where: {
+        workspaceId,
+        isActive: true,
+        OR: [{ role: "MANAGER", teamId }, { role: "ADMIN" }],
+      },
+      select: { email: true, name: true },
+    }),
+  ]);
+
+  for (const approver of approvers) {
+    notifyLeaveSubmitted({
+      managerEmail: approver.email,
+      managerName: approver.name,
+      employeeName: requester?.name ?? user.name,
+      leaveType: input.type,
+      startDate,
+      endDate,
+      note: input.reason,
+    });
+  }
+
   return {
     leaveRequest,
     warning: conflictDetected,
@@ -436,6 +596,29 @@ export const updateLeaveStatus = async (
       approver: { select: { id: true, name: true } },
     },
   });
+
+  if (updated.status === "APPROVED") {
+    notifyLeaveApproved({
+      employeeEmail: updated.user.email,
+      employeeName: updated.user.name,
+      leaveType: updated.type,
+      startDate: updated.startDate,
+      endDate: updated.endDate,
+      approvedBy: updated.approver?.name ?? "Manager",
+    });
+  }
+
+  if (updated.status === "REJECTED") {
+    notifyLeaveRejected({
+      employeeEmail: updated.user.email,
+      employeeName: updated.user.name,
+      leaveType: updated.type,
+      startDate: updated.startDate,
+      endDate: updated.endDate,
+      rejectedBy: updated.approver?.name ?? "Manager",
+      comment: updated.comment,
+    });
+  }
 
   return updated;
 };

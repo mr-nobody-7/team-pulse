@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -19,6 +19,7 @@ interface NavbarProps {
   userName?: string;
   userEmail?: string;
   onLogout?: () => Promise<void>;
+  onMenuClick?: () => void;
 }
 
 function getInitials(name?: string): string {
@@ -31,7 +32,12 @@ function getInitials(name?: string): string {
     .toUpperCase();
 }
 
-export function Navbar({ userName, userEmail, onLogout }: NavbarProps) {
+export function Navbar({
+  userName,
+  userEmail,
+  onLogout,
+  onMenuClick,
+}: NavbarProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -46,7 +52,16 @@ export function Navbar({ userName, userEmail, onLogout }: NavbarProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
       {/* Left slot — page title / breadcrumbs added per-page via portal */}
-      <div />
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        aria-label="Open sidebar"
+        onClick={onMenuClick}
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

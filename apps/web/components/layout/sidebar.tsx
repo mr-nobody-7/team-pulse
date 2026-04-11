@@ -104,9 +104,17 @@ interface SidebarProps {
   userRole?: UserRole;
   userName?: string;
   userEmail?: string;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
+export function Sidebar({
+  userRole,
+  userName,
+  userEmail,
+  isMobileOpen = false,
+  onMobileClose,
+}: SidebarProps) {
   const pathname = usePathname();
 
   const filtered = navItems.filter(
@@ -114,7 +122,13 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
   );
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r bg-sidebar">
+    <aside
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r bg-sidebar transition-transform duration-200 ease-out md:z-40",
+        isMobileOpen ? "translate-x-0" : "-translate-x-full",
+        "md:translate-x-0",
+      )}
+    >
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 border-b px-6">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -135,6 +149,7 @@ export function Sidebar({ userRole, userName, userEmail }: SidebarProps) {
               <li key={`${item.href}-${item.label}`}>
                 <Link
                   href={item.href}
+                  onClick={onMobileClose}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive

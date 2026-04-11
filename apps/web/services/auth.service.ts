@@ -3,6 +3,7 @@ import type {
   ApiResponse,
   LoginPayload,
   RegisterPayload,
+  RegisterWorkspacePayload,
   SafeUser,
 } from "@/types/api";
 
@@ -28,6 +29,16 @@ export async function login(payload: LoginPayload): Promise<SafeUser> {
 export async function register(payload: RegisterPayload): Promise<SafeUser> {
   const { data } = await api.post<ApiResponse<{ user: SafeUser }>>(
     "/auth/register",
+    payload,
+  );
+  return data.data.user;
+}
+
+export async function registerWorkspace(
+  payload: RegisterWorkspacePayload,
+): Promise<SafeUser> {
+  const { data } = await api.post<ApiResponse<{ user: SafeUser }>>(
+    "/auth/register-workspace",
     payload,
   );
   return data.data.user;

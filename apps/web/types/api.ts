@@ -31,6 +31,14 @@ export interface RegisterPayload {
   password: string;
 }
 
+export interface RegisterWorkspacePayload {
+  name: string;
+  email: string;
+  password: string;
+  workspaceName: string;
+  leaveTypes: LeaveType[];
+}
+
 export interface LoginPayload {
   email: string;
   password: string;

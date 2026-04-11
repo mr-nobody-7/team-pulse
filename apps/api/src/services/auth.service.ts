@@ -3,6 +3,7 @@ import { prisma } from "../lib/db.js";
 import type {
   LoginInput,
   RegisterInput,
+  RegisterWorkspaceInput,
   RegisterResult,
 } from "../types/index.js";
 import {
@@ -23,6 +24,13 @@ export class InvalidCredentialsError extends AppError {
     super(401, "Invalid credentials");
   }
 }
+
+const ALL_WORKSPACE_LEAVE_TYPES = [
+  "VACATION",
+  "SICK",
+  "PERSONAL",
+  "CASUAL",
+] as const;
 
 export const registerUserService = async (
   input: RegisterInput,
@@ -69,6 +77,62 @@ export const registerUserService = async (
     const { passwordHash: _, ...safeUser } = user;
     return { workspace, user: safeUser };
   });
+};
+
+export const registerWorkspaceService = async (
+  input: RegisterWorkspaceInput,
+) => {
+  const normalizedEmail = input.email.trim().toLowerCase();
+  const name = input.name.trim();
+  const workspaceName = input.workspaceName.trim();
+  const password = input.password;
+  const selectedLeaveTypes = new Set(input.leaveTypes);
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email: normalizedEmail },
+  });
+  if (existingUser) {
+    throw new EmailInUseError();
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const result = await prisma.$transaction(async (tx) => {
+    const workspace = await tx.workspace.create({
+      data: { name: workspaceName },
+    });
+
+    const user = await tx.user.create({
+      data: {
+        name,
+        email: normalizedEmail,
+        passwordHash,
+        role: "ADMIN",
+        workspaceId: workspace.id,
+      },
+    });
+
+    await tx.workspaceLeaveType.createMany({
+      data: ALL_WORKSPACE_LEAVE_TYPES.map((type) => ({
+        workspaceId: workspace.id,
+        type,
+        isActive: selectedLeaveTypes.has(type),
+      })),
+      skipDuplicates: true,
+    });
+
+    const { passwordHash: _, ...safeUser } = user;
+    return { workspace, user: safeUser };
+  });
+
+  const token = generateToken({
+    userId: result.user.id,
+    workspaceId: result.user.workspaceId,
+    teamId: result.user.teamId,
+    role: result.user.role,
+  });
+
+  return { ...result, token };
 };
 
 export const loginService = async (input: LoginInput) => {

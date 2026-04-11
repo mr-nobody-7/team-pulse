@@ -3,6 +3,7 @@ import {
   loginService,
   getMeService,
   registerUserService,
+  registerWorkspaceService,
 } from "../services/auth.service.js";
 import { sendSuccess } from "../utils/response.js";
 import { createAuditLog } from "../utils/audit.js";
@@ -51,6 +52,36 @@ export const registerController = async (
     });
 
     sendSuccess(res, { user: result.user }, "User registered successfully", 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const registerWorkspaceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await registerWorkspaceService(req.body);
+
+    createAuditLog({
+      action: "USER_REGISTERED",
+      userId: result.user.id,
+      workspaceId: result.user.workspaceId,
+      targetId: result.user.id,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: {
+        email: result.user.email,
+        name: result.user.name,
+        workspaceName: result.workspace.name,
+        leaveTypes: req.body.leaveTypes,
+      },
+    });
+
+    issueAuthCookie(res, result.token);
+    sendSuccess(res, { user: result.user }, "Workspace created successfully", 201);
   } catch (error) {
     next(error);
   }

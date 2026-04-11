@@ -5,6 +5,14 @@ export interface RegisterInput {
   password: string;
 }
 
+export interface RegisterWorkspaceInput {
+  name: string;
+  email: string;
+  password: string;
+  workspaceName: string;
+  leaveTypes: LeaveTypeValue[];
+}
+
 export interface SafeUser {
   id: string;
   name: string;

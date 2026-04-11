@@ -19,6 +19,29 @@ export const registerSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
+export const registerWorkspaceSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  workspaceName: z
+    .string()
+    .trim()
+    .min(3, "Workspace name is required")
+    .max(50, "Workspace name must be less than 50 characters"),
+  leaveTypes: z
+    .array(z.enum(["VACATION", "SICK", "PERSONAL", "CASUAL"]))
+    .max(4, "At most 4 leave types are supported")
+    .transform((types) => Array.from(new Set(types))),
+});
+
 export const loginSchema = z.object({
   email: z
     .string()

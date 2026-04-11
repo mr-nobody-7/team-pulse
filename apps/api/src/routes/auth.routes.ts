@@ -8,14 +8,24 @@ import {
   logoutController,
   meController,
   registerController,
+  registerWorkspaceController,
 } from "../controllers/auth.controller.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { validate } from "../middleware/validate.js";
-import { loginSchema, registerSchema } from "../utils/validations.js";
+import {
+  loginSchema,
+  registerSchema,
+  registerWorkspaceSchema,
+} from "../utils/validations.js";
 
 const router = Router();
 
 router.post("/register", validate(registerSchema), registerController);
+router.post(
+  "/register-workspace",
+  validate(registerWorkspaceSchema),
+  registerWorkspaceController,
+);
 router.post("/login", validate(loginSchema), loginController);
 router.get(
   "/google",

@@ -1,7 +1,15 @@
 import axios from "axios";
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+if (!apiBaseUrl) {
+  throw new Error(
+    "NEXT_PUBLIC_API_URL is not set. Define it in apps/web/.env.local for development and in your deployment environment for production.",
+  );
+}
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000",
+  baseURL: apiBaseUrl,
   // Send the httpOnly cookie on every request
   withCredentials: true,
   headers: {

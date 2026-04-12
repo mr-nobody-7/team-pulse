@@ -115,6 +115,10 @@ export interface UpdateLeaveTypesInput {
   enabled_types: LeaveTypeValue[];
 }
 
+export interface CreateFeedbackInput {
+  message: string;
+}
+
 export interface CreateTeamInput {
   name: string;
 }

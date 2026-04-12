@@ -94,6 +94,7 @@ model Workspace {
   availabilityStatuses UserAvailabilityStatus[]
   workloadStatuses     UserWorkloadStatus[]
   publicHolidays       PublicHoliday[]
+  feedbackEntries      FeedbackEntry[]
 }
 
 model Team {
@@ -124,6 +125,7 @@ model User {
   requestedLeaveRequests LeaveRequest[]
   availabilityStatuses   UserAvailabilityStatus[]
   workloadStatuses       UserWorkloadStatus[]
+  feedbackEntries        FeedbackEntry[]
 
   approvedLeaveRequests LeaveRequest[] @relation("Approver")
 }
@@ -229,4 +231,18 @@ model PublicHoliday {
   @@index([date])
   @@index([workspaceId, date])
   @@index([category, region, date])
+}
+
+model FeedbackEntry {
+  id          String   @id @default(uuid())
+  message     String
+  userId      String
+  workspaceId String
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+  @@index([userId, createdAt])
 }

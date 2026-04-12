@@ -186,6 +186,14 @@ export const updateLeaveTypesSchema = z.object({
     .min(1, "At least one leave type must remain enabled"),
 });
 
+export const createFeedbackSchema = z.object({
+  message: z
+    .string()
+    .trim()
+    .min(1, "Feedback message is required")
+    .max(2000, "Feedback message must be less than 2000 characters"),
+});
+
 export const createTeamSchema = z.object({
   name: z
     .string()

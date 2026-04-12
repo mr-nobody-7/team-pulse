@@ -26,6 +26,7 @@ function normalizeOrigin(origin: string): string {
 }
 
 function resolveAllowedOrigins(): string[] {
+  const isProduction = process.env.NODE_ENV === "production";
   const fromClientUrl = process.env.CLIENT_URL ?? "";
   const fromClientUrls = process.env.CLIENT_URLS ?? "";
 
@@ -35,8 +36,18 @@ function resolveAllowedOrigins(): string[] {
     .filter(Boolean)
     .map(normalizeOrigin);
 
-  const defaults = ["http://localhost:3000"];
-  return Array.from(new Set([...defaults, ...configured]));
+  if (configured.length > 0) {
+    return Array.from(new Set(configured));
+  }
+
+  if (isProduction) {
+    console.warn(
+      "[CORS] No CLIENT_URL/CLIENT_URLS configured in production. No browser origins will be allowed.",
+    );
+    return [];
+  }
+
+  return ["http://localhost:3000"];
 }
 
 const allowedOrigins = resolveAllowedOrigins();

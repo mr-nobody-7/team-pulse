@@ -8,8 +8,11 @@ if (!apiBaseUrl) {
   );
 }
 
+const resolvedBaseUrl =
+  process.env.NODE_ENV === "production" ? "/api" : apiBaseUrl;
+
 const api = axios.create({
-  baseURL: apiBaseUrl,
+  baseURL: resolvedBaseUrl,
   // Send the httpOnly cookie on every request
   withCredentials: true,
   headers: {

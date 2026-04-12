@@ -59,7 +59,8 @@ export const ModelName = {
   WorkspaceLeaveType: 'WorkspaceLeaveType',
   UserAvailabilityStatus: 'UserAvailabilityStatus',
   UserWorkloadStatus: 'UserWorkloadStatus',
-  PublicHoliday: 'PublicHoliday'
+  PublicHoliday: 'PublicHoliday',
+  FeedbackEntry: 'FeedbackEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,6 +197,17 @@ export const PublicHolidayScalarFieldEnum = {
 } as const
 
 export type PublicHolidayScalarFieldEnum = (typeof PublicHolidayScalarFieldEnum)[keyof typeof PublicHolidayScalarFieldEnum]
+
+
+export const FeedbackEntryScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  userId: 'userId',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt'
+} as const
+
+export type FeedbackEntryScalarFieldEnum = (typeof FeedbackEntryScalarFieldEnum)[keyof typeof FeedbackEntryScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -84,3 +84,8 @@ export type UserWorkloadStatus = Prisma.UserWorkloadStatusModel
  * 
  */
 export type PublicHoliday = Prisma.PublicHolidayModel
+/**
+ * Model FeedbackEntry
+ * 
+ */
+export type FeedbackEntry = Prisma.FeedbackEntryModel

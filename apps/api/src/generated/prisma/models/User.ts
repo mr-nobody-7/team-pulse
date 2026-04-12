@@ -219,6 +219,7 @@ export type UserWhereInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
   availabilityStatuses?: Prisma.UserAvailabilityStatusListRelationFilter
   workloadStatuses?: Prisma.UserWorkloadStatusListRelationFilter
+  feedbackEntries?: Prisma.FeedbackEntryListRelationFilter
   approvedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
 }
 
@@ -237,6 +238,7 @@ export type UserOrderByWithRelationInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestOrderByRelationAggregateInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusOrderByRelationAggregateInput
   workloadStatuses?: Prisma.UserWorkloadStatusOrderByRelationAggregateInput
+  feedbackEntries?: Prisma.FeedbackEntryOrderByRelationAggregateInput
   approvedLeaveRequests?: Prisma.LeaveRequestOrderByRelationAggregateInput
 }
 
@@ -258,6 +260,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   requestedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
   availabilityStatuses?: Prisma.UserAvailabilityStatusListRelationFilter
   workloadStatuses?: Prisma.UserWorkloadStatusListRelationFilter
+  feedbackEntries?: Prisma.FeedbackEntryListRelationFilter
   approvedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
 }, "id" | "email">
 
@@ -304,6 +307,7 @@ export type UserCreateInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -320,6 +324,7 @@ export type UserUncheckedCreateInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -336,6 +341,7 @@ export type UserUpdateInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -352,6 +358,7 @@ export type UserUncheckedUpdateInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -599,6 +606,20 @@ export type UserUpdateOneRequiredWithoutWorkloadStatusesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWorkloadStatusesInput, Prisma.UserUpdateWithoutWorkloadStatusesInput>, Prisma.UserUncheckedUpdateWithoutWorkloadStatusesInput>
 }
 
+export type UserCreateNestedOneWithoutFeedbackEntriesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackEntriesInput, Prisma.UserUncheckedCreateWithoutFeedbackEntriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackEntriesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFeedbackEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbackEntriesInput, Prisma.UserUncheckedCreateWithoutFeedbackEntriesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbackEntriesInput
+  upsert?: Prisma.UserUpsertWithoutFeedbackEntriesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeedbackEntriesInput, Prisma.UserUpdateWithoutFeedbackEntriesInput>, Prisma.UserUncheckedUpdateWithoutFeedbackEntriesInput>
+}
+
 export type UserCreateWithoutWorkspaceInput = {
   id?: string
   name: string
@@ -611,6 +632,7 @@ export type UserCreateWithoutWorkspaceInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -626,6 +648,7 @@ export type UserUncheckedCreateWithoutWorkspaceInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -682,6 +705,7 @@ export type UserCreateWithoutTeamInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -697,6 +721,7 @@ export type UserUncheckedCreateWithoutTeamInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -738,6 +763,7 @@ export type UserCreateWithoutRequestedLeaveRequestsInput = {
   team?: Prisma.TeamCreateNestedOneWithoutUsersInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -753,6 +779,7 @@ export type UserUncheckedCreateWithoutRequestedLeaveRequestsInput = {
   teamId?: string | null
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -774,6 +801,7 @@ export type UserCreateWithoutApprovedLeaveRequestsInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedLeaveRequestsInput = {
@@ -789,6 +817,7 @@ export type UserUncheckedCreateWithoutApprovedLeaveRequestsInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedLeaveRequestsInput = {
@@ -819,6 +848,7 @@ export type UserUpdateWithoutRequestedLeaveRequestsInput = {
   team?: Prisma.TeamUpdateOneWithoutUsersNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -834,6 +864,7 @@ export type UserUncheckedUpdateWithoutRequestedLeaveRequestsInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -861,6 +892,7 @@ export type UserUpdateWithoutApprovedLeaveRequestsInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedLeaveRequestsInput = {
@@ -876,6 +908,7 @@ export type UserUncheckedUpdateWithoutApprovedLeaveRequestsInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAvailabilityStatusesInput = {
@@ -890,6 +923,7 @@ export type UserCreateWithoutAvailabilityStatusesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutUsersInput
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -905,6 +939,7 @@ export type UserUncheckedCreateWithoutAvailabilityStatusesInput = {
   teamId?: string | null
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -936,6 +971,7 @@ export type UserUpdateWithoutAvailabilityStatusesInput = {
   team?: Prisma.TeamUpdateOneWithoutUsersNestedInput
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -951,6 +987,7 @@ export type UserUncheckedUpdateWithoutAvailabilityStatusesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -966,6 +1003,7 @@ export type UserCreateWithoutWorkloadStatusesInput = {
   team?: Prisma.TeamCreateNestedOneWithoutUsersInput
   requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
 }
 
@@ -981,6 +1019,7 @@ export type UserUncheckedCreateWithoutWorkloadStatusesInput = {
   teamId?: string | null
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
 }
 
@@ -1012,6 +1051,7 @@ export type UserUpdateWithoutWorkloadStatusesInput = {
   team?: Prisma.TeamUpdateOneWithoutUsersNestedInput
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -1027,6 +1067,87 @@ export type UserUncheckedUpdateWithoutWorkloadStatusesInput = {
   teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
+}
+
+export type UserCreateWithoutFeedbackEntriesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutUsersInput
+  team?: Prisma.TeamCreateNestedOneWithoutUsersInput
+  requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
+  workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
+}
+
+export type UserUncheckedCreateWithoutFeedbackEntriesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  workspaceId: string
+  teamId?: string | null
+  requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
+}
+
+export type UserCreateOrConnectWithoutFeedbackEntriesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackEntriesInput, Prisma.UserUncheckedCreateWithoutFeedbackEntriesInput>
+}
+
+export type UserUpsertWithoutFeedbackEntriesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackEntriesInput, Prisma.UserUncheckedUpdateWithoutFeedbackEntriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbackEntriesInput, Prisma.UserUncheckedCreateWithoutFeedbackEntriesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFeedbackEntriesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFeedbackEntriesInput, Prisma.UserUncheckedUpdateWithoutFeedbackEntriesInput>
+}
+
+export type UserUpdateWithoutFeedbackEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutUsersNestedInput
+  team?: Prisma.TeamUpdateOneWithoutUsersNestedInput
+  requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFeedbackEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -1053,6 +1174,7 @@ export type UserUpdateWithoutWorkspaceInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -1068,6 +1190,7 @@ export type UserUncheckedUpdateWithoutWorkspaceInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -1105,6 +1228,7 @@ export type UserUpdateWithoutTeamInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
 }
 
@@ -1120,6 +1244,7 @@ export type UserUncheckedUpdateWithoutTeamInput = {
   requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
   availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
   workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
 }
 
@@ -1143,6 +1268,7 @@ export type UserCountOutputType = {
   requestedLeaveRequests: number
   availabilityStatuses: number
   workloadStatuses: number
+  feedbackEntries: number
   approvedLeaveRequests: number
 }
 
@@ -1150,6 +1276,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   requestedLeaveRequests?: boolean | UserCountOutputTypeCountRequestedLeaveRequestsArgs
   availabilityStatuses?: boolean | UserCountOutputTypeCountAvailabilityStatusesArgs
   workloadStatuses?: boolean | UserCountOutputTypeCountWorkloadStatusesArgs
+  feedbackEntries?: boolean | UserCountOutputTypeCountFeedbackEntriesArgs
   approvedLeaveRequests?: boolean | UserCountOutputTypeCountApprovedLeaveRequestsArgs
 }
 
@@ -1187,6 +1314,13 @@ export type UserCountOutputTypeCountWorkloadStatusesArgs<ExtArgs extends runtime
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountFeedbackEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeedbackEntryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountApprovedLeaveRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LeaveRequestWhereInput
 }
@@ -1207,6 +1341,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   requestedLeaveRequests?: boolean | Prisma.User$requestedLeaveRequestsArgs<ExtArgs>
   availabilityStatuses?: boolean | Prisma.User$availabilityStatusesArgs<ExtArgs>
   workloadStatuses?: boolean | Prisma.User$workloadStatusesArgs<ExtArgs>
+  feedbackEntries?: boolean | Prisma.User$feedbackEntriesArgs<ExtArgs>
   approvedLeaveRequests?: boolean | Prisma.User$approvedLeaveRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1258,6 +1393,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   requestedLeaveRequests?: boolean | Prisma.User$requestedLeaveRequestsArgs<ExtArgs>
   availabilityStatuses?: boolean | Prisma.User$availabilityStatusesArgs<ExtArgs>
   workloadStatuses?: boolean | Prisma.User$workloadStatusesArgs<ExtArgs>
+  feedbackEntries?: boolean | Prisma.User$feedbackEntriesArgs<ExtArgs>
   approvedLeaveRequests?: boolean | Prisma.User$approvedLeaveRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1278,6 +1414,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     requestedLeaveRequests: Prisma.$LeaveRequestPayload<ExtArgs>[]
     availabilityStatuses: Prisma.$UserAvailabilityStatusPayload<ExtArgs>[]
     workloadStatuses: Prisma.$UserWorkloadStatusPayload<ExtArgs>[]
+    feedbackEntries: Prisma.$FeedbackEntryPayload<ExtArgs>[]
     approvedLeaveRequests: Prisma.$LeaveRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1689,6 +1826,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   requestedLeaveRequests<T extends Prisma.User$requestedLeaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$requestedLeaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   availabilityStatuses<T extends Prisma.User$availabilityStatusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$availabilityStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAvailabilityStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workloadStatuses<T extends Prisma.User$workloadStatusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workloadStatusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserWorkloadStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedbackEntries<T extends Prisma.User$feedbackEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbackEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedLeaveRequests<T extends Prisma.User$approvedLeaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedLeaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2212,6 +2350,30 @@ export type User$workloadStatusesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.UserWorkloadStatusScalarFieldEnum | Prisma.UserWorkloadStatusScalarFieldEnum[]
+}
+
+/**
+ * User.feedbackEntries
+ */
+export type User$feedbackEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeedbackEntry
+   */
+  select?: Prisma.FeedbackEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeedbackEntry
+   */
+  omit?: Prisma.FeedbackEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeedbackEntryInclude<ExtArgs> | null
+  where?: Prisma.FeedbackEntryWhereInput
+  orderBy?: Prisma.FeedbackEntryOrderByWithRelationInput | Prisma.FeedbackEntryOrderByWithRelationInput[]
+  cursor?: Prisma.FeedbackEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeedbackEntryScalarFieldEnum | Prisma.FeedbackEntryScalarFieldEnum[]
 }
 
 /**

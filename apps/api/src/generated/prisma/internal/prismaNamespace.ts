@@ -392,7 +392,8 @@ export const ModelName = {
   WorkspaceLeaveType: 'WorkspaceLeaveType',
   UserAvailabilityStatus: 'UserAvailabilityStatus',
   UserWorkloadStatus: 'UserWorkloadStatus',
-  PublicHoliday: 'PublicHoliday'
+  PublicHoliday: 'PublicHoliday',
+  FeedbackEntry: 'FeedbackEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "userWorkloadStatus" | "publicHoliday"
+    modelProps: "workspace" | "team" | "user" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "userWorkloadStatus" | "publicHoliday" | "feedbackEntry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1079,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FeedbackEntry: {
+      payload: Prisma.$FeedbackEntryPayload<ExtArgs>
+      fields: Prisma.FeedbackEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeedbackEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeedbackEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.FeedbackEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeedbackEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        findMany: {
+          args: Prisma.FeedbackEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>[]
+        }
+        create: {
+          args: Prisma.FeedbackEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        createMany: {
+          args: Prisma.FeedbackEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeedbackEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.FeedbackEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        update: {
+          args: Prisma.FeedbackEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeedbackEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeedbackEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeedbackEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeedbackEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.FeedbackEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeedbackEntry>
+        }
+        groupBy: {
+          args: Prisma.FeedbackEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedbackEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeedbackEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedbackEntryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1235,6 +1310,17 @@ export const PublicHolidayScalarFieldEnum = {
 } as const
 
 export type PublicHolidayScalarFieldEnum = (typeof PublicHolidayScalarFieldEnum)[keyof typeof PublicHolidayScalarFieldEnum]
+
+
+export const FeedbackEntryScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  userId: 'userId',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt'
+} as const
+
+export type FeedbackEntryScalarFieldEnum = (typeof FeedbackEntryScalarFieldEnum)[keyof typeof FeedbackEntryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1562,6 +1648,7 @@ export type GlobalOmitConfig = {
   userAvailabilityStatus?: Prisma.UserAvailabilityStatusOmit
   userWorkloadStatus?: Prisma.UserWorkloadStatusOmit
   publicHoliday?: Prisma.PublicHolidayOmit
+  feedbackEntry?: Prisma.FeedbackEntryOmit
 }
 
 /* Types for Logging */

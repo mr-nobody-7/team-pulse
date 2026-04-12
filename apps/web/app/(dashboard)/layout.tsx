@@ -1,20 +1,54 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { Navbar } from "@/components/layout/navbar";
 import { Sidebar } from "@/components/layout/sidebar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/auth-context";
 import type { UserRole } from "@/hooks/use-role";
 import { useRole } from "@/hooks/use-role";
+import api from "@/lib/axios";
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const { role } = useRole();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   const openMobileSidebar = () => setIsMobileSidebarOpen(true);
   const closeMobileSidebar = () => setIsMobileSidebarOpen(false);
+
+  const handleFeedbackSubmit = async () => {
+    const message = feedbackMessage.trim();
+    if (!message) {
+      toast.error("Please enter your feedback before submitting");
+      return;
+    }
+
+    setIsSubmittingFeedback(true);
+    try {
+      await api.post("/feedback", { message });
+      toast.success("Thanks! Your feedback was submitted.");
+      setFeedbackMessage("");
+      setIsFeedbackOpen(false);
+    } catch {
+      toast.error("Could not submit feedback");
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
 
   return (
     <div className="relative flex min-h-screen">
@@ -44,6 +78,60 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
         />
         <main className="flex-1 overflow-auto">{children}</main>
       </div>
+
+      <Button
+        type="button"
+        className="fixed right-4 bottom-4 z-50 shadow-lg"
+        onClick={() => setIsFeedbackOpen(true)}
+      >
+        Feedback
+      </Button>
+
+      <Dialog
+        open={isFeedbackOpen}
+        onOpenChange={(open) => {
+          setIsFeedbackOpen(open);
+          if (!open) {
+            setFeedbackMessage("");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Share feedback</DialogTitle>
+            <DialogDescription>What&apos;s on your mind?</DialogDescription>
+          </DialogHeader>
+
+          <textarea
+            value={feedbackMessage}
+            onChange={(event) => setFeedbackMessage(event.target.value)}
+            placeholder="Tell us what would make Team Pulse better..."
+            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring min-h-28 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
+            maxLength={2000}
+          />
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsFeedbackOpen(false);
+                setFeedbackMessage("");
+              }}
+              disabled={isSubmittingFeedback}
+            >
+              Close
+            </Button>
+            <Button
+              type="button"
+              onClick={handleFeedbackSubmit}
+              disabled={isSubmittingFeedback}
+            >
+              {isSubmittingFeedback ? "Submitting..." : "Submit"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

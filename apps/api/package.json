@@ -12,7 +12,8 @@
     "seed": "tsx prisma/seed.ts",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "check": "biome check ."
+    "check": "biome check .",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

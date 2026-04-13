@@ -9,13 +9,16 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format",
-    "check": "pnpm -r check"
+    "check": "pnpm -r check",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.28.1",
   "devDependencies": {
-    "@biomejs/biome": "^2.3.14"
+    "@biomejs/biome": "^2.3.14",
+    "husky": "^9.1.7"
   }
 }

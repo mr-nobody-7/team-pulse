@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth-context";
+import { posthog } from "@/lib/posthog";
 import { registerWorkspace } from "@/services/auth.service";
 import type { LeaveType } from "@/types/api";
 
@@ -109,6 +110,7 @@ export default function RegisterPage() {
         leaveTypes: values.leaveTypes,
       });
 
+      posthog.capture("user_signed_up");
       toast.success("Workspace created successfully.");
       await refetch();
       router.push("/dashboard");

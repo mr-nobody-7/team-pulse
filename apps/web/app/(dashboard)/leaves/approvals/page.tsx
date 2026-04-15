@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLeaves } from "@/hooks/use-leaves";
 import api from "@/lib/axios";
+import { posthog } from "@/lib/posthog";
 
 export default function ApprovalsPage() {
   const queryClient = useQueryClient();
@@ -38,7 +39,10 @@ export default function ApprovalsPage() {
     }) => {
       await api.patch(`/leave/${leaveId}/status`, { status, comment });
     },
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
+      if (variables.status === "APPROVED") {
+        posthog.capture("leave_approved");
+      }
       toast.success("Request updated");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["leaves"] }),

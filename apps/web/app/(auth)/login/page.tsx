@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/auth-context";
 import api from "@/lib/axios";
+import { posthog } from "@/lib/posthog";
 import type { ApiResponse, SafeUser } from "@/types/api";
 
 const loginSchema = z.object({
@@ -62,6 +63,7 @@ export default function LoginPage() {
         "/auth/login",
         values,
       );
+      posthog.capture("user_logged_in");
       toast.success(`Welcome back, ${data.data.user.name}!`);
       refetch();
       router.push("/dashboard");

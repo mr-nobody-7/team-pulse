@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import api from "@/lib/axios";
+import { posthog } from "@/lib/posthog";
 import type {
   ApiResponse,
   ApplyLeavePayload,
@@ -82,6 +83,7 @@ export default function ApplyLeavePage() {
     onSuccess: async (response: {
       data?: { warning?: boolean; warningMessage?: string | null };
     }) => {
+      posthog.capture("leave_requested");
       if (response?.data?.warning) {
         toast.warning(
           response.data.warningMessage ??

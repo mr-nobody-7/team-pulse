@@ -178,6 +178,9 @@ export default function Home() {
             <Link href="/register" className="hover:text-foreground">
               Sign up
             </Link>
+            <Link href="/changelog" className="hover:text-foreground">
+              Changelog
+            </Link>
             <a
               href="https://github.com/mr-nobody-7/team-pulse"
               target="_blank"

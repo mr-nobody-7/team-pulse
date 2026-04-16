@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -105,9 +106,14 @@ export default function LeavesPage() {
               ))}
             </div>
           ) : !(data?.leaves.length ?? 0) ? (
-            <p className="text-sm text-muted-foreground">
-              No leave requests found.
-            </p>
+            <div className="flex flex-col items-start gap-3">
+              <p className="text-sm text-muted-foreground">
+                No leave requests yet.
+              </p>
+              <Button asChild size="sm">
+                <Link href="/leaves/apply">Apply for leave</Link>
+              </Button>
+            </div>
           ) : (
             <div className="space-y-2">
               {data?.leaves.map((leave) => (

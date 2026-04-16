@@ -10,6 +10,7 @@ import {
   PieChart,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import {
   Cell,
@@ -122,6 +123,12 @@ export default function DashboardPage() {
     [availabilityByDay],
   );
 
+  const showWorkspaceWelcome =
+    !isLoading &&
+    (summary?.totalUsers ?? 0) <= 1 &&
+    (summary?.todayLeaves ?? 0) === 0 &&
+    formattedUpcomingLeaves.length === 0;
+
   return (
     <PageContainer>
       {/* Header */}
@@ -133,6 +140,39 @@ export default function DashboardPage() {
           Here&apos;s what&apos;s happening with your team today.
         </p>
       </div>
+
+      {showWorkspaceWelcome && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Welcome to your new workspace</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              You&apos;re all set. Start by taking one of these quick actions.
+            </p>
+            <div className="grid gap-3 md:grid-cols-3">
+              <Link
+                href="/leaves/apply"
+                className="rounded-lg border p-4 text-sm font-medium hover:bg-muted/40"
+              >
+                Apply for leave
+              </Link>
+              <Link
+                href="/calendar"
+                className="rounded-lg border p-4 text-sm font-medium hover:bg-muted/40"
+              >
+                View calendar
+              </Link>
+              <Link
+                href="/settings/team"
+                className="rounded-lg border p-4 text-sm font-medium hover:bg-muted/40"
+              >
+                Invite your team
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

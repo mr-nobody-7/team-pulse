@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AvailabilityBoard } from "@/components/calendar/availability-board";
@@ -9,6 +10,8 @@ import { CalendarGrid } from "@/components/calendar/calendar-grid";
 import { CalendarHeader } from "@/components/calendar/calendar-header";
 import { LeaveDetailsPanel } from "@/components/calendar/leave-details-panel";
 import { PageContainer } from "@/components/layout/page-container";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
 import { useAvailabilityBoard } from "@/hooks/use-availability-board";
 import { useCalendarLeaves } from "@/hooks/use-calendar-leaves";
@@ -87,6 +90,9 @@ export default function CalendarPage() {
     currentDate.getMonth(),
     effectiveTeamId,
   );
+
+  const showNoTeamMembersState =
+    role !== "USER" && !isLoading && visibleTeams.length === 0;
 
   const { data: holidaysMap = {}, isLoading: isHolidayLoading } =
     usePublicHolidays({
@@ -171,6 +177,19 @@ export default function CalendarPage() {
         showHeatmapLegend={showCapacityHeatmap}
         showAllTeamsOption={canSelectAllTeams}
       />
+
+      {showNoTeamMembersState && (
+        <Card>
+          <CardContent className="flex flex-col items-start gap-3 p-4">
+            <p className="text-sm text-muted-foreground">
+              Add your team to see the calendar.
+            </p>
+            <Button asChild size="sm">
+              <Link href="/settings/team">Invite members</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div
         key={monthKey}

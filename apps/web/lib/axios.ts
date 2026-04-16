@@ -20,6 +20,11 @@ const api = axios.create({
   },
 });
 
+function isPublicRoute(pathname: string): boolean {
+  const exactPublicRoutes = new Set(["/", "/login", "/register", "/changelog"]);
+  return exactPublicRoutes.has(pathname);
+}
+
 // On 401 (expired / invalid session) redirect to login (client-side only)
 api.interceptors.response.use(
   (response) => response,
@@ -28,7 +33,7 @@ api.interceptors.response.use(
       axios.isAxiosError(error) &&
       error.response?.status === 401 &&
       typeof window !== "undefined" &&
-      !window.location.pathname.startsWith("/login")
+      !isPublicRoute(window.location.pathname)
     ) {
       window.location.replace("/login");
     }

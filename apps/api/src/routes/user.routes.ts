@@ -4,14 +4,29 @@ import {
   createUserController,
   deactivateUserController,
   listUsersController,
+  updateMyPasswordController,
+  updateMyProfileController,
   updateUserController,
 } from "../controllers/user.controller.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
 import { validate } from "../middleware/validate.js";
-import { createUserSchema, updateUserSchema } from "../utils/validations.js";
+import {
+  createUserSchema,
+  updateMyPasswordSchema,
+  updateMyProfileSchema,
+  updateUserSchema,
+} from "../utils/validations.js";
 
 const router = Router();
+
+router.put("/me", authenticate, validate(updateMyProfileSchema), updateMyProfileController);
+router.put(
+  "/me/password",
+  authenticate,
+  validate(updateMyPasswordSchema),
+  updateMyPasswordController,
+);
 
 router.get("/", authenticate, authorize(["ADMIN"]), listUsersController);
 router.post(

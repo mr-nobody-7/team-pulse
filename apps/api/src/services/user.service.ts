@@ -4,6 +4,8 @@ import { prisma } from "../lib/db.js";
 import type {
   CreateUserInput,
   ListUsersQuery,
+  UpdateMyPasswordInput,
+  UpdateMyProfileInput,
   UpdateUserInput,
 } from "../types/index.js";
 import { BadRequestError, ConflictError, NotFoundError } from "../utils/errors.js";
@@ -176,5 +178,67 @@ export const deactivateUser = async (workspaceId: string, userId: string) => {
       isActive: true,
       teamId: true,
     },
+  });
+};
+
+export const updateMyProfile = async (
+  workspaceId: string,
+  userId: string,
+  input: UpdateMyProfileInput,
+) => {
+  const user = await prisma.user.findFirst({
+    where: { id: userId, workspaceId },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: { name: input.name.trim() },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isActive: true,
+      createdAt: true,
+      workspaceId: true,
+      teamId: true,
+      team: { select: { id: true, name: true } },
+    },
+  });
+};
+
+export const updateMyPassword = async (
+  workspaceId: string,
+  userId: string,
+  input: UpdateMyPasswordInput,
+) => {
+  const user = await prisma.user.findFirst({
+    where: { id: userId, workspaceId },
+    select: { id: true, passwordHash: true },
+  });
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  const currentPasswordValid = await bcrypt.compare(
+    input.currentPassword,
+    user.passwordHash,
+  );
+
+  if (!currentPasswordValid) {
+    throw new BadRequestError("Current password is incorrect");
+  }
+
+  const nextPasswordHash = await bcrypt.hash(input.newPassword, 10);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash: nextPasswordHash },
   });
 };

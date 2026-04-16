@@ -259,6 +259,24 @@ export const updateUserSchema = z
     message: "At least one field is required",
   });
 
+export const updateMyProfileSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
+});
+
+export const updateMyPasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(8, "Current password must be at least 8 characters long"),
+    newPassword: z
+      .string()
+      .min(8, "New password must be at least 8 characters long"),
+  });
+
 export const listAuditLogsSchema = z.object({
   action: z
     .enum([

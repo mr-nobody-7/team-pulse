@@ -151,6 +151,15 @@ export interface UpdateUserInput {
   is_active?: boolean | undefined;
 }
 
+export interface UpdateMyProfileInput {
+  name: string;
+}
+
+export interface UpdateMyPasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface ListAuditLogsQuery {
   action?:
     | "USER_REGISTERED"

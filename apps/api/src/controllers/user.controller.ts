@@ -4,6 +4,8 @@ import {
   createUser,
   deactivateUser,
   listUsers,
+  updateMyPassword,
+  updateMyProfile,
   updateUser,
 } from "../services/user.service.js";
 import { createAuditLog } from "../utils/audit.js";
@@ -128,6 +130,59 @@ export const deactivateUserController = async (
     });
 
     sendSuccess(res, { user }, "User deactivated");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateMyProfileController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    const user = await updateMyProfile(workspaceId, userId, req.body);
+
+    createAuditLog({
+      action: "USER_UPDATED",
+      userId,
+      workspaceId,
+      targetId: user.id,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+
+    sendSuccess(res, { user }, "Profile updated");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateMyPasswordController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    await updateMyPassword(workspaceId, userId, req.body);
+
+    createAuditLog({
+      action: "USER_UPDATED",
+      userId,
+      workspaceId,
+      targetId: userId,
+      targetType: "User",
+      ipAddress: req.ip,
+      metadata: { passwordChanged: true },
+    });
+
+    sendSuccess(res, null, "Password updated");
   } catch (error) {
     next(error);
   }

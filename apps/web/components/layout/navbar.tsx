@@ -88,7 +88,7 @@ export function Navbar({
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/settings/profile")}>
             <User className="mr-2 h-4 w-4" />
             Profile
           </DropdownMenuItem>

@@ -18,14 +18,15 @@ export interface GoogleAuthUser {
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL;
+const GOOGLE_CALLBACK_URL =
+  process.env.GOOGLE_CALLBACK_URL?.trim() || "/auth/google/callback";
 
 const OAUTH_ONBOARDING_WORKSPACE_NAME = "OAuth Onboarding";
 
 function ensureGoogleOauthEnv() {
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
     throw new Error(
-      "Google OAuth is not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_CALLBACK_URL.",
+      "Google OAuth is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.",
     );
   }
 }
@@ -133,7 +134,7 @@ export function configureGoogleStrategy(): void {
       {
         clientID: GOOGLE_CLIENT_ID!,
         clientSecret: GOOGLE_CLIENT_SECRET!,
-        callbackURL: GOOGLE_CALLBACK_URL!,
+        callbackURL: GOOGLE_CALLBACK_URL,
       },
       async (
         _accessToken: string,

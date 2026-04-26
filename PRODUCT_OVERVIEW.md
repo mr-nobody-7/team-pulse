@@ -13,7 +13,7 @@ Team Pulse gives organizations a single source of truth for leave planning, work
 ## Primary users
 
 - **User**: applies for leave, tracks status, updates availability/workload.
-- **Manager**: approves/rejects leave, views team planning signals and reports.
+- **Manager**: approves/rejects leave, views team planning signals and reports.l
 - **Admin**: workspace-wide visibility and configuration (teams, users, settings, audit logs).
 
 ## Value proposition

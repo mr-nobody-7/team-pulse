@@ -1,40 +1,72 @@
 # Team Pulse
 
-Team Pulse is a workspace-based team availability and leave management platform.
-It helps teams plan time off, understand daily capacity, and make better approval decisions.
+Team Pulse is a workspace-based leave and availability platform for teams.
+It helps employees plan time off, helps managers make better approval decisions,
+and gives admins visibility into operations with auditability.
 
-## What this product does
+## User guide
 
-- Centralized leave request lifecycle (apply, approve/reject, cancel, track)
-- Team-wide daily availability and workload visibility
-- Public holiday-aware planning
-- Smart warning signals during leave approvals
-- Capacity heatmap in calendar for manager/admin planning
-- Reports and analytics for operational visibility
-- Audit logs for important workspace actions
+### Who should use Team Pulse
 
-## Monorepo structure
+- Users (employees): apply for leave, track request status, set daily availability/workload.
+- Managers: review team leaves, approve/reject requests, monitor team planning risk.
+- Admins: manage teams/users/settings, review analytics and audit logs.
 
-- `apps/api` — Express + TypeScript REST API
-- `apps/web` — Next.js + TypeScript frontend
-- `packages` — shared packages (reserved)
+### Main product features
 
-## Tech stack
+- Authentication with email/password and Google OAuth.
+- Workspace onboarding with custom leave type selection.
+- Leave lifecycle management:
+	- Apply leave with session granularity: `FULL_DAY`, `FIRST_HALF`, `SECOND_HALF`.
+	- Approval lifecycle: `PENDING`, `APPROVED`, `REJECTED`, `CANCELLED`.
+	- Overlap prevention and status-based filtering.
+- Smart capacity warning:
+	- Warns when projected team capacity drops below threshold.
+	- Configurable by `TEAM_MIN_CAPACITY_WARNING_PERCENT`.
+- Calendar and planning:
+	- Team leave calendar.
+	- Public holiday overlay.
+	- Capacity heatmap for planning risk.
+- Availability and standup support:
+	- Daily status: `AVAILABLE`, `ON_LEAVE`, `WORKING_REMOTELY`, `HALF_DAY`, `BUSY`, `FOCUS_TIME`.
+	- Workload status: `LIGHT`, `NORMAL`, `HEAVY`.
+	- Standup board for daily team visibility.
+- Reports and governance:
+	- Dashboard summaries.
+	- Analytics with CSV export.
+	- Audit logs for key actions.
 
-- Node.js + TypeScript
-- Express 5, Prisma, PostgreSQL
-- Next.js App Router + React Query
-- Biome for linting/formatting
-- pnpm workspaces
+### Typical user workflows
 
-## Quick start
+1. Register a workspace using email/password or Google.
+2. Configure leave types (admin) and teams/users.
+3. Team members apply for leave.
+4. Managers/admins review approvals with capacity warnings.
+5. Team uses calendar, standup board, and analytics for planning.
+
+### Role-based navigation highlights
+
+- User:
+	- `My Leaves`, `Apply Leave`, `Calendar`, `Dashboard`.
+- Manager:
+	- `Team Leaves`, `Approvals`, `Reports`, `Calendar`.
+- Admin:
+	- `All Leaves`, `Teams`, `Users`, `Settings`, `Audit Logs`, `Reports`.
+
+### Error and feedback behavior
+
+- Validation and business errors are returned with user-friendly messages.
+- Duplicate email registration now returns `Email already in use`.
+- Auth/session issues on private pages redirect to login.
+
+## Getting started
 
 ### Prerequisites
 
 - Node.js 20+
 - pnpm 10+
 
-### Install
+### Install dependencies
 
 ```bash
 pnpm install
@@ -42,15 +74,19 @@ pnpm install
 
 ### Configure environment
 
-API environment file:
+API:
 
 ```bash
 cp apps/api/.env.example apps/api/.env
 ```
 
-Set required values in `apps/api/.env`.
+Web:
 
-### Run all apps
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
+
+### Run locally
 
 ```bash
 pnpm dev
@@ -58,61 +94,78 @@ pnpm dev
 
 - Web: `http://localhost:3000`
 - API: `http://localhost:4000`
+- Health check: `http://localhost:4000/health`
 
-### Build and checks
+### Quality commands
 
 ```bash
-pnpm build
 pnpm check
+pnpm typecheck
+pnpm build
 pnpm format
 ```
 
-## Deployment
+## Environment variables
 
-### Production setup (Render + Vercel)
+### API required (`apps/api`)
 
-1. Deploy the API from `apps/api` to Render.
-2. Confirm the API is healthy at `<render-api-url>/health`.
-3. In Vercel project settings for `apps/web`, set `NEXT_PUBLIC_API_URL` to the Render API URL.
-4. Deploy the web app from `apps/web` to Vercel.
-5. Verify web routes and authenticated flows (`/login`, `/register`, `/dashboard`) in production.
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `CLIENT_URL`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `GOOGLE_CALLBACK_URL`
+- `BREVO_API_KEY`
+- `BREVO_SENDER_EMAIL`
+- `BREVO_SENDER_NAME`
 
-### Required environment variables
+### API recommended/optional (`apps/api`)
 
-#### API (`apps/api`)
+- `CLIENT_URLS` (comma-separated allowed origins)
+- `NODE_ENV`
+- `PORT`
+- `TEAM_MIN_CAPACITY_WARNING_PERCENT` (`0`-`100`, default `50`)
 
-- `DATABASE_URL`: PostgreSQL connection string used by Prisma.
-- `JWT_SECRET`: Secret key used to sign and verify authentication JWTs.
-- `CLIENT_URL`: Primary allowed frontend origin for CORS and OAuth redirects.
-- `GOOGLE_CLIENT_ID`: Google OAuth client ID.
-- `GOOGLE_CLIENT_SECRET`: Google OAuth client secret.
-- `GOOGLE_CALLBACK_URL`: OAuth callback URL served by the API (`/auth/google/callback`).
-- `BREVO_API_KEY`: API key used to send transactional email notifications.
-- `BREVO_SENDER_EMAIL`: Sender email address used for outbound emails.
-- `BREVO_SENDER_NAME`: Sender display name used for outbound emails.
+### Web required (`apps/web`)
 
-#### API optional but recommended (`apps/api`)
+- `NEXT_PUBLIC_API_URL`
 
-- `CLIENT_URLS`: Comma-separated list of additional allowed frontend origins (preview/staging domains).
-- `NODE_ENV`: Runtime environment (`production` in deploy).
-- `PORT`: HTTP port for the API process.
-- `TEAM_MIN_CAPACITY_WARNING_PERCENT`: Threshold (0-100) for leave capacity warnings.
+### OAuth callback recommendation
 
-#### Web (`apps/web`)
+Use relative callback path so one config works locally and in production:
 
-- `NEXT_PUBLIC_API_URL`: Public API base URL for browser calls and Vercel `/api/*` rewrite destination (set this to the Render API URL in Vercel).
+- `GOOGLE_CALLBACK_URL=/auth/google/callback`
 
-## Environment variables (API)
+Then register both exact callback URLs in Google Console:
 
-See `apps/api/.env.example`.
-Notable variable:
+- `http://localhost:4000/auth/google/callback`
+- `https://backend-production-4678.up.railway.app/auth/google/callback`
 
-- `TEAM_MIN_CAPACITY_WARNING_PERCENT` — integer threshold from `0` to `100` (default `50`)
+## Deployment notes
+
+Current hosted setup:
+
+- API: Railway (`https://backend-production-4678.up.railway.app`)
+- Web: Vercel (`https://team-pulse-web-omega.vercel.app`)
+
+Deployment checklist:
+
+1. Deploy API and confirm `/health` is reachable.
+2. Set web `NEXT_PUBLIC_API_URL` to API URL.
+3. Configure API `CLIENT_URL` to the web domain.
+4. Ensure Google OAuth origins and redirect URIs include local and production URLs.
+5. Redeploy both services after environment variable changes.
+
+## Repository structure
+
+- `apps/api`: Express + Prisma backend
+- `apps/web`: Next.js frontend
+- `packages`: shared packages (reserved)
 
 ## Documentation index
 
 - [Product Overview](./PRODUCT_OVERVIEW.md)
-- [Architecture](./ARCHITECTURE.md)
+- [Technical Document](./ARCHITECTURE.md)
 - [Features](./FEATURES.md)
 - [Setup Guide](./SETUP.md)
 - [Operations Guide](./OPERATIONS.md)

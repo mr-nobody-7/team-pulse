@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/db.js";
 import type {
   LoginInput,
@@ -32,6 +33,29 @@ const ALL_WORKSPACE_LEAVE_TYPES = [
   "CASUAL",
 ] as const;
 
+function isEmailUniqueConstraintError(error: unknown): boolean {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+    return false;
+  }
+
+  if (error.code !== "P2002") {
+    return false;
+  }
+
+  const target = error.meta?.target;
+  if (typeof target === "string") {
+    return target.toLowerCase().includes("email");
+  }
+
+  if (Array.isArray(target)) {
+    return target.some(
+      (field) => typeof field === "string" && field.toLowerCase().includes("email"),
+    );
+  }
+
+  return false;
+}
+
 export const registerUserService = async (
   input: RegisterInput,
 ): Promise<RegisterResult> => {
@@ -49,34 +73,42 @@ export const registerUserService = async (
 
   const passwordHash = await bcrypt.hash(password, 10);
 
-  return prisma.$transaction(async (tx) => {
-    const workspace = await tx.workspace.create({
-      data: { name: workspaceName },
-    });
+  try {
+    return prisma.$transaction(async (tx) => {
+      const workspace = await tx.workspace.create({
+        data: { name: workspaceName },
+      });
 
-    const user = await tx.user.create({
-      data: {
-        name,
-        email: normalizedEmail,
-        passwordHash,
-        role: "ADMIN",
-        workspaceId: workspace.id,
-      },
-    });
+      const user = await tx.user.create({
+        data: {
+          name,
+          email: normalizedEmail,
+          passwordHash,
+          role: "ADMIN",
+          workspaceId: workspace.id,
+        },
+      });
 
-    await tx.workspaceLeaveType.createMany({
-      data: [
-        { workspaceId: workspace.id, type: "VACATION", isActive: true },
-        { workspaceId: workspace.id, type: "SICK", isActive: true },
-        { workspaceId: workspace.id, type: "PERSONAL", isActive: true },
-        { workspaceId: workspace.id, type: "CASUAL", isActive: true },
-      ],
-      skipDuplicates: true,
-    });
+      await tx.workspaceLeaveType.createMany({
+        data: [
+          { workspaceId: workspace.id, type: "VACATION", isActive: true },
+          { workspaceId: workspace.id, type: "SICK", isActive: true },
+          { workspaceId: workspace.id, type: "PERSONAL", isActive: true },
+          { workspaceId: workspace.id, type: "CASUAL", isActive: true },
+        ],
+        skipDuplicates: true,
+      });
 
-    const { passwordHash: _, ...safeUser } = user;
-    return { workspace, user: safeUser };
-  });
+      const { passwordHash: _, ...safeUser } = user;
+      return { workspace, user: safeUser };
+    });
+  } catch (error) {
+    if (isEmailUniqueConstraintError(error)) {
+      throw new EmailInUseError();
+    }
+
+    throw error;
+  }
 };
 
 export const registerWorkspaceService = async (
@@ -97,33 +129,43 @@ export const registerWorkspaceService = async (
 
   const passwordHash = await bcrypt.hash(password, 10);
 
-  const result = await prisma.$transaction(async (tx) => {
-    const workspace = await tx.workspace.create({
-      data: { name: workspaceName },
-    });
+  let result;
 
-    const user = await tx.user.create({
-      data: {
-        name,
-        email: normalizedEmail,
-        passwordHash,
-        role: "ADMIN",
-        workspaceId: workspace.id,
-      },
-    });
+  try {
+    result = await prisma.$transaction(async (tx) => {
+      const workspace = await tx.workspace.create({
+        data: { name: workspaceName },
+      });
 
-    await tx.workspaceLeaveType.createMany({
-      data: ALL_WORKSPACE_LEAVE_TYPES.map((type) => ({
-        workspaceId: workspace.id,
-        type,
-        isActive: selectedLeaveTypes.has(type),
-      })),
-      skipDuplicates: true,
-    });
+      const user = await tx.user.create({
+        data: {
+          name,
+          email: normalizedEmail,
+          passwordHash,
+          role: "ADMIN",
+          workspaceId: workspace.id,
+        },
+      });
 
-    const { passwordHash: _, ...safeUser } = user;
-    return { workspace, user: safeUser };
-  });
+      await tx.workspaceLeaveType.createMany({
+        data: ALL_WORKSPACE_LEAVE_TYPES.map((type) => ({
+          workspaceId: workspace.id,
+          type,
+          isActive: selectedLeaveTypes.has(type),
+        })),
+        skipDuplicates: true,
+      });
+
+      const { passwordHash: _, ...safeUser } = user;
+      return { workspace, user: safeUser };
+    });
+  } catch (error) {
+    if (isEmailUniqueConstraintError(error)) {
+      throw new EmailInUseError();
+    }
+
+    throw error;
+  }
 
   const token = generateToken({
     userId: result.user.id,

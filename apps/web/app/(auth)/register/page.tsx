@@ -78,6 +78,30 @@ export default function RegisterPage() {
 
   const leaveTypes = form.watch("leaveTypes");
 
+  const getErrorMessage = (error: unknown): string | undefined => {
+    if (!isAxiosError(error)) {
+      return undefined;
+    }
+
+    const data = error.response?.data as
+      | { message?: string; error?: string }
+      | undefined;
+
+    if (typeof data?.message === "string" && data.message.trim().length > 0) {
+      return data.message;
+    }
+
+    if (typeof data?.error === "string" && data.error.trim().length > 0) {
+      return data.error;
+    }
+
+    if (error.response?.status === 409) {
+      return "Email already in use";
+    }
+
+    return undefined;
+  };
+
   const handleNext = async () => {
     const fieldsByStep: Record<1 | 2 | 3, Array<keyof RegisterForm>> = {
       1: ["name", "email", "password"],
@@ -115,9 +139,7 @@ export default function RegisterPage() {
       await refetch();
       router.push("/dashboard");
     } catch (error) {
-      const message = isAxiosError(error)
-        ? (error.response?.data as { message?: string })?.message
-        : undefined;
+      const message = getErrorMessage(error);
       toast.error(message ?? "Could not create workspace");
     } finally {
       setIsSubmitting(false);

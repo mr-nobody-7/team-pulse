@@ -2,6 +2,10 @@
   "name": "team-pulse",
   "private": true,
   "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "description": "",
   "main": "index.js",
   "scripts": {

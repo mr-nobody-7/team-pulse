@@ -166,8 +166,6 @@ Deployment checklist:
 
 - [Product Overview](./PRODUCT_OVERVIEW.md)
 - [Technical Document](./ARCHITECTURE.md)
-- [Features](./FEATURES.md)
-- [Setup Guide](./SETUP.md)
 - [Operations Guide](./OPERATIONS.md)
 
 ## License

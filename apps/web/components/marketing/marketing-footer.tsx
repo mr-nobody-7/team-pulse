@@ -75,6 +75,23 @@ export function MarketingFooter() {
                 GitHub
               </a>
             </div>
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-widest text-foreground">
+                Legal
+              </span>
+              <Link
+                href="/privacy"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Terms of Service
+              </Link>
+            </div>
           </nav>
         </div>
 

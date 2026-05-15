@@ -5,6 +5,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import passport from "passport";
+import * as Sentry from "@sentry/node";
 import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
@@ -126,6 +127,10 @@ app.get("/health", (_req, res) => {
   res.json({ success: true, message: "API running 🚀" });
 });
 
+app.get("/debug-sentry", () => {
+  throw new Error("My first Sentry error!");
+});
+
 // ── API Docs (development-friendly, not rate-limited) ──────────────────────
 app.get("/openapi.json", (_req, res) => {
   res.json(openApiSpec);
@@ -139,4 +144,5 @@ app.use(
   }),
 );
 
+Sentry.setupExpressErrorHandler(app);
 app.use(errorHandler);

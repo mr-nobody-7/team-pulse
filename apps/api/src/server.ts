@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./instrument.js";
 import { app } from "./app.js";
 import { startAccrualCronJobs } from "./services/accrual.service.js";
 import { startSlackDigestCron } from "./integrations/slack/slack.digest.js";

@@ -5,6 +5,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import passport from "passport";
+import { randomUUID } from "crypto";
 import * as Sentry from "@sentry/node";
 import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -70,6 +71,14 @@ function shouldCaptureRawBodyUrl(url?: string): boolean {
 }
 
 app.set("trust proxy", 1);
+
+// Add request ID middleware for audit trails and debugging
+app.use((req, res, next) => {
+  req.id =
+    (req.headers["x-request-id"] as string) || randomUUID();
+  res.setHeader("X-Request-ID", req.id);
+  next();
+});
 
 app.use(
   cors({

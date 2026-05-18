@@ -71,7 +71,7 @@ router.post(
   calendarDisconnectController,
 );
 router.get("/me", authenticate, meController);
-router.post("/logout", logoutController);
+router.post("/logout", authenticate, logoutController);
 router.post("/refresh", refreshController);
 
 export { router as authRoutes };

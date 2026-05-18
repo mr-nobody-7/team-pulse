@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +9,6 @@ import type { ApiResponse } from "@/types/api";
 type CalendarStatus = {
   connected: boolean;
 };
-
-function resolveApiBaseUrl(): string {
-  return (process.env.NEXT_PUBLIC_API_URL ?? "/api").replace(/\/$/, "");
-}
 
 export function GoogleCalendarConnectCard() {
   const queryClient = useQueryClient();
@@ -43,8 +37,9 @@ export function GoogleCalendarConnectCard() {
   });
 
   const handleConnect = () => {
-    const apiBaseUrl = resolveApiBaseUrl();
-    window.location.href = `${apiBaseUrl}/auth/google/calendar-connect`;
+    // Use Next.js API route for server-side redirect
+    // Backend URL is never exposed to the browser
+    window.location.href = "/api/auth/calendar-connect";
   };
 
   return (

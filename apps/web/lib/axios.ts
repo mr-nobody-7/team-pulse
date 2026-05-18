@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 const api = axios.create({
   // Always call through Next.js rewrite so both local and production are consistent.
@@ -9,6 +9,10 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 
 function isPublicRoute(pathname: string): boolean {
   const exactPublicRoutes = new Set(["/", "/login", "/register", "/changelog"]);
@@ -22,10 +26,7 @@ let failedQueue: Array<{
   reject: (reason?: unknown) => void;
 }> = [];
 
-const processQueue = (
-  error?: unknown,
-  token: string | null = null,
-) => {
+const processQueue = (error?: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -49,7 +50,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const originalRequest = error.config as any;
+    const originalRequest = error.config as CustomAxiosRequestConfig;
 
     // Prevent infinite redirect loops on public routes
     if (isPublicRoute(window.location.pathname)) {

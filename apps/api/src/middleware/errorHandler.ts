@@ -21,7 +21,7 @@ function isDatabaseConnectivityError(err: Error): boolean {
 
 export const errorHandler = (
   err: Error,
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
@@ -34,7 +34,7 @@ export const errorHandler = (
   }
 
   if (isDatabaseConnectivityError(err)) {
-    console.error("[Infrastructure Error] Database connectivity", err);
+    console.error(`[${req.id}] [Infrastructure Error] Database connectivity`, err);
     res.status(503).json({
       success: false,
       message: "Database temporarily unavailable",
@@ -42,7 +42,7 @@ export const errorHandler = (
     return;
   }
 
-  console.error("[Unhandled Error]", err);
+  console.error(`[${req.id}] [Unhandled Error]`, err);
   res.status(500).json({
     success: false,
     message: "Internal server error",

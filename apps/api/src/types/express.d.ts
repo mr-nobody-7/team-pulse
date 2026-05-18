@@ -7,6 +7,7 @@ declare global {
     interface Request {
       user?: User;
       rawBody?: string;
+      id: string;
     }
   }
 }

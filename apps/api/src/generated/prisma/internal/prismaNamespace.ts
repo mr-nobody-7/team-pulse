@@ -1731,8 +1731,8 @@ export type FeedbackEntryScalarFieldEnum = (typeof FeedbackEntryScalarFieldEnum)
 export const UserGoogleTokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
+  accessTokenEncrypted: 'accessTokenEncrypted',
+  refreshTokenEncrypted: 'refreshTokenEncrypted',
   expiresAt: 'expiresAt',
   scope: 'scope',
   createdAt: 'createdAt',

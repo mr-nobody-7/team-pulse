@@ -49,15 +49,15 @@ export async function saveGoogleTokens(
     const savedRecord = await prisma.userGoogleToken.upsert({
       where: { userId },
       update: {
-        accessToken: encryptedAccessToken,
-        refreshToken: encryptedRefreshToken,
+        accessTokenEncrypted: encryptedAccessToken,
+        refreshTokenEncrypted: encryptedRefreshToken,
         expiresAt: new Date(tokens.expiry_date),
         scope: tokens.scope,
       },
       create: {
         userId,
-        accessToken: encryptedAccessToken,
-        refreshToken: encryptedRefreshToken,
+        accessTokenEncrypted: encryptedAccessToken,
+        refreshTokenEncrypted: encryptedRefreshToken,
         expiresAt: new Date(tokens.expiry_date),
         scope: tokens.scope,
       },
@@ -85,8 +85,8 @@ export async function getGoogleClient(
       return null;
     }
 
-    const accessToken = decrypt(tokenRecord.accessToken);
-    const refreshToken = decrypt(tokenRecord.refreshToken);
+    const accessToken = decrypt(tokenRecord.accessTokenEncrypted);
+    const refreshToken = decrypt(tokenRecord.refreshTokenEncrypted);
 
     const client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
@@ -102,17 +102,17 @@ export async function getGoogleClient(
     client.on("tokens", async (refreshedTokens) => {
       try {
         const nextData: {
-          accessToken?: string;
-          refreshToken?: string;
+          accessTokenEncrypted?: string;
+          refreshTokenEncrypted?: string;
           expiresAt?: Date;
         } = {};
 
         if (refreshedTokens.access_token) {
-          nextData.accessToken = encrypt(refreshedTokens.access_token);
+          nextData.accessTokenEncrypted = encrypt(refreshedTokens.access_token);
         }
 
         if (refreshedTokens.refresh_token) {
-          nextData.refreshToken = encrypt(refreshedTokens.refresh_token);
+          nextData.refreshTokenEncrypted = encrypt(refreshedTokens.refresh_token);
         }
 
         if (refreshedTokens.expiry_date) {

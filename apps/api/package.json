@@ -22,6 +22,11 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node"
+  },
   "packageManager": "pnpm@10.28.1",
   "dependencies": {
     "@getbrevo/brevo": "^3.0.1",
@@ -64,6 +69,7 @@
     "@types/web-push": "^3.6.4",
     "biome": "^0.3.3",
     "prisma": "^7.4.1",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

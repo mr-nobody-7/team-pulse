@@ -292,8 +292,8 @@ model UserGoogleToken {
   id           String   @id @default(cuid())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String   @unique
-  accessToken  String
-  refreshToken String
+  accessTokenEncrypted  String
+  refreshTokenEncrypted String
   expiresAt    DateTime
   scope        String
   createdAt    DateTime @default(now())

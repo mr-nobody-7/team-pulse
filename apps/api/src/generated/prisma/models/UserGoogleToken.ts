@@ -27,8 +27,8 @@ export type AggregateUserGoogleToken = {
 export type UserGoogleTokenMinAggregateOutputType = {
   id: string | null
   userId: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   createdAt: Date | null
@@ -38,8 +38,8 @@ export type UserGoogleTokenMinAggregateOutputType = {
 export type UserGoogleTokenMaxAggregateOutputType = {
   id: string | null
   userId: string | null
-  accessToken: string | null
-  refreshToken: string | null
+  accessTokenEncrypted: string | null
+  refreshTokenEncrypted: string | null
   expiresAt: Date | null
   scope: string | null
   createdAt: Date | null
@@ -49,8 +49,8 @@ export type UserGoogleTokenMaxAggregateOutputType = {
 export type UserGoogleTokenCountAggregateOutputType = {
   id: number
   userId: number
-  accessToken: number
-  refreshToken: number
+  accessTokenEncrypted: number
+  refreshTokenEncrypted: number
   expiresAt: number
   scope: number
   createdAt: number
@@ -62,8 +62,8 @@ export type UserGoogleTokenCountAggregateOutputType = {
 export type UserGoogleTokenMinAggregateInputType = {
   id?: true
   userId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   createdAt?: true
@@ -73,8 +73,8 @@ export type UserGoogleTokenMinAggregateInputType = {
 export type UserGoogleTokenMaxAggregateInputType = {
   id?: true
   userId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   createdAt?: true
@@ -84,8 +84,8 @@ export type UserGoogleTokenMaxAggregateInputType = {
 export type UserGoogleTokenCountAggregateInputType = {
   id?: true
   userId?: true
-  accessToken?: true
-  refreshToken?: true
+  accessTokenEncrypted?: true
+  refreshTokenEncrypted?: true
   expiresAt?: true
   scope?: true
   createdAt?: true
@@ -168,8 +168,8 @@ export type UserGoogleTokenGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type UserGoogleTokenGroupByOutputType = {
   id: string
   userId: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date
   scope: string
   createdAt: Date
@@ -200,8 +200,8 @@ export type UserGoogleTokenWhereInput = {
   NOT?: Prisma.UserGoogleTokenWhereInput | Prisma.UserGoogleTokenWhereInput[]
   id?: Prisma.StringFilter<"UserGoogleToken"> | string
   userId?: Prisma.StringFilter<"UserGoogleToken"> | string
-  accessToken?: Prisma.StringFilter<"UserGoogleToken"> | string
-  refreshToken?: Prisma.StringFilter<"UserGoogleToken"> | string
+  accessTokenEncrypted?: Prisma.StringFilter<"UserGoogleToken"> | string
+  refreshTokenEncrypted?: Prisma.StringFilter<"UserGoogleToken"> | string
   expiresAt?: Prisma.DateTimeFilter<"UserGoogleToken"> | Date | string
   scope?: Prisma.StringFilter<"UserGoogleToken"> | string
   createdAt?: Prisma.DateTimeFilter<"UserGoogleToken"> | Date | string
@@ -212,8 +212,8 @@ export type UserGoogleTokenWhereInput = {
 export type UserGoogleTokenOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -227,8 +227,8 @@ export type UserGoogleTokenWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserGoogleTokenWhereInput | Prisma.UserGoogleTokenWhereInput[]
   OR?: Prisma.UserGoogleTokenWhereInput[]
   NOT?: Prisma.UserGoogleTokenWhereInput | Prisma.UserGoogleTokenWhereInput[]
-  accessToken?: Prisma.StringFilter<"UserGoogleToken"> | string
-  refreshToken?: Prisma.StringFilter<"UserGoogleToken"> | string
+  accessTokenEncrypted?: Prisma.StringFilter<"UserGoogleToken"> | string
+  refreshTokenEncrypted?: Prisma.StringFilter<"UserGoogleToken"> | string
   expiresAt?: Prisma.DateTimeFilter<"UserGoogleToken"> | Date | string
   scope?: Prisma.StringFilter<"UserGoogleToken"> | string
   createdAt?: Prisma.DateTimeFilter<"UserGoogleToken"> | Date | string
@@ -239,8 +239,8 @@ export type UserGoogleTokenWhereUniqueInput = Prisma.AtLeast<{
 export type UserGoogleTokenOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -256,8 +256,8 @@ export type UserGoogleTokenScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserGoogleTokenScalarWhereWithAggregatesInput | Prisma.UserGoogleTokenScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
   userId?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
-  accessToken?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
-  refreshToken?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
+  accessTokenEncrypted?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
+  refreshTokenEncrypted?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"UserGoogleToken"> | Date | string
   scope?: Prisma.StringWithAggregatesFilter<"UserGoogleToken"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserGoogleToken"> | Date | string
@@ -266,8 +266,8 @@ export type UserGoogleTokenScalarWhereWithAggregatesInput = {
 
 export type UserGoogleTokenCreateInput = {
   id?: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date | string
   scope: string
   createdAt?: Date | string
@@ -278,8 +278,8 @@ export type UserGoogleTokenCreateInput = {
 export type UserGoogleTokenUncheckedCreateInput = {
   id?: string
   userId: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date | string
   scope: string
   createdAt?: Date | string
@@ -288,8 +288,8 @@ export type UserGoogleTokenUncheckedCreateInput = {
 
 export type UserGoogleTokenUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -300,8 +300,8 @@ export type UserGoogleTokenUpdateInput = {
 export type UserGoogleTokenUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -311,8 +311,8 @@ export type UserGoogleTokenUncheckedUpdateInput = {
 export type UserGoogleTokenCreateManyInput = {
   id?: string
   userId: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date | string
   scope: string
   createdAt?: Date | string
@@ -321,8 +321,8 @@ export type UserGoogleTokenCreateManyInput = {
 
 export type UserGoogleTokenUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -332,8 +332,8 @@ export type UserGoogleTokenUpdateManyMutationInput = {
 export type UserGoogleTokenUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -348,8 +348,8 @@ export type UserGoogleTokenNullableScalarRelationFilter = {
 export type UserGoogleTokenCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -359,8 +359,8 @@ export type UserGoogleTokenCountOrderByAggregateInput = {
 export type UserGoogleTokenMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -370,8 +370,8 @@ export type UserGoogleTokenMaxOrderByAggregateInput = {
 export type UserGoogleTokenMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  accessToken?: Prisma.SortOrder
-  refreshToken?: Prisma.SortOrder
+  accessTokenEncrypted?: Prisma.SortOrder
+  refreshTokenEncrypted?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -412,8 +412,8 @@ export type UserGoogleTokenUncheckedUpdateOneWithoutUserNestedInput = {
 
 export type UserGoogleTokenCreateWithoutUserInput = {
   id?: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date | string
   scope: string
   createdAt?: Date | string
@@ -422,8 +422,8 @@ export type UserGoogleTokenCreateWithoutUserInput = {
 
 export type UserGoogleTokenUncheckedCreateWithoutUserInput = {
   id?: string
-  accessToken: string
-  refreshToken: string
+  accessTokenEncrypted: string
+  refreshTokenEncrypted: string
   expiresAt: Date | string
   scope: string
   createdAt?: Date | string
@@ -448,8 +448,8 @@ export type UserGoogleTokenUpdateToOneWithWhereWithoutUserInput = {
 
 export type UserGoogleTokenUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,8 +458,8 @@ export type UserGoogleTokenUpdateWithoutUserInput = {
 
 export type UserGoogleTokenUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  accessToken?: Prisma.StringFieldUpdateOperationsInput | string
-  refreshToken?: Prisma.StringFieldUpdateOperationsInput | string
+  accessTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
+  refreshTokenEncrypted?: Prisma.StringFieldUpdateOperationsInput | string
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scope?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -471,8 +471,8 @@ export type UserGoogleTokenUncheckedUpdateWithoutUserInput = {
 export type UserGoogleTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   createdAt?: boolean
@@ -483,8 +483,8 @@ export type UserGoogleTokenSelect<ExtArgs extends runtime.Types.Extensions.Inter
 export type UserGoogleTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   createdAt?: boolean
@@ -495,8 +495,8 @@ export type UserGoogleTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
 export type UserGoogleTokenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   createdAt?: boolean
@@ -507,15 +507,15 @@ export type UserGoogleTokenSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type UserGoogleTokenSelectScalar = {
   id?: boolean
   userId?: boolean
-  accessToken?: boolean
-  refreshToken?: boolean
+  accessTokenEncrypted?: boolean
+  refreshTokenEncrypted?: boolean
   expiresAt?: boolean
   scope?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserGoogleTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "accessToken" | "refreshToken" | "expiresAt" | "scope" | "createdAt" | "updatedAt", ExtArgs["result"]["userGoogleToken"]>
+export type UserGoogleTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "accessTokenEncrypted" | "refreshTokenEncrypted" | "expiresAt" | "scope" | "createdAt" | "updatedAt", ExtArgs["result"]["userGoogleToken"]>
 export type UserGoogleTokenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -534,8 +534,8 @@ export type $UserGoogleTokenPayload<ExtArgs extends runtime.Types.Extensions.Int
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    accessToken: string
-    refreshToken: string
+    accessTokenEncrypted: string
+    refreshTokenEncrypted: string
     expiresAt: Date
     scope: string
     createdAt: Date
@@ -966,8 +966,8 @@ export interface Prisma__UserGoogleTokenClient<T, Null = never, ExtArgs extends 
 export interface UserGoogleTokenFieldRefs {
   readonly id: Prisma.FieldRef<"UserGoogleToken", 'String'>
   readonly userId: Prisma.FieldRef<"UserGoogleToken", 'String'>
-  readonly accessToken: Prisma.FieldRef<"UserGoogleToken", 'String'>
-  readonly refreshToken: Prisma.FieldRef<"UserGoogleToken", 'String'>
+  readonly accessTokenEncrypted: Prisma.FieldRef<"UserGoogleToken", 'String'>
+  readonly refreshTokenEncrypted: Prisma.FieldRef<"UserGoogleToken", 'String'>
   readonly expiresAt: Prisma.FieldRef<"UserGoogleToken", 'DateTime'>
   readonly scope: Prisma.FieldRef<"UserGoogleToken", 'String'>
   readonly createdAt: Prisma.FieldRef<"UserGoogleToken", 'DateTime'>

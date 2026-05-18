@@ -8,6 +8,7 @@ import passport from "passport";
 import * as Sentry from "@sentry/node";
 import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { doubleCsrfProtection } from "./middleware/csrf.js";
 import { apiRateLimit, authRateLimit } from "./middleware/security.js";
 import { openApiSpec } from "./openapi.js";
 import { auditRoutes } from "./routes/audit.routes.js";
@@ -108,6 +109,7 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(doubleCsrfProtection);
 app.use(passport.initialize());
 
 app.use("/auth", authRateLimit, authRoutes);

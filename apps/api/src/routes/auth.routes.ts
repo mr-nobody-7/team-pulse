@@ -12,6 +12,7 @@ import {
   registerWorkspaceController,
 } from "../controllers/auth.controller.js";
 import { authenticate } from "../middleware/authenticate.js";
+import { csrfTokenController } from "../controllers/csrf.controller.js";
 import { validate } from "../middleware/validate.js";
 import {
   loginSchema,
@@ -20,6 +21,8 @@ import {
 } from "../utils/validations.js";
 
 const router = Router();
+// CSRF token endpoint (must be authenticated)
+router.get("/csrf-token", authenticate, csrfTokenController);
 const GOOGLE_OAUTH_SCOPES = [
   "profile",
   "email",

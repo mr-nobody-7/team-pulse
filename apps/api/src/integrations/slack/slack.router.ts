@@ -32,6 +32,16 @@ function resolvePrimaryFrontendUrl(): string {
   return configured[0] ?? "http://localhost:3000";
 }
 
+// Middleware to skip CSRF for Slack-signed requests
+import type { Request, Response, NextFunction } from "express";
+function skipCsrfForSlack(req: Request, res: Response, next: NextFunction) {
+  if (req.headers["x-slack-signature"]) {
+    return next();
+  }
+  // continue to CSRF middleware
+  return undefined;
+}
+
 slackRouter.get(
   "/oauth/install",
   authenticate,
@@ -144,27 +154,25 @@ slackRouter.patch(
   },
 );
 
-slackRouter.post("/commands", verifySlackSignature, async (req, res) => {
+slackRouter.post("/commands", skipCsrfForSlack, verifySlackSignature, async (req, res) => {
   await handleSlashCommand(req, res);
 });
 
-slackRouter.post("/actions", verifySlackSignature, async (req, res) => {
-  const payload = req.body.payload
-    ? JSON.parse(String(req.body.payload))
-    : null;
-  if (!payload) {
-    res
-      .status(400)
-      .json({ success: false, message: "Invalid Slack action payload" });
-    return;
-  }
-
-  req.body = payload;
-
-  if (payload.type === "view_submission") {
-    await handleViewSubmission(req, res);
-    return;
-  }
-
-  await handleBlockAction(req, res);
-});
+slackRouter.post(
+  "/actions",
+  skipCsrfForSlack,
+  verifySlackSignature,
+  async (req, res) => {
+    const payload = req.body.payload
+      ? JSON.parse(String(req.body.payload))
+      : null;
+    if (!payload) {
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid Slack action payload" });
+      return;
+    }
+    req.body.payload = payload;
+    await handleBlockAction(req, res);
+  },
+);

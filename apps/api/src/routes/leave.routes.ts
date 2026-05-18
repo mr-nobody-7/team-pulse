@@ -9,6 +9,7 @@ import {
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
 import { validate } from "../middleware/validate.js";
+import { sensitiveWriteRateLimit, csvExportRateLimit } from "../middleware/security.js";
 import {
   applyLeaveSchema,
   updateLeaveStatusSchema,
@@ -20,6 +21,7 @@ router.post(
   "/applyLeave",
   authenticate,
   authorize(["ADMIN", "MANAGER", "USER"]),
+  sensitiveWriteRateLimit,
   validate(applyLeaveSchema),
   applyLeaveController,
 );
@@ -30,6 +32,7 @@ router.get(
   "/export",
   authenticate,
   authorize(["ADMIN", "MANAGER"]),
+  csvExportRateLimit,
   exportLeavesController,
 );
 

@@ -9,7 +9,13 @@ import * as Sentry from "@sentry/node";
 import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { doubleCsrfProtection } from "./middleware/csrf.js";
-import { apiRateLimit, authRateLimit } from "./middleware/security.js";
+import {
+  apiRateLimit,
+  authRateLimit,
+  sensitiveWriteRateLimit,
+  csvExportRateLimit,
+  feedbackRateLimit,
+} from "./middleware/security.js";
 import { openApiSpec } from "./openapi.js";
 import { auditRoutes } from "./routes/audit.routes.js";
 import { authRoutes } from "./routes/auth.routes.js";
@@ -83,6 +89,14 @@ app.use(
       callback(new Error(`CORS blocked for origin: ${origin}`));
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-csrf-token'
+    ],
+    exposedHeaders: ['Content-Disposition'],
+    maxAge: 86400,  // cache preflight for 24 hours
   }),
 );
 app.use(helmet());
@@ -101,6 +115,7 @@ app.use(
 app.use(
   express.urlencoded({
     extended: true,
+    limit: '100kb',  // form data should never be large
     verify: (req, _res, buf) => {
       if (shouldCaptureRawBodyUrl(req.url)) {
         (req as express.Request).rawBody = buf.toString("utf8");

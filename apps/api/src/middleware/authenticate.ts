@@ -9,13 +9,13 @@ export const authenticate = (
 ) => {
   const token: string | undefined = req.cookies.token;
   if (!token) {
-    return next(new UnauthorizedError());
+    return next(new UnauthorizedError('Authentication required'));
   }
 
   try {
     req.user = verifyToken(token);
     next();
   } catch {
-    next(new UnauthorizedError("Invalid token"));
+    next(new UnauthorizedError('Authentication required'));
   }
 };

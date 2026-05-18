@@ -240,6 +240,7 @@ export type UserWhereInput = {
   leaveBalances?: Prisma.UserLeaveBalanceListRelationFilter
   approvedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
+  refreshTokens?: Prisma.RefreshTokenListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -264,6 +265,7 @@ export type UserOrderByWithRelationInput = {
   leaveBalances?: Prisma.UserLeaveBalanceOrderByRelationAggregateInput
   approvedLeaveRequests?: Prisma.LeaveRequestOrderByRelationAggregateInput
   pushSubscriptions?: Prisma.PushSubscriptionOrderByRelationAggregateInput
+  refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -291,6 +293,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   leaveBalances?: Prisma.UserLeaveBalanceListRelationFilter
   approvedLeaveRequests?: Prisma.LeaveRequestListRelationFilter
   pushSubscriptions?: Prisma.PushSubscriptionListRelationFilter
+  refreshTokens?: Prisma.RefreshTokenListRelationFilter
 }, "id" | "email" | "slackUserId">
 
 export type UserOrderByWithAggregationInput = {
@@ -347,6 +350,7 @@ export type UserCreateInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -369,6 +373,7 @@ export type UserUncheckedCreateInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -391,6 +396,7 @@ export type UserUpdateInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -413,6 +419,7 @@ export type UserUncheckedUpdateInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -605,6 +612,20 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
+export type UserCreateNestedOneWithoutRefreshTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRefreshTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefreshTokensInput
+  upsert?: Prisma.UserUpsertWithoutRefreshTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefreshTokensInput, Prisma.UserUpdateWithoutRefreshTokensInput>, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+}
+
 export type UserCreateNestedOneWithoutRequestedLeaveRequestsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutRequestedLeaveRequestsInput, Prisma.UserUncheckedCreateWithoutRequestedLeaveRequestsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutRequestedLeaveRequestsInput
@@ -738,6 +759,7 @@ export type UserCreateWithoutWorkspaceInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkspaceInput = {
@@ -759,6 +781,7 @@ export type UserUncheckedCreateWithoutWorkspaceInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkspaceInput = {
@@ -823,6 +846,7 @@ export type UserCreateWithoutTeamInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTeamInput = {
@@ -844,6 +868,7 @@ export type UserUncheckedCreateWithoutTeamInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTeamInput = {
@@ -872,6 +897,110 @@ export type UserUpdateManyWithWhereWithoutTeamInput = {
   data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutTeamInput>
 }
 
+export type UserCreateWithoutRefreshTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  slackUserId?: string | null
+  slackDmChannel?: string | null
+  workspace: Prisma.WorkspaceCreateNestedOneWithoutUsersInput
+  team?: Prisma.TeamCreateNestedOneWithoutUsersInput
+  requestedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutUserInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusCreateNestedManyWithoutUserInput
+  workloadStatuses?: Prisma.UserWorkloadStatusCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryCreateNestedManyWithoutUserInput
+  googleToken?: Prisma.UserGoogleTokenCreateNestedOneWithoutUserInput
+  leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
+  approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRefreshTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  isActive?: boolean
+  createdAt?: Date | string
+  slackUserId?: string | null
+  slackDmChannel?: string | null
+  workspaceId: string
+  teamId?: string | null
+  requestedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutUserInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedCreateNestedManyWithoutUserInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUncheckedCreateNestedManyWithoutUserInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedCreateNestedManyWithoutUserInput
+  googleToken?: Prisma.UserGoogleTokenUncheckedCreateNestedOneWithoutUserInput
+  leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRefreshTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+}
+
+export type UserUpsertWithoutRefreshTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRefreshTokensInput, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefreshTokensInput, Prisma.UserUncheckedCreateWithoutRefreshTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRefreshTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRefreshTokensInput, Prisma.UserUncheckedUpdateWithoutRefreshTokensInput>
+}
+
+export type UserUpdateWithoutRefreshTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slackUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slackDmChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspace?: Prisma.WorkspaceUpdateOneRequiredWithoutUsersNestedInput
+  team?: Prisma.TeamUpdateOneWithoutUsersNestedInput
+  requestedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutUserNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUpdateManyWithoutUserNestedInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUpdateManyWithoutUserNestedInput
+  googleToken?: Prisma.UserGoogleTokenUpdateOneWithoutUserNestedInput
+  leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRefreshTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slackUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slackDmChannel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workspaceId?: Prisma.StringFieldUpdateOperationsInput | string
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutUserNestedInput
+  availabilityStatuses?: Prisma.UserAvailabilityStatusUncheckedUpdateManyWithoutUserNestedInput
+  workloadStatuses?: Prisma.UserWorkloadStatusUncheckedUpdateManyWithoutUserNestedInput
+  feedbackEntries?: Prisma.FeedbackEntryUncheckedUpdateManyWithoutUserNestedInput
+  googleToken?: Prisma.UserGoogleTokenUncheckedUpdateOneWithoutUserNestedInput
+  leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
+  approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutRequestedLeaveRequestsInput = {
   id?: string
   name: string
@@ -891,6 +1020,7 @@ export type UserCreateWithoutRequestedLeaveRequestsInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRequestedLeaveRequestsInput = {
@@ -912,6 +1042,7 @@ export type UserUncheckedCreateWithoutRequestedLeaveRequestsInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRequestedLeaveRequestsInput = {
@@ -938,6 +1069,7 @@ export type UserCreateWithoutApprovedLeaveRequestsInput = {
   googleToken?: Prisma.UserGoogleTokenCreateNestedOneWithoutUserInput
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedLeaveRequestsInput = {
@@ -959,6 +1091,7 @@ export type UserUncheckedCreateWithoutApprovedLeaveRequestsInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedCreateNestedOneWithoutUserInput
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedLeaveRequestsInput = {
@@ -996,6 +1129,7 @@ export type UserUpdateWithoutRequestedLeaveRequestsInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRequestedLeaveRequestsInput = {
@@ -1017,6 +1151,7 @@ export type UserUncheckedUpdateWithoutRequestedLeaveRequestsInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedLeaveRequestsInput = {
@@ -1049,6 +1184,7 @@ export type UserUpdateWithoutApprovedLeaveRequestsInput = {
   googleToken?: Prisma.UserGoogleTokenUpdateOneWithoutUserNestedInput
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedLeaveRequestsInput = {
@@ -1070,6 +1206,7 @@ export type UserUncheckedUpdateWithoutApprovedLeaveRequestsInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedUpdateOneWithoutUserNestedInput
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAvailabilityStatusesInput = {
@@ -1091,6 +1228,7 @@ export type UserCreateWithoutAvailabilityStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAvailabilityStatusesInput = {
@@ -1112,6 +1250,7 @@ export type UserUncheckedCreateWithoutAvailabilityStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAvailabilityStatusesInput = {
@@ -1149,6 +1288,7 @@ export type UserUpdateWithoutAvailabilityStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAvailabilityStatusesInput = {
@@ -1170,6 +1310,7 @@ export type UserUncheckedUpdateWithoutAvailabilityStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkloadStatusesInput = {
@@ -1191,6 +1332,7 @@ export type UserCreateWithoutWorkloadStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkloadStatusesInput = {
@@ -1212,6 +1354,7 @@ export type UserUncheckedCreateWithoutWorkloadStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkloadStatusesInput = {
@@ -1249,6 +1392,7 @@ export type UserUpdateWithoutWorkloadStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkloadStatusesInput = {
@@ -1270,6 +1414,7 @@ export type UserUncheckedUpdateWithoutWorkloadStatusesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeedbackEntriesInput = {
@@ -1291,6 +1436,7 @@ export type UserCreateWithoutFeedbackEntriesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeedbackEntriesInput = {
@@ -1312,6 +1458,7 @@ export type UserUncheckedCreateWithoutFeedbackEntriesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeedbackEntriesInput = {
@@ -1349,6 +1496,7 @@ export type UserUpdateWithoutFeedbackEntriesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeedbackEntriesInput = {
@@ -1370,6 +1518,7 @@ export type UserUncheckedUpdateWithoutFeedbackEntriesInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGoogleTokenInput = {
@@ -1391,6 +1540,7 @@ export type UserCreateWithoutGoogleTokenInput = {
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGoogleTokenInput = {
@@ -1412,6 +1562,7 @@ export type UserUncheckedCreateWithoutGoogleTokenInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGoogleTokenInput = {
@@ -1449,6 +1600,7 @@ export type UserUpdateWithoutGoogleTokenInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGoogleTokenInput = {
@@ -1470,6 +1622,7 @@ export type UserUncheckedUpdateWithoutGoogleTokenInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeaveBalancesInput = {
@@ -1491,6 +1644,7 @@ export type UserCreateWithoutLeaveBalancesInput = {
   googleToken?: Prisma.UserGoogleTokenCreateNestedOneWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveBalancesInput = {
@@ -1512,6 +1666,7 @@ export type UserUncheckedCreateWithoutLeaveBalancesInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedCreateNestedOneWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveBalancesInput = {
@@ -1549,6 +1704,7 @@ export type UserUpdateWithoutLeaveBalancesInput = {
   googleToken?: Prisma.UserGoogleTokenUpdateOneWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveBalancesInput = {
@@ -1570,6 +1726,7 @@ export type UserUncheckedUpdateWithoutLeaveBalancesInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
@@ -1591,6 +1748,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   googleToken?: Prisma.UserGoogleTokenCreateNestedOneWithoutUserInput
   leaveBalances?: Prisma.UserLeaveBalanceCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutApproverInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -1612,6 +1770,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedCreateNestedOneWithoutUserInput
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedCreateNestedManyWithoutUserInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApproverInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -1649,6 +1808,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   googleToken?: Prisma.UserGoogleTokenUpdateOneWithoutUserNestedInput
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -1670,6 +1830,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   googleToken?: Prisma.UserGoogleTokenUncheckedUpdateOneWithoutUserNestedInput
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyWorkspaceInput = {
@@ -1704,6 +1865,7 @@ export type UserUpdateWithoutWorkspaceInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkspaceInput = {
@@ -1725,6 +1887,7 @@ export type UserUncheckedUpdateWithoutWorkspaceInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutWorkspaceInput = {
@@ -1772,6 +1935,7 @@ export type UserUpdateWithoutTeamInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeamInput = {
@@ -1793,6 +1957,7 @@ export type UserUncheckedUpdateWithoutTeamInput = {
   leaveBalances?: Prisma.UserLeaveBalanceUncheckedUpdateManyWithoutUserNestedInput
   approvedLeaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApproverNestedInput
   pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutTeamInput = {
@@ -1821,6 +1986,7 @@ export type UserCountOutputType = {
   leaveBalances: number
   approvedLeaveRequests: number
   pushSubscriptions: number
+  refreshTokens: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1831,6 +1997,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   leaveBalances?: boolean | UserCountOutputTypeCountLeaveBalancesArgs
   approvedLeaveRequests?: boolean | UserCountOutputTypeCountApprovedLeaveRequestsArgs
   pushSubscriptions?: boolean | UserCountOutputTypeCountPushSubscriptionsArgs
+  refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
 }
 
 /**
@@ -1892,6 +2059,13 @@ export type UserCountOutputTypeCountPushSubscriptionsArgs<ExtArgs extends runtim
   where?: Prisma.PushSubscriptionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefreshTokenWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1915,6 +2089,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   leaveBalances?: boolean | Prisma.User$leaveBalancesArgs<ExtArgs>
   approvedLeaveRequests?: boolean | Prisma.User$approvedLeaveRequestsArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
+  refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1976,6 +2151,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   leaveBalances?: boolean | Prisma.User$leaveBalancesArgs<ExtArgs>
   approvedLeaveRequests?: boolean | Prisma.User$approvedLeaveRequestsArgs<ExtArgs>
   pushSubscriptions?: boolean | Prisma.User$pushSubscriptionsArgs<ExtArgs>
+  refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2000,6 +2176,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leaveBalances: Prisma.$UserLeaveBalancePayload<ExtArgs>[]
     approvedLeaveRequests: Prisma.$LeaveRequestPayload<ExtArgs>[]
     pushSubscriptions: Prisma.$PushSubscriptionPayload<ExtArgs>[]
+    refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2417,6 +2594,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   leaveBalances<T extends Prisma.User$leaveBalancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaveBalancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserLeaveBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedLeaveRequests<T extends Prisma.User$approvedLeaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedLeaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pushSubscriptions<T extends Prisma.User$pushSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3056,6 +3234,30 @@ export type User$pushSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.PushSubscriptionScalarFieldEnum | Prisma.PushSubscriptionScalarFieldEnum[]
+}
+
+/**
+ * User.refreshTokens
+ */
+export type User$refreshTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RefreshToken
+   */
+  select?: Prisma.RefreshTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RefreshToken
+   */
+  omit?: Prisma.RefreshTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefreshTokenInclude<ExtArgs> | null
+  where?: Prisma.RefreshTokenWhereInput
+  orderBy?: Prisma.RefreshTokenOrderByWithRelationInput | Prisma.RefreshTokenOrderByWithRelationInput[]
+  cursor?: Prisma.RefreshTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefreshTokenScalarFieldEnum | Prisma.RefreshTokenScalarFieldEnum[]
 }
 
 /**

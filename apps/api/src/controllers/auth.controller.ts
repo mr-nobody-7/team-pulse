@@ -10,9 +10,16 @@ import {
   hasCalendarAccess as hasCalendarAccessIntegration,
   revokeGoogleAccess as revokeGoogleAccessIntegration,
 } from "../integrations/google/google-calendar.service.js";
+import { prisma } from "../lib/db.js";
 import { createAuditLog } from "../utils/audit.js";
-import { generateToken } from "../utils/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  generateToken,
+  hashToken,
+} from "../utils/jwt.js";
 import { sendSuccess } from "../utils/response.js";
+import { UnauthorizedError } from "../utils/errors.js";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const AUTH_COOKIE_OPTIONS = {
@@ -48,6 +55,52 @@ function resolveSettingsConnectedRedirectUrl(): string {
   return new URL("/settings?calendar=connected", frontendUrl).toString();
 }
 
+/**
+ * Issue access and refresh tokens to the client
+ * Access token: 15 minutes, stored as httpOnly cookie
+ * Refresh token: 30 days, stored as httpOnly cookie with path=/auth/refresh
+ */
+async function issueTokens(
+  res: Response,
+  user: { id: string; workspaceId: string; role: string },
+  req: Request,
+) {
+  // Generate short-lived access token (15 minutes)
+  const accessToken = generateAccessToken(user.id, user.workspaceId, user.role);
+
+  // Generate opaque refresh token
+  const refreshToken = generateRefreshToken();
+  const tokenHash = hashToken(refreshToken);
+
+  // Save hashed refresh token to database
+  await prisma.refreshToken.create({
+    data: {
+      userId: user.id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+      userAgent: req.headers["user-agent"] ?? null,
+      ipAddress: req.ip ?? null,
+    },
+  });
+
+  // Set access token cookie (15 minutes)
+  res.cookie("token", accessToken, {
+    ...AUTH_COOKIE_OPTIONS,
+    maxAge: 15 * 60 * 1000, // 15 minutes
+  });
+
+  // Set refresh token cookie (30 days, only sent to /auth/refresh)
+  res.cookie("refresh_token", refreshToken, {
+    ...AUTH_COOKIE_OPTIONS,
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    path: "/auth/refresh",
+  });
+}
+
+/**
+ * Legacy function: issue single long-lived JWT cookie
+ * Kept for backward compatibility with Google OAuth flow
+ */
 function issueAuthCookie(res: Response, token: string) {
   res.cookie("token", token, {
     ...AUTH_COOKIE_OPTIONS,
@@ -96,6 +149,8 @@ export const registerWorkspaceController = async (
   try {
     const result = await registerWorkspaceService(req.body);
 
+    await issueTokens(res, result.user, req);
+
     createAuditLog({
       action: "USER_REGISTERED",
       userId: result.user.id,
@@ -111,7 +166,6 @@ export const registerWorkspaceController = async (
       },
     });
 
-    issueAuthCookie(res, result.token);
     sendSuccess(
       res,
       { user: result.user },
@@ -131,6 +185,8 @@ export const loginController = async (
   try {
     const result = await loginService(req.body);
 
+    await issueTokens(res, result.user, req);
+
     createAuditLog({
       action: "USER_LOGIN",
       userId: result.user.id,
@@ -141,7 +197,6 @@ export const loginController = async (
       metadata: { email: result.user.email },
     });
 
-    issueAuthCookie(res, result.token);
     sendSuccess(res, { user: result.user }, "User logged in successfully");
   } catch (error) {
     // Record failed login attempts regardless of why they failed
@@ -263,7 +318,83 @@ export const calendarDisconnectController = async (
   }
 };
 
-export const logoutController = (_req: Request, res: Response) => {
+export const logoutController = async (req: Request, res: Response) => {
+  // Clear both access and refresh token cookies
   res.clearCookie("token", AUTH_COOKIE_OPTIONS);
+  res.clearCookie("refresh_token", { ...AUTH_COOKIE_OPTIONS, path: "/auth/refresh" });
+
+  // Revoke refresh token if user is authenticated
+  if (req.user?.userId) {
+    const refreshToken = req.cookies.refresh_token;
+    if (refreshToken) {
+      const tokenHash = hashToken(refreshToken);
+      await prisma.refreshToken.updateMany({
+        where: { tokenHash, userId: req.user.userId },
+        data: { revokedAt: new Date() },
+      });
+    }
+  }
+
   sendSuccess(res, null, "Logged out successfully");
+};
+
+/**
+ * Refresh endpoint: validates refresh token and issues new access token + refresh token
+ */
+export const refreshController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (!refreshToken) {
+      return next(new UnauthorizedError("Authentication required"));
+    }
+
+    // Hash the token and look up in database
+    const tokenHash = hashToken(refreshToken);
+    const savedToken = await prisma.refreshToken.findUnique({
+      where: { tokenHash },
+      include: { user: true },
+    });
+
+    if (!savedToken) {
+      return next(new UnauthorizedError("Authentication required"));
+    }
+
+    // Check if token was revoked (possible replay attack)
+    if (savedToken.revokedAt) {
+      // Revoke ALL refresh tokens for this user (security incident)
+      await prisma.refreshToken.updateMany({
+        where: { userId: savedToken.userId },
+        data: { revokedAt: new Date() },
+      });
+      return next(new UnauthorizedError("Authentication required"));
+    }
+
+    // Check if token has expired
+    if (savedToken.expiresAt < new Date()) {
+      return next(new UnauthorizedError("Authentication required"));
+    }
+
+    // Verify user is still active
+    if (!savedToken.user.isActive) {
+      return next(new UnauthorizedError("Authentication required"));
+    }
+
+    // Mark current refresh token as revoked (rotation)
+    await prisma.refreshToken.update({
+      where: { id: savedToken.id },
+      data: { revokedAt: new Date() },
+    });
+
+    // Issue new tokens
+    await issueTokens(res, savedToken.user, req);
+
+    sendSuccess(res, null, "Tokens refreshed successfully");
+  } catch (error) {
+    next(error);
+  }
 };

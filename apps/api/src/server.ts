@@ -3,6 +3,7 @@ import "./instrument.js";
 import { app } from "./app.js";
 import { startAccrualCronJobs } from "./services/accrual.service.js";
 import { startSlackDigestCron } from "./integrations/slack/slack.digest.js";
+import { startRefreshTokenCleanupCron } from "./services/refresh-token-cleanup.service.js";
 
 const PORT = Number(process.env.PORT ?? 4000);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -11,6 +12,7 @@ const server = app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`);
   startSlackDigestCron();
   startAccrualCronJobs();
+  startRefreshTokenCleanupCron();
 });
 
 server.on("error", (error) => {

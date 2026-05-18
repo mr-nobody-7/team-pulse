@@ -55,6 +55,7 @@ export const ModelName = {
   SlackInstallation: 'SlackInstallation',
   Team: 'Team',
   User: 'User',
+  RefreshToken: 'RefreshToken',
   LeaveRequest: 'LeaveRequest',
   AuditLog: 'AuditLog',
   WorkspaceLeaveType: 'WorkspaceLeaveType',
@@ -143,6 +144,20 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  revokedAt: 'revokedAt',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress'
+} as const
+
+export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
 export const LeaveRequestScalarFieldEnum = {

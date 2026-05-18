@@ -8,6 +8,7 @@ import {
   loginController,
   logoutController,
   meController,
+  refreshController,
   registerController,
   registerWorkspaceController,
 } from "../controllers/auth.controller.js";
@@ -71,5 +72,6 @@ router.post(
 );
 router.get("/me", authenticate, meController);
 router.post("/logout", logoutController);
+router.post("/refresh", refreshController);
 
 export { router as authRoutes };

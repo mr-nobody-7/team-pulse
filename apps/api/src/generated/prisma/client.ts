@@ -60,6 +60,11 @@ export type Team = Prisma.TeamModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel
+/**
  * Model LeaveRequest
  * 
  */

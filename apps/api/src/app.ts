@@ -153,9 +153,12 @@ app.get("/health", (_req, res) => {
   res.json({ success: true, message: "API running 🚀" });
 });
 
-app.get("/debug-sentry", () => {
-  throw new Error("My first Sentry error!");
-});
+ // Debug endpoint — development only
+ if (process.env.NODE_ENV !== "production") {
+   app.get("/debug-sentry", () => {
+     throw new Error("My first Sentry error!");
+   });
+ }
 
 // ── API Docs (development-friendly, not rate-limited) ──────────────────────
 app.get("/openapi.json", (_req, res) => {

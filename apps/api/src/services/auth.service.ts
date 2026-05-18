@@ -208,18 +208,24 @@ export const loginService = async (input: LoginInput) => {
   const password = input.password;
 
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) {
+
+  // Always run bcrypt comparison — use a dummy hash 
+  // if user not found to equalize timing
+  const DUMMY_HASH = '$2b$10$invalidhashfortimingequalisation';
+  const passwordToCheck = user?.passwordHash || DUMMY_HASH;
+  const isValid = await bcrypt.compare(password, passwordToCheck);
+
+  if (!user || !isValid) {
     throw new InvalidCredentialsError();
   }
 
+  // Only check isActive AFTER password verification
   if (!user.isActive) {
-    throw new ForbiddenError("Account is inactive");
-  }
-
-  const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-
-  if (!passwordMatch) {
-    throw new InvalidCredentialsError();
+    throw new ForbiddenError(
+      'This account is no longer active. ' +
+      'Please contact your workspace admin or ' +
+      'support@teamfore.com for assistance.'
+    );
   }
 
   const token = generateToken({

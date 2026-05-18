@@ -6,13 +6,22 @@ apiInstance.setApiKey(
   process.env.BREVO_API_KEY!,
 );
 
+
+const senderEmail = process.env.BREVO_SENDER_EMAIL;
+if (!senderEmail && process.env.NODE_ENV === 'production') {
+  throw new Error('BREVO_SENDER_EMAIL not set');
+}
 const SENDER = {
   name: process.env.BREVO_SENDER_NAME || "TeamFore",
-  email: process.env.BREVO_SENDER_EMAIL || "noreply@teamfore.com",
+  email: senderEmail || "noreply@teamfore.com",
 };
 
+const replyToEmail = process.env.BREVO_REPLY_TO;
+if (!replyToEmail && process.env.NODE_ENV === 'production') {
+  throw new Error('BREVO_REPLY_TO not set');
+}
 const REPLY_TO = {
-  email: process.env.BREVO_REPLY_TO || "support@teamfore.com",
+  email: replyToEmail || "support@teamfore.com",
   name: "TeamFore Support",
 };
 

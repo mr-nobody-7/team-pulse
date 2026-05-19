@@ -25,9 +25,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           Privacy Policy
         </h1>
-        <p className="mt-3 text-sm text-zinc-400">
-          Last updated: May 19, 2026
-        </p>
+        <p className="mt-3 text-sm text-zinc-400">Last updated: May 19, 2026</p>
 
         <div className="mt-10 space-y-10 text-sm leading-relaxed text-zinc-300">
           <section>
@@ -52,10 +50,9 @@ export default function PrivacyPage() {
               2. Google User Data
             </h2>
             <p className="mb-4">
-              TeamFore uses Google APIs for two purposes: authentication
-              (Google Sign-In) and optional Google Calendar integration. The
-              following discloses how we handle Google user data in compliance
-              with the{" "}
+              TeamFore uses Google APIs for two purposes: authentication (Google
+              Sign-In) and optional Google Calendar integration. The following
+              discloses how we handle Google user data in compliance with the{" "}
               <a
                 href="https://developers.google.com/terms/api-services-user-data-policy"
                 target="_blank"
@@ -70,9 +67,13 @@ export default function PrivacyPage() {
             <div className="space-y-6 pl-1">
               {/* a — Data Accessed */}
               <div>
-                <h3 className="mb-2 font-semibold text-white">a) Data Accessed</h3>
+                <h3 className="mb-2 font-semibold text-white">
+                  a) Data Accessed
+                </h3>
                 <p className="mb-2">
-                  <span className="font-medium text-white">Google Sign-In (all users):</span>{" "}
+                  <span className="font-medium text-white">
+                    Google Sign-In (all users):
+                  </span>{" "}
                   When you authenticate with Google we receive your name, email
                   address, and Google account ID. We do not receive your Google
                   password or access to any other Google service.
@@ -96,12 +97,16 @@ export default function PrivacyPage() {
                 <h3 className="mb-2 font-semibold text-white">b) Data Usage</h3>
                 <ul className="list-disc space-y-2 pl-5">
                   <li>
-                    <span className="font-medium text-white">Name &amp; email:</span>{" "}
+                    <span className="font-medium text-white">
+                      Name &amp; email:
+                    </span>{" "}
                     used to create and identify your TeamFore account and to
                     send leave-related email notifications.
                   </li>
                   <li>
-                    <span className="font-medium text-white">Google account ID:</span>{" "}
+                    <span className="font-medium text-white">
+                      Google account ID:
+                    </span>{" "}
                     used solely to link your Google identity to your TeamFore
                     account during sign-in. It is never exposed to other users.
                   </li>
@@ -124,7 +129,9 @@ export default function PrivacyPage() {
 
               {/* c — Data Sharing */}
               <div>
-                <h3 className="mb-2 font-semibold text-white">c) Data Sharing</h3>
+                <h3 className="mb-2 font-semibold text-white">
+                  c) Data Sharing
+                </h3>
                 <p>
                   Google user data is{" "}
                   <span className="font-medium text-white">
@@ -134,13 +141,17 @@ export default function PrivacyPage() {
                 </p>
                 <ul className="mt-2 list-disc space-y-2 pl-5">
                   <li>
-                    <span className="font-medium text-white">Neon (PostgreSQL):</span>{" "}
+                    <span className="font-medium text-white">
+                      Neon (PostgreSQL):
+                    </span>{" "}
                     your encrypted account data and tokens are stored in their
                     managed database. Neon does not process Google data
                     independently.
                   </li>
                   <li>
-                    <span className="font-medium text-white">Brevo (email):</span>{" "}
+                    <span className="font-medium text-white">
+                      Brevo (email):
+                    </span>{" "}
                     your name and email address are passed to Brevo only to
                     deliver transactional leave notifications. Brevo does not
                     receive Google OAuth tokens or calendar data.
@@ -169,8 +180,10 @@ export default function PrivacyPage() {
                   </li>
                   <li>
                     All data is transmitted over{" "}
-                    <span className="font-medium text-white">HTTPS / TLS 1.2+</span>.
-                    Strict-Transport-Security (HSTS) headers are enforced in
+                    <span className="font-medium text-white">
+                      HTTPS / TLS 1.2+
+                    </span>
+                    . Strict-Transport-Security (HSTS) headers are enforced in
                     production.
                   </li>
                   <li>
@@ -202,9 +215,9 @@ export default function PrivacyPage() {
                     <span className="font-medium text-white">
                       Google Calendar OAuth tokens:
                     </span>{" "}
-                    deleted immediately when you disconnect Google Calendar
-                    from your TeamFore settings, or when your account is
-                    deleted, whichever comes first.
+                    deleted immediately when you disconnect Google Calendar from
+                    your TeamFore settings, or when your account is deleted,
+                    whichever comes first.
                   </li>
                   <li>
                     To delete your account and all associated Google data,

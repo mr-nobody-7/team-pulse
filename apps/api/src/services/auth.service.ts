@@ -66,8 +66,13 @@ export const registerUserService = async (
   const workspaceName = input.workspace_name.trim();
   const password = input.password;
 
-  const existingUser = await prisma.user.findUnique({
-    where: { email: normalizedEmail },
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: normalizedEmail,
+        mode: "insensitive",
+      },
+    },
   });
   if (existingUser) {
     throw new EmailInUseError();
@@ -142,8 +147,13 @@ export const registerWorkspaceService = async (
   const password = input.password;
   const selectedLeaveTypes = new Set(input.leaveTypes);
 
-  const existingUser = await prisma.user.findUnique({
-    where: { email: normalizedEmail },
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: normalizedEmail,
+        mode: "insensitive",
+      },
+    },
   });
   if (existingUser) {
     throw new EmailInUseError();
@@ -193,14 +203,7 @@ export const registerWorkspaceService = async (
     throw error;
   }
 
-  const token = generateToken({
-    userId: result.user.id,
-    workspaceId: result.user.workspaceId,
-    teamId: result.user.teamId,
-    role: result.user.role,
-  });
-
-  return { ...result, token };
+  return result;
 };
 
 export const loginService = async (input: LoginInput) => {

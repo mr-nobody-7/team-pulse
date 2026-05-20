@@ -23,8 +23,6 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL =
   process.env.GOOGLE_CALLBACK_URL?.trim() || "/auth/google/callback";
 
-const OAUTH_ONBOARDING_WORKSPACE_NAME = "OAuth Onboarding";
-
 function getGoogleOauthEnv(): {
   clientId: string;
   clientSecret: string;
@@ -53,33 +51,41 @@ function profileDisplayName(profile: Profile, fallbackEmail: string): string {
   return fallbackEmail.split("@")[0] ?? "Google User";
 }
 
-async function getOrCreateOnboardingWorkspaceId(): Promise<string> {
-  const existing = await prisma.workspace.findFirst({
-    where: { name: OAUTH_ONBOARDING_WORKSPACE_NAME },
-    select: { id: true },
-  });
-
-  if (existing) {
-    return existing.id;
-  }
-
-  const created = await prisma.workspace.create({
-    data: { name: OAUTH_ONBOARDING_WORKSPACE_NAME },
-    select: { id: true },
-  });
-  return created.id;
+function mapGoogleAuthUser(user: {
+  id: string;
+  email: string;
+  name: string;
+  workspaceId: string;
+  role: "USER" | "MANAGER" | "ADMIN";
+  teamId: string | null;
+}): GoogleAuthUser {
+  return {
+    userId: user.id,
+    email: user.email,
+    name: user.name,
+    workspaceId: user.workspaceId,
+    role: user.role,
+    teamId: user.teamId,
+    hasCalendarRefreshToken: false,
+  };
 }
 
 async function findOrCreateGoogleUser(
   profile: Profile,
 ): Promise<GoogleAuthUser> {
   const email = profile.emails?.[0]?.value?.trim().toLowerCase();
+  const googleId = profile.id?.trim();
+
   if (!email) {
     throw new Error("Google account email is required");
   }
 
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
+  if (!googleId) {
+    throw new Error("Google account id is required");
+  }
+
+  const existingUserByGoogleId = await prisma.user.findUnique({
+    where: { googleId },
     select: {
       id: true,
       email: true,
@@ -91,33 +97,20 @@ async function findOrCreateGoogleUser(
     },
   });
 
-  if (existingUser) {
-    if (!existingUser.isActive) {
+  if (existingUserByGoogleId) {
+    if (!existingUserByGoogleId.isActive) {
       throw new Error("Account is inactive");
     }
 
-    return {
-      userId: existingUser.id,
-      email: existingUser.email,
-      name: existingUser.name,
-      workspaceId: existingUser.workspaceId,
-      role: existingUser.role,
-      teamId: existingUser.teamId,
-      hasCalendarRefreshToken: false,
-    };
+    return mapGoogleAuthUser(existingUserByGoogleId);
   }
 
-  const workspaceId = await getOrCreateOnboardingWorkspaceId();
-  const name = profileDisplayName(profile, email);
-  const passwordHash = await bcrypt.hash(crypto.randomUUID(), 10);
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      passwordHash,
-      role: "USER",
-      workspaceId,
+  const existingUserByEmail = await prisma.user.findFirst({
+    where: {
+      email: {
+        equals: email,
+        mode: "insensitive",
+      },
     },
     select: {
       id: true,
@@ -126,18 +119,69 @@ async function findOrCreateGoogleUser(
       workspaceId: true,
       role: true,
       teamId: true,
+      isActive: true,
+      googleId: true,
     },
   });
 
-  return {
-    userId: user.id,
-    email: user.email,
-    name: user.name,
-    workspaceId: user.workspaceId,
-    role: user.role,
-    teamId: user.teamId,
-    hasCalendarRefreshToken: false,
-  };
+  if (existingUserByEmail) {
+    if (!existingUserByEmail.isActive) {
+      throw new Error("Account is inactive");
+    }
+
+    if (
+      existingUserByEmail.googleId &&
+      existingUserByEmail.googleId !== googleId
+    ) {
+      throw new Error("Email is already linked to another Google account");
+    }
+
+    const linkedUser = await prisma.user.update({
+      where: { id: existingUserByEmail.id },
+      data: { googleId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        workspaceId: true,
+        role: true,
+        teamId: true,
+      },
+    });
+
+    return mapGoogleAuthUser(linkedUser);
+  }
+
+  const name = profileDisplayName(profile, email);
+  const passwordHash = await bcrypt.hash(crypto.randomUUID(), 10);
+
+  const user = await prisma.$transaction(async (tx) => {
+    const workspace = await tx.workspace.create({
+      data: { name: `${name}'s Workspace` },
+      select: { id: true },
+    });
+
+    return tx.user.create({
+      data: {
+        name,
+        email,
+        passwordHash,
+        role: "USER",
+        workspaceId: workspace.id,
+        googleId,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        workspaceId: true,
+        role: true,
+        teamId: true,
+      },
+    });
+  });
+
+  return mapGoogleAuthUser(user);
 }
 
 export function configureGoogleStrategy(): void {
@@ -158,6 +202,11 @@ export function configureGoogleStrategy(): void {
       ) => {
         try {
           const user = await findOrCreateGoogleUser(profile);
+
+          if (!user) {
+            done(new Error("Could not find or create user"));
+            return;
+          }
 
           if (refreshToken) {
             try {
@@ -184,7 +233,13 @@ export function configureGoogleStrategy(): void {
 
           done(null, user);
         } catch (error) {
-          done(error as Error);
+          console.error(
+            "[configureGoogleStrategy] Could not resolve OAuth user",
+            {
+              error: error instanceof Error ? error.message : String(error),
+            },
+          );
+          done(new Error("Could not find or create user"));
         }
       },
     ),

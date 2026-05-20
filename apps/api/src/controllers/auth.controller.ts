@@ -26,6 +26,7 @@ const AUTH_COOKIE_OPTIONS = {
   httpOnly: true,
   secure: IS_PRODUCTION,
   sameSite: IS_PRODUCTION ? "none" : "strict",
+  path: "/",
 } as const;
 
 function normalizeOrigin(origin: string): string {
@@ -223,8 +224,14 @@ export const googleCallbackController = (req: Request, res: Response) => {
     return;
   }
 
+  const resolvedUserId = oauthUser.userId;
+  console.info("[googleCallbackController] OAuth user resolved", {
+    id: resolvedUserId,
+    email: oauthUser.email,
+  });
+
   const token = generateToken({
-    userId: oauthUser.userId,
+    userId: resolvedUserId,
     workspaceId: oauthUser.workspaceId,
     role: oauthUser.role,
     teamId: oauthUser.teamId,

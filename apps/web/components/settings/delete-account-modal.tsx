@@ -53,16 +53,19 @@ export function DeleteAccountModal({
     setApiError(null);
     mutation.mutate(undefined, {
       onError: (err: unknown) => {
-        const status = (err as { response?: { status?: number } })?.response?.status;
-        const message = (err as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message;
+        const status = (err as { response?: { status?: number } })?.response
+          ?.status;
+        const message = (err as { response?: { data?: { message?: string } } })
+          ?.response?.data?.message;
 
         if (status === 400 && message) {
           // Ownership-transfer block — close modal and show as toast
           handleClose();
           toast.error(message);
         } else {
-          setApiError("Something went wrong. Please try again or contact support.");
+          setApiError(
+            "Something went wrong. Please try again or contact support.",
+          );
         }
       },
     });
@@ -74,7 +77,9 @@ export function DeleteAccountModal({
         {step === 1 ? (
           <>
             <DialogHeader>
-              <DialogTitle className="text-destructive">Are you sure?</DialogTitle>
+              <DialogTitle className="text-destructive">
+                Are you sure?
+              </DialogTitle>
             </DialogHeader>
 
             <div className="space-y-3 text-sm text-muted-foreground">
@@ -100,10 +105,7 @@ export function DeleteAccountModal({
               <Button variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button
-                variant="destructive"
-                onClick={() => setStep(2)}
-              >
+              <Button variant="destructive" onClick={() => setStep(2)}>
                 Yes, continue
               </Button>
             </DialogFooter>

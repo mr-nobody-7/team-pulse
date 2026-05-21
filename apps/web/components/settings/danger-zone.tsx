@@ -48,10 +48,7 @@ export function DangerZone() {
                   cannot be undone.
                 </p>
               </div>
-              <Button
-                variant="destructive"
-                onClick={() => setModalOpen(true)}
-              >
+              <Button variant="destructive" onClick={() => setModalOpen(true)}>
                 Delete account
               </Button>
             </div>

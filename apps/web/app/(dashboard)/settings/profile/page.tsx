@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { NotificationSettings } from "@/components/pwa/notification-settings";
+import { DangerZone } from "@/components/settings/danger-zone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -195,6 +196,8 @@ export default function ProfileSettingsPage() {
           <NotificationSettings />
         </CardContent>
       </Card>
+
+      <DangerZone />
     </PageContainer>
   );
 }

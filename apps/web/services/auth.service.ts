@@ -9,6 +9,9 @@ import type {
 
 export interface MeData {
   user: SafeUser & {
+    authMethod: "google" | "email";
+    isSoleAdmin: boolean;
+    workspaceMemberCount: number;
     workspace: {
       id: string;
       name: string;

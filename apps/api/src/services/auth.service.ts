@@ -249,6 +249,7 @@ export const getMeService = async (userId: string) => {
       id: true,
       name: true,
       email: true,
+      googleId: true,
       role: true,
       isActive: true,
       workspaceId: true,
@@ -266,5 +267,21 @@ export const getMeService = async (userId: string) => {
     },
   });
   if (!user) throw new UnauthorizedError("User not found");
-  return user;
+
+  // For ADMIN users, determine if they are the sole admin and the total member count.
+  // This information drives the "Danger Zone" UI on the client.
+  const [adminCount, memberCount] = user.role === "ADMIN"
+    ? await Promise.all([
+        prisma.user.count({ where: { workspaceId: user.workspaceId, role: "ADMIN" } }),
+        prisma.user.count({ where: { workspaceId: user.workspaceId } }),
+      ])
+    : [null, null];
+
+  const { googleId, ...rest } = user;
+  return {
+    ...rest,
+    authMethod: googleId ? ("google" as const) : ("email" as const),
+    isSoleAdmin: user.role === "ADMIN" && adminCount === 1,
+    workspaceMemberCount: memberCount ?? 1,
+  };
 };

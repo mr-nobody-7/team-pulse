@@ -519,7 +519,7 @@ export const applyLeave = async (
       where: {
         workspaceId,
         isActive: true,
-        OR: [{ role: "MANAGER", teamId }, { role: "ADMIN" }],
+        OR: [{ role: "MANAGER", teamId }, { role: { in: ["ADMIN", "OWNER"] } }],
       },
       select: { email: true, name: true, id: true },
     }),
@@ -796,7 +796,7 @@ export const listLeave = async (
   }
 
   const shouldIncludeCapacityWarnings =
-    status === "PENDING" && (role === "MANAGER" || role === "ADMIN");
+    status === "PENDING" && (role === "MANAGER" || role === "ADMIN" || role === "OWNER");
 
   if (!shouldIncludeCapacityWarnings) {
     return { leaves: leavesWithBalances, total, page, limit };

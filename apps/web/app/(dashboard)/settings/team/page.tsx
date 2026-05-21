@@ -7,6 +7,7 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { PageContainer } from "@/components/layout/page-container";
+import { TransferOwnershipModal } from "@/components/settings/transfer-ownership-modal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -116,9 +117,10 @@ function flagEmoji(countryCode: string): string {
 
 export default function TeamSettingsPage() {
   const { user, refetch } = useAuth();
-  const { isAdmin } = useRole();
+  const { isAdmin, isOwner } = useRole();
   const countryInputId = useId();
   const timezoneInputId = useId();
+  const [isTransferOwnershipOpen, setIsTransferOwnershipOpen] = useState(false);
   const [country, setCountry] = useState<string>("");
   const [timezone, setTimezone] = useState<string>("Asia/Kolkata");
   const [accrualRows, setAccrualRows] = useState<AccrualRow[]>([]);
@@ -608,6 +610,44 @@ export default function TeamSettingsPage() {
             )}
           </CardContent>
         </Card>
+      )}
+
+      <Card className="border-destructive/40">
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger Zone</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-medium">Transfer ownership</p>
+              <p className="text-sm text-muted-foreground">
+                The new owner will have full control of this workspace. You will
+                become an Admin.
+              </p>
+            </div>
+            {isOwner ? (
+              <Button onClick={() => setIsTransferOwnershipOpen(true)}>
+                Transfer ownership
+              </Button>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  Only the current workspace owner can transfer ownership.
+                </p>
+                <Button disabled>Transfer ownership</Button>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {user && (
+        <TransferOwnershipModal
+          open={isTransferOwnershipOpen}
+          onClose={() => setIsTransferOwnershipOpen(false)}
+          workspaceId={user.workspace.id}
+          currentUserId={user.id}
+        />
       )}
     </PageContainer>
   );

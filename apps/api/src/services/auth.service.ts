@@ -91,7 +91,7 @@ export const registerUserService = async (
           name,
           email: normalizedEmail,
           passwordHash,
-          role: "ADMIN",
+          role: "OWNER",
           workspaceId: workspace.id,
         },
       });
@@ -177,7 +177,7 @@ export const registerWorkspaceService = async (
           name,
           email: normalizedEmail,
           passwordHash,
-          role: "ADMIN",
+          role: "OWNER",
           workspaceId: workspace.id,
         },
       });
@@ -268,11 +268,10 @@ export const getMeService = async (userId: string) => {
   });
   if (!user) throw new UnauthorizedError("User not found");
 
-  // For ADMIN users, determine if they are the sole admin and the total member count.
-  // This information drives the "Danger Zone" UI on the client.
-  const [adminCount, memberCount] = user.role === "ADMIN"
+  // Ownership info drives delete-account and transfer-ownership UI.
+  const [ownerCount, memberCount] = user.role === "OWNER"
     ? await Promise.all([
-        prisma.user.count({ where: { workspaceId: user.workspaceId, role: "ADMIN" } }),
+        prisma.user.count({ where: { workspaceId: user.workspaceId, role: "OWNER" } }),
         prisma.user.count({ where: { workspaceId: user.workspaceId } }),
       ])
     : [null, null];
@@ -281,7 +280,7 @@ export const getMeService = async (userId: string) => {
   return {
     ...rest,
     authMethod: googleId ? ("google" as const) : ("email" as const),
-    isSoleAdmin: user.role === "ADMIN" && adminCount === 1,
+    isOwner: user.role === "OWNER" && ownerCount === 1,
     workspaceMemberCount: memberCount ?? 1,
   };
 };

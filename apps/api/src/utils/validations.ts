@@ -267,7 +267,7 @@ export const updateTeamSchema = z.object({
 });
 
 export const listUsersSchema = z.object({
-  role: z.enum(["USER", "MANAGER", "ADMIN"]).optional(),
+  role: z.enum(["USER", "MANAGER", "ADMIN", "OWNER"]).optional(),
   team_id: z.string().optional(),
   is_active: z
     .enum(["true", "false"])
@@ -367,4 +367,8 @@ export const deleteAccountSchema = z.object({
     .refine((v) => v.toLowerCase() === "delete my account", {
       message: 'Confirmation phrase must be exactly "delete my account"',
     }),
+});
+
+export const transferOwnershipSchema = z.object({
+  newOwnerUserId: z.string().trim().min(1, "newOwnerUserId is required"),
 });

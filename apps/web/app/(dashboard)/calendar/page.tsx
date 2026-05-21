@@ -79,7 +79,7 @@ export default function CalendarPage() {
     return teams.filter((team) => team.id === user.teamId);
   }, [role, teams, user?.teamId]);
 
-  const canSelectAllTeams = role === "ADMIN";
+  const canSelectAllTeams = role === "ADMIN" || role === "OWNER";
   const effectiveTeamId =
     role === "MANAGER"
       ? (user?.teamId ?? undefined)

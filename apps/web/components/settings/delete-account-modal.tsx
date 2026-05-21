@@ -21,7 +21,7 @@ interface DeleteAccountModalProps {
   onClose: () => void;
   /** True when the user authenticated via Google OAuth. */
   isGoogleUser: boolean;
-  /** True when the user is the sole admin and only member — deletes entire workspace. */
+  /** True when the current owner is the only workspace member — deletes the workspace too. */
   deletesWorkspace: boolean;
 }
 

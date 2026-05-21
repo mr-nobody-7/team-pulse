@@ -31,7 +31,7 @@ function getTabsForRole(role?: UserRole): TabItem[] {
     exact: true,
   };
 
-  if (role === "MANAGER" || role === "ADMIN") {
+  if (role === "MANAGER" || role === "ADMIN" || role === "OWNER") {
     return [
       { href: "/dashboard", label: "Home", icon: LayoutDashboard, exact: true },
       { href: "/leaves", label: "Leaves", icon: CalendarDays, exact: true },

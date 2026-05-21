@@ -234,7 +234,7 @@ export default function LeavesPage() {
                 ))}
               </SelectContent>
             </Select>
-            {(role === "ADMIN" || role === "MANAGER") && (
+            {(role === "ADMIN" || role === "OWNER" || role === "MANAGER") && (
               <Button
                 variant="outline"
                 size="sm"

@@ -377,7 +377,8 @@ export default function UsersPage() {
                     </div>
                     <div className="pt-1 sm:pt-0 sm:text-right">
                       {currentUser?.id !== user.id &&
-                        currentUser?.role === "ADMIN" && (
+                        (currentUser?.role === "ADMIN" ||
+                          currentUser?.role === "OWNER") && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button

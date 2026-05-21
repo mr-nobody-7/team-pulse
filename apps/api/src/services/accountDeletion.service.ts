@@ -211,30 +211,21 @@ export async function deleteUserAccount(
     },
   });
 
-  if (user.role === "ADMIN") {
-    // Check if this user is the only ADMIN in the workspace
-    const adminCount = await prisma.user.count({
-      where: { workspaceId, role: "ADMIN" },
-    });
+  if (user.role === "OWNER") {
+    const totalMembers = await prisma.user.count({ where: { workspaceId } });
 
-    if (adminCount === 1) {
-      // This user is the sole admin — check if there are other members
-      const totalMembers = await prisma.user.count({ where: { workspaceId } });
-
-      if (totalMembers > 1) {
-        throw new BadRequestError(
-          "Transfer workspace ownership or remove all members before deleting your account.",
-        );
-      }
-
-      // Sole admin AND sole member — delete entire workspace
-      await deleteWorkspaceAndOwner(userId, workspaceId);
-      await sendWorkspaceDeletionEmail(user.email, user.name, workspace.name);
-      return;
+    if (totalMembers > 1) {
+      throw new BadRequestError(
+        "Transfer workspace ownership or remove all members before deleting your account.",
+      );
     }
+
+    await deleteWorkspaceAndOwner(userId, workspaceId);
+    await sendWorkspaceDeletionEmail(user.email, user.name, workspace.name);
+    return;
   }
 
-  // USER, MANAGER, or non-sole ADMIN
+  // USER, MANAGER, or ADMIN
   await deleteRegularUser(userId, workspaceId, user.googleToken);
   await sendDeletionConfirmationEmail(user.email, user.name);
 }

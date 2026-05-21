@@ -11,6 +11,7 @@ enum Role {
   USER
   MANAGER
   ADMIN
+  OWNER
 }
 
 enum LeaveStatus {

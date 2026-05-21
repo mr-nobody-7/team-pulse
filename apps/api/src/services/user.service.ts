@@ -18,7 +18,7 @@ import {
 export const listUsers = async (workspaceId: string, query: ListUsersQuery) => {
   const where: {
     workspaceId: string;
-    role?: "USER" | "MANAGER" | "ADMIN";
+    role?: "USER" | "MANAGER" | "ADMIN" | "OWNER";
     teamId?: string;
     isActive?: boolean;
   } = { workspaceId };

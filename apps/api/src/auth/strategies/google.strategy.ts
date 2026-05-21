@@ -13,7 +13,7 @@ export interface GoogleAuthUser {
   email: string;
   name: string;
   workspaceId: string;
-  role: "USER" | "MANAGER" | "ADMIN";
+  role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   teamId: string | null;
   hasCalendarRefreshToken: boolean;
 }
@@ -56,7 +56,7 @@ function mapGoogleAuthUser(user: {
   email: string;
   name: string;
   workspaceId: string;
-  role: "USER" | "MANAGER" | "ADMIN";
+  role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   teamId: string | null;
 }): GoogleAuthUser {
   return {
@@ -166,7 +166,7 @@ async function findOrCreateGoogleUser(
         name,
         email,
         passwordHash,
-        role: "USER",
+        role: "OWNER",
         workspaceId: workspace.id,
         googleId,
       },

@@ -145,13 +145,13 @@ export const getDashboardSummary = async ({
   }
 
   const userCountWhere: Prisma.UserWhereInput =
-    role === "ADMIN"
+    role === "ADMIN" || role === "OWNER"
       ? { workspaceId, isActive: true }
       : teamId
         ? { workspaceId, teamId, isActive: true }
         : { id: userId, isActive: true };
 
-  const canApprove = role === "ADMIN" || role === "MANAGER";
+  const canApprove = role === "ADMIN" || role === "OWNER" || role === "MANAGER";
 
   const scopeTeamPromise = teamId
     ? prisma.team.findFirst({
@@ -229,7 +229,7 @@ export const getDashboardSummary = async ({
   ]);
 
   const availabilityScopeLabel =
-    role === "ADMIN"
+    role === "ADMIN" || role === "OWNER"
       ? "Workspace"
       : scopeTeam?.name
         ? `${scopeTeam.name} Team`

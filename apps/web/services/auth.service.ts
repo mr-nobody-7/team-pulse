@@ -10,7 +10,7 @@ import type {
 export interface MeData {
   user: SafeUser & {
     authMethod: "google" | "email";
-    isSoleAdmin: boolean;
+    isOwner: boolean;
     workspaceMemberCount: number;
     workspace: {
       id: string;

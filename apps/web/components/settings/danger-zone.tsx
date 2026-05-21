@@ -12,15 +12,13 @@ export function DangerZone() {
 
   if (!user) return null;
 
-  const isSoleAdmin = user.isSoleAdmin ?? false;
+  const isOwner = user.isOwner ?? false;
   const memberCount = user.workspaceMemberCount ?? 1;
   const isGoogleUser = user.authMethod === "google";
 
-  // Sole admin with other members — blocked from self-deletion
-  const isBlocked = isSoleAdmin && memberCount > 1;
+  const isBlocked = isOwner && memberCount > 1;
 
-  // Sole admin + only member — would delete the entire workspace
-  const deletesWorkspace = isSoleAdmin && memberCount === 1;
+  const deletesWorkspace = isOwner && memberCount === 1;
 
   return (
     <>

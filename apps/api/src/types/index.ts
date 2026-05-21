@@ -161,11 +161,15 @@ export interface UpdateTeamInput {
 }
 
 export interface ListUsersQuery {
-  role?: "USER" | "MANAGER" | "ADMIN" | undefined;
+  role?: "USER" | "MANAGER" | "ADMIN" | "OWNER" | undefined;
   team_id?: string | undefined;
   is_active?: boolean | undefined;
   page: number;
   limit: number;
+}
+
+export interface TransferOwnershipInput {
+  newOwnerUserId: string;
 }
 
 export interface CreateUserInput {

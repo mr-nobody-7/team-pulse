@@ -17,7 +17,7 @@ export interface SafeUser {
   id: string;
   name: string;
   email: string;
-  role: "USER" | "MANAGER" | "ADMIN";
+  role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   isActive: boolean;
   workspaceId: string;
   teamId: string | null;
@@ -127,7 +127,7 @@ export interface WorkspaceUser {
   id: string;
   name: string;
   email: string;
-  role: "USER" | "MANAGER" | "ADMIN";
+  role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   isActive: boolean;
   createdAt: string;
   workspaceId: string;

@@ -30,6 +30,7 @@ import { settingsRoutes } from "./routes/settings.routes.js";
 import { slackRoutes } from "./routes/slack.routes.js";
 import { teamRoutes } from "./routes/team.routes.js";
 import { userRoutes } from "./routes/user.routes.js";
+import { workspaceRoutes } from "./routes/workspace.routes.js";
 
 export const app = express();
 
@@ -146,6 +147,7 @@ app.use("/settings", settingsRoutes);
 app.use("/slack", slackRoutes);
 app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
+app.use("/workspaces", workspaceRoutes);
 app.use("/audit-logs", auditRoutes);
 app.use("/push", pushRoutes);
 

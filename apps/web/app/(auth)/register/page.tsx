@@ -32,6 +32,9 @@ const registerSchema = z.object({
   workspaceName: z
     .string()
     .min(3, "Workspace name must be at least 3 characters"),
+  privacyAccepted: z.boolean().refine((value) => value === true, {
+    message: "You must accept the Privacy Policy and Terms of Service",
+  }),
   leaveTypes: z.array(z.string().min(1)),
 });
 
@@ -57,7 +60,13 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
+    const isValid = await form.trigger("privacyAccepted");
+    if (!isValid) {
+      toast.error("Accept the Privacy Policy and Terms of Service to continue");
+      return;
+    }
+
     window.location.href = "/api/auth/google";
   };
 
@@ -68,6 +77,7 @@ export default function RegisterPage() {
       email: "",
       password: "",
       workspaceName: "",
+      privacyAccepted: false,
       leaveTypes: DEFAULT_LEAVE_TYPES,
     },
   });
@@ -127,6 +137,7 @@ export default function RegisterPage() {
         email: values.email,
         password: values.password,
         workspaceName: values.workspaceName,
+        privacyAccepted: values.privacyAccepted,
         leaveTypes: values.leaveTypes,
       });
 
@@ -362,6 +373,52 @@ export default function RegisterPage() {
                   </Button>
                 )}
               </div>
+
+              <FormField
+                control={form.control}
+                name="privacyAccepted"
+                render={({ field }) => (
+                  <FormItem className="rounded-lg border border-white/8 bg-white/5 p-4">
+                    <label className="flex items-start gap-3 text-sm text-zinc-300">
+                      <FormControl>
+                        <input
+                          type="checkbox"
+                          className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10"
+                          checked={field.value}
+                          onChange={(event) =>
+                            field.onChange(event.currentTarget.checked)
+                          }
+                        />
+                      </FormControl>
+                      <span>
+                        I agree to TeamFore&apos;s{" "}
+                        <Link
+                          href="/privacy"
+                          className="text-violet-300 hover:text-violet-200"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Privacy Policy
+                        </Link>{" "}
+                        and{" "}
+                        <Link
+                          href="/terms"
+                          className="text-violet-300 hover:text-violet-200"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Terms of Service
+                        </Link>
+                        .
+                      </span>
+                    </label>
+                    <FormDescription className="text-xs text-zinc-500">
+                      Required to create a workspace or continue with Google.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
 
@@ -378,7 +435,9 @@ export default function RegisterPage() {
             type="button"
             variant="outline"
             className="w-full border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10 hover:text-white disabled:border-white/10 disabled:bg-white/5 disabled:text-zinc-500 disabled:opacity-100"
-            onClick={handleGoogleSignIn}
+            onClick={() => {
+              void handleGoogleSignIn();
+            }}
             disabled={isSubmitting}
           >
             Continue with Google

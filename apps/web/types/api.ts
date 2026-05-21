@@ -19,6 +19,7 @@ export interface SafeUser {
   email: string;
   role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   isActive: boolean;
+  privacyAcceptedAt?: string | null;
   workspaceId: string;
   teamId: string | null;
   createdAt: string;
@@ -29,6 +30,7 @@ export interface RegisterPayload {
   name: string;
   email: string;
   password: string;
+  privacyAccepted: boolean;
 }
 
 export interface RegisterWorkspacePayload {
@@ -36,6 +38,7 @@ export interface RegisterWorkspacePayload {
   email: string;
   password: string;
   workspaceName: string;
+  privacyAccepted: boolean;
   leaveTypes: string[];
 }
 

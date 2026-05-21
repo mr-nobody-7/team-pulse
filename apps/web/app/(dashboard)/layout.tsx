@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
@@ -16,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/contexts/auth-context";
 import type { UserRole } from "@/hooks/use-role";
 import { useRole } from "@/hooks/use-role";
@@ -147,6 +149,23 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && user && !user.privacyAcceptedAt) {
+      router.replace("/privacy-consent");
+    }
+  }, [isLoading, router, user]);
+
+  if (isLoading || (!!user && !user.privacyAcceptedAt)) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <AuthGuard>
       <DashboardShell>{children}</DashboardShell>

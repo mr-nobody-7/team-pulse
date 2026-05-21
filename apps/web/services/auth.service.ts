@@ -12,6 +12,7 @@ export interface MeData {
     authMethod: "google" | "email";
     isOwner: boolean;
     workspaceMemberCount: number;
+    privacyAcceptedAt: string | null;
     workspace: {
       id: string;
       name: string;

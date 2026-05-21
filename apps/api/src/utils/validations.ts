@@ -341,6 +341,7 @@ export const listAuditLogsSchema = z.object({
       "USER_CREATED",
       "USER_UPDATED",
       "USER_DEACTIVATED",
+      "ACCOUNT_DELETION_INITIATED",
       "TEAM_CREATED",
       "TEAM_UPDATED",
       "TEAM_DELETED",
@@ -357,4 +358,13 @@ export const listAuditLogsSchema = z.object({
   to: z.string().datetime().optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
+export const deleteAccountSchema = z.object({
+  confirmPhrase: z
+    .string()
+    .trim()
+    .refine((v) => v.toLowerCase() === "delete my account", {
+      message: 'Confirmation phrase must be exactly "delete my account"',
+    }),
 });

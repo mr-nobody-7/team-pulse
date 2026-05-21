@@ -62,3 +62,16 @@ export const feedbackRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// Strict rate limiter for account deletion (2 attempts per 24 hours per user)
+export const accountDeletionRateLimit = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000, // 24 hours
+  max: 2,
+  message: {
+    success: false,
+    message: 'Too many deletion attempts. Please try again tomorrow.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: Request) => (req.user as any)?.userId || req.ip || 'unknown',
+});

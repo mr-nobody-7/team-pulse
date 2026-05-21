@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   createUserController,
   deactivateUserController,
+  deleteMyAccountController,
   listUsersController,
   updateMyPasswordController,
   updateMyProfileController,
@@ -10,9 +11,11 @@ import {
 } from "../controllers/user.controller.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
+import { accountDeletionRateLimit } from "../middleware/security.js";
 import { validate } from "../middleware/validate.js";
 import {
   createUserSchema,
+  deleteAccountSchema,
   updateMyPasswordSchema,
   updateMyProfileSchema,
   updateUserSchema,
@@ -31,6 +34,14 @@ router.put(
   authenticate,
   validate(updateMyPasswordSchema),
   updateMyPasswordController,
+);
+// Must be defined before /:id routes to avoid param matching
+router.delete(
+  "/me/account",
+  authenticate,
+  accountDeletionRateLimit,
+  validate(deleteAccountSchema),
+  deleteMyAccountController,
 );
 
 router.get("/", authenticate, authorize(["ADMIN"]), listUsersController);

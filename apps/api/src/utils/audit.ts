@@ -6,6 +6,8 @@ export interface AuditLogParams {
   action: AuditAction;
   /** Actor — omit for unauthenticated / failed-auth events */
   userId?: string | undefined;
+  /** Human-readable label for the actor (e.g. email). Preserved after deletion. */
+  actorDisplay?: string | undefined;
   workspaceId?: string | undefined;
   /** Primary entity this action touched */
   targetId?: string | undefined;
@@ -29,6 +31,7 @@ export const createAuditLog = (params: AuditLogParams): void => {
       data: {
         action: params.action,
         userId: params.userId ?? null,
+        actorDisplay: params.actorDisplay ?? null,
         workspaceId: params.workspaceId ?? null,
         targetId: params.targetId ?? null,
         targetType: params.targetType ?? null,

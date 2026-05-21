@@ -201,6 +201,7 @@ export interface ListAuditLogsQuery {
     | "USER_CREATED"
     | "USER_UPDATED"
     | "USER_DEACTIVATED"
+    | "ACCOUNT_DELETION_INITIATED"
     | "TEAM_CREATED"
     | "TEAM_UPDATED"
     | "TEAM_DELETED"

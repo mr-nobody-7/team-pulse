@@ -185,6 +185,7 @@ export const AuditLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
   userId: 'userId',
+  actorDisplay: 'actorDisplay',
   workspaceId: 'workspaceId',
   targetId: 'targetId',
   targetType: 'targetType',

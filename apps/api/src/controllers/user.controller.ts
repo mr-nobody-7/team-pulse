@@ -8,10 +8,19 @@ import {
   updateMyProfile,
   updateUser,
 } from "../services/user.service.js";
+import { deleteUserAccount } from "../services/accountDeletion.service.js";
 import { createAuditLog } from "../utils/audit.js";
 import { BadRequestError } from "../utils/errors.js";
 import { sendSuccess } from "../utils/response.js";
 import { listUsersSchema } from "../utils/validations.js";
+
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: IS_PRODUCTION,
+  sameSite: IS_PRODUCTION ? ("none" as const) : ("strict" as const),
+  path: "/",
+};
 
 export const listUsersController = async (
   req: Request,
@@ -183,6 +192,27 @@ export const updateMyPasswordController = async (
     });
 
     sendSuccess(res, null, "Password updated");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteMyAccountController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    await deleteUserAccount(userId, workspaceId, req.ip);
+
+    res.clearCookie("token", AUTH_COOKIE_OPTIONS);
+    res.clearCookie("refresh_token", {
+      ...AUTH_COOKIE_OPTIONS,
+      path: "/auth/refresh",
+    });
+
+    sendSuccess(res, null, "Account deleted");
   } catch (error) {
     next(error);
   }

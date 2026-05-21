@@ -260,3 +260,125 @@ export const updateMyPassword = async (
     data: { passwordHash: nextPasswordHash },
   });
 };
+
+export const exportMyData = async (workspaceId: string, userId: string) => {
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+  const [user, leaveRequests, availabilityStatuses, workloadStatuses] =
+    await Promise.all([
+      prisma.user.findFirst({
+        where: { id: userId, workspaceId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          googleId: true,
+          privacyAcceptedAt: true,
+          createdAt: true,
+          workspace: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+              timezone: true,
+              createdAt: true,
+            },
+          },
+        },
+      }),
+      prisma.leaveRequest.findMany({
+        where: { userId },
+        orderBy: { created_at: "desc" },
+        select: {
+          id: true,
+          teamId: true,
+          startDate: true,
+          startSession: true,
+          endDate: true,
+          endSession: true,
+          type: true,
+          status: true,
+          reason: true,
+          comment: true,
+          created_at: true,
+        },
+      }),
+      prisma.userAvailabilityStatus.findMany({
+        where: {
+          userId,
+          workspaceId,
+          date: { gte: ninetyDaysAgo },
+        },
+        orderBy: { date: "desc" },
+        select: {
+          id: true,
+          date: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      prisma.userWorkloadStatus.findMany({
+        where: {
+          userId,
+          workspaceId,
+          date: { gte: ninetyDaysAgo },
+        },
+        orderBy: { date: "desc" },
+        select: {
+          id: true,
+          date: true,
+          workload: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+    ]);
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  return {
+    exportedAt: new Date().toISOString(),
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      authMethod: user.googleId ? "google" : "email",
+      privacyAcceptedAt: user.privacyAcceptedAt,
+      createdAt: user.createdAt,
+    },
+    workspace: user.workspace,
+    leaveRequests,
+    availabilityStatuses,
+    workloadStatuses,
+  };
+};
+
+export const acceptPrivacyConsent = async (
+  workspaceId: string,
+  userId: string,
+) => {
+  const user = await prisma.user.findFirst({
+    where: { id: userId, workspaceId },
+    select: { id: true, privacyAcceptedAt: true },
+  });
+
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  if (user.privacyAcceptedAt) {
+    return user;
+  }
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: { privacyAcceptedAt: new Date() },
+    select: { id: true, privacyAcceptedAt: true },
+  });
+};

@@ -56,6 +56,11 @@ function resolveSettingsConnectedRedirectUrl(): string {
   return new URL("/settings?calendar=connected", frontendUrl).toString();
 }
 
+function resolvePrivacyConsentRedirectUrl(): string {
+  const frontendUrl = resolvePrimaryFrontendUrl();
+  return new URL("/privacy-consent", frontendUrl).toString();
+}
+
 /**
  * Issue access and refresh tokens to the client
  * Access token: 15 minutes, stored as httpOnly cookie
@@ -251,6 +256,11 @@ export const googleCallbackController = (req: Request, res: Response) => {
       provider: "google",
     },
   });
+
+  if (!isCalendarConnectFlow && !oauthUser.privacyAcceptedAt) {
+    res.redirect(resolvePrivacyConsentRedirectUrl());
+    return;
+  }
 
   res.redirect(
     isCalendarConnectFlow

@@ -92,6 +92,7 @@ export const registerUserService = async (
           email: normalizedEmail,
           passwordHash,
           role: "OWNER",
+          privacyAcceptedAt: new Date(),
           workspaceId: workspace.id,
         },
       });
@@ -178,6 +179,7 @@ export const registerWorkspaceService = async (
           email: normalizedEmail,
           passwordHash,
           role: "OWNER",
+          privacyAcceptedAt: new Date(),
           workspaceId: workspace.id,
         },
       });
@@ -252,6 +254,7 @@ export const getMeService = async (userId: string) => {
       googleId: true,
       role: true,
       isActive: true,
+      privacyAcceptedAt: true,
       workspaceId: true,
       teamId: true,
       createdAt: true,

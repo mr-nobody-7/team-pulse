@@ -137,6 +137,7 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   role: 'role',
   isActive: 'isActive',
+  privacyAcceptedAt: 'privacyAcceptedAt',
   createdAt: 'createdAt',
   slackUserId: 'slackUserId',
   slackDmChannel: 'slackDmChannel',

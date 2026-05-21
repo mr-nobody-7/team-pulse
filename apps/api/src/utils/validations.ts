@@ -1,5 +1,9 @@
 import z from "zod";
 
+const privacyAcceptedSchema = z.boolean().refine((value) => value === true, {
+  message: "You must accept the Privacy Policy and Terms of Service",
+});
+
 export const registerSchema = z.object({
   workspace_name: z
     .string()
@@ -17,6 +21,7 @@ export const registerSchema = z.object({
     .toLowerCase()
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
+  privacyAccepted: privacyAcceptedSchema,
 });
 
 export const registerWorkspaceSchema = z.object({
@@ -36,6 +41,7 @@ export const registerWorkspaceSchema = z.object({
     .trim()
     .min(3, "Workspace name is required")
     .max(50, "Workspace name must be less than 50 characters"),
+  privacyAccepted: privacyAcceptedSchema,
   leaveTypes: z
     .array(z.string().trim().min(1))
     .max(10, "At most 10 leave types are supported")
@@ -49,6 +55,10 @@ export const loginSchema = z.object({
     .toLowerCase()
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
+});
+
+export const privacyConsentSchema = z.object({
+  privacyAccepted: privacyAcceptedSchema,
 });
 
 export const applyLeaveSchema = z.object({

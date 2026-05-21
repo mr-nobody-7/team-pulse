@@ -75,3 +75,16 @@ export const accountDeletionRateLimit = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req: Request) => (req.user as any)?.userId || req.ip || 'unknown',
 });
+
+// Personal data export is intentionally restricted to one export per day.
+export const personalDataExportRateLimit = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 1,
+  message: {
+    success: false,
+    message: 'Your data was already exported today. Please try again tomorrow.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: Request) => (req.user as any)?.userId || req.ip || 'unknown',
+});

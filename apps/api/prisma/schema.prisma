@@ -147,6 +147,7 @@ model User {
   passwordHash String
   role         Role     @default(USER)
   isActive     Boolean  @default(true)
+  privacyAcceptedAt DateTime?
   createdAt    DateTime @default(now())
   slackUserId  String?  @unique
   slackDmChannel String?

@@ -15,6 +15,7 @@ export interface GoogleAuthUser {
   workspaceId: string;
   role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   teamId: string | null;
+  privacyAcceptedAt: Date | null;
   hasCalendarRefreshToken: boolean;
 }
 
@@ -58,6 +59,7 @@ function mapGoogleAuthUser(user: {
   workspaceId: string;
   role: "USER" | "MANAGER" | "ADMIN" | "OWNER";
   teamId: string | null;
+  privacyAcceptedAt: Date | null;
 }): GoogleAuthUser {
   return {
     userId: user.id,
@@ -66,6 +68,7 @@ function mapGoogleAuthUser(user: {
     workspaceId: user.workspaceId,
     role: user.role,
     teamId: user.teamId,
+    privacyAcceptedAt: user.privacyAcceptedAt,
     hasCalendarRefreshToken: false,
   };
 }
@@ -93,6 +96,7 @@ async function findOrCreateGoogleUser(
       workspaceId: true,
       role: true,
       teamId: true,
+      privacyAcceptedAt: true,
       isActive: true,
     },
   });
@@ -119,6 +123,7 @@ async function findOrCreateGoogleUser(
       workspaceId: true,
       role: true,
       teamId: true,
+      privacyAcceptedAt: true,
       isActive: true,
       googleId: true,
     },
@@ -146,6 +151,7 @@ async function findOrCreateGoogleUser(
         workspaceId: true,
         role: true,
         teamId: true,
+        privacyAcceptedAt: true,
       },
     });
 
@@ -169,6 +175,7 @@ async function findOrCreateGoogleUser(
         role: "OWNER",
         workspaceId: workspace.id,
         googleId,
+        privacyAcceptedAt: null,
       },
       select: {
         id: true,
@@ -177,6 +184,7 @@ async function findOrCreateGoogleUser(
         workspaceId: true,
         role: true,
         teamId: true,
+        privacyAcceptedAt: true,
       },
     });
   });

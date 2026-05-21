@@ -1,8 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 
 import {
+  acceptPrivacyConsent,
   createUser,
   deactivateUser,
+  exportMyData,
   listUsers,
   updateMyPassword,
   updateMyProfile,
@@ -213,6 +215,47 @@ export const deleteMyAccountController = async (
     });
 
     sendSuccess(res, null, "Account deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const exportMyDataController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    const exportPayload = await exportMyData(workspaceId, userId);
+    const exportDate = new Date().toISOString().slice(0, 10);
+
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="teamfore-my-data-${exportDate}.json"`,
+    );
+
+    res.status(200).send(`${JSON.stringify(exportPayload, null, 2)}\n`);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const acceptMyPrivacyConsentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId, workspaceId } = req.user!;
+    const user = await acceptPrivacyConsent(workspaceId, userId);
+
+    sendSuccess(
+      res,
+      { privacyAcceptedAt: user.privacyAcceptedAt },
+      "Privacy notice accepted",
+    );
   } catch (error) {
     next(error);
   }

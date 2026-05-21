@@ -3,6 +3,7 @@ export interface RegisterInput {
   name: string;
   email: string;
   password: string;
+  privacyAccepted: boolean;
 }
 
 export interface RegisterWorkspaceInput {
@@ -11,6 +12,7 @@ export interface RegisterWorkspaceInput {
   password: string;
   workspaceName: string;
   leaveTypes: LeaveTypeValue[];
+  privacyAccepted: boolean;
 }
 
 export interface SafeUser {
@@ -19,6 +21,7 @@ export interface SafeUser {
   email: string;
   role: string;
   isActive: boolean;
+  privacyAcceptedAt?: Date | null;
   workspaceId: string;
   teamId: string | null;
   createdAt: Date;

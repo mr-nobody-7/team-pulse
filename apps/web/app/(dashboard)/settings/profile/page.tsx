@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ export default function ProfileSettingsPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isExportingData, setIsExportingData] = useState(false);
 
   useEffect(() => {
     setName(user?.name ?? "");
@@ -87,6 +89,42 @@ export default function ProfileSettingsPage() {
     }
 
     updatePasswordMutation.mutate();
+  };
+
+  const downloadMyData = async () => {
+    try {
+      setIsExportingData(true);
+
+      const response = await api.get("/users/me/export", {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data], {
+        type: "application/json;charset=utf-8",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const disposition = response.headers["content-disposition"] as
+        | string
+        | undefined;
+      const matchedFileName = disposition?.match(/filename="?([^"]+)"?$/);
+
+      link.href = url;
+      link.download = matchedFileName?.[1] ?? "teamfore-my-data.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Your data export is ready.");
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? (error.response?.data as { message?: string } | undefined)?.message
+        : undefined;
+
+      toast.error(message ?? "Could not export your data");
+    } finally {
+      setIsExportingData(false);
+    }
   };
 
   return (
@@ -194,6 +232,29 @@ export default function ProfileSettingsPage() {
         </CardHeader>
         <CardContent>
           <NotificationSettings />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Privacy &amp; Data</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Download a JSON copy of the personal data TeamFore stores for your
+            account. You can request one export every 24 hours.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => {
+              void downloadMyData();
+            }}
+            disabled={isExportingData}
+          >
+            {isExportingData ? "Preparing export..." : "Download my data"}
+          </Button>
         </CardContent>
       </Card>
 

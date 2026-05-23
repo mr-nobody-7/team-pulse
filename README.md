@@ -131,6 +131,28 @@ pnpm format
 
 - `BACKEND_URL`
 
+### Sentry setup
+
+Sentry is already wired in both apps, but it will stay silent until you add the matching environment variables and create the projects in Sentry.
+
+For the web app, set:
+
+- `NEXT_PUBLIC_SENTRY_DSN` for browser events
+- `SENTRY_DSN` for server and edge events
+- `SENTRY_AUTH_TOKEN` in CI or any build environment that uploads source maps
+
+For the API, set:
+
+- `SENTRY_DSN` for runtime error reporting
+- `SENTRY_AUTH_TOKEN` in CI or any build environment that runs `pnpm sentry:sourcemaps`
+
+Create two Sentry projects under the `teamfore` organization to match the current config:
+
+- Web project slug: `teamfore-web`
+- API project slug: `node`
+
+If you only want local testing, `SENTRY_DSN` is enough to start sending events. Source map upload still requires `SENTRY_AUTH_TOKEN`.
+
 ### OAuth callback recommendation
 
 Use relative callback path so one config works locally and in production:

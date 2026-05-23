@@ -47,34 +47,34 @@ export default function PrivacyConsentPage() {
 
   if (isLoading || !user || user.privacyAcceptedAt) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0f0c17]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#14111d] via-[#0f0c17] to-[#0a0813] px-4 text-white">
+    <div className="min-h-screen bg-background px-4 text-foreground">
       <div className="mx-auto flex min-h-screen max-w-xl items-center justify-center">
-        <div className="w-full rounded-2xl border border-white/8 bg-linear-to-b from-[#252033] to-[#1a1725] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
+        <div className="w-full rounded-2xl border border-[--tf-border] bg-[--tf-surface-2] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
           <div className="space-y-3">
-            <p className="text-sm uppercase tracking-[0.24em] text-zinc-500">
+            <p className="text-sm uppercase tracking-[0.24em] text-[--tf-text-3]">
               One last step
             </p>
             <h1 className="text-2xl font-bold tracking-tight">
               Review TeamFore&apos;s privacy notice
             </h1>
-            <p className="text-sm leading-6 text-zinc-300">
+            <p className="text-sm leading-6 text-[--tf-text-1]">
               Before entering your workspace, confirm that you have reviewed
               TeamFore&apos;s Privacy Policy and Terms of Service.
             </p>
           </div>
 
-          <div className="mt-6 rounded-xl border border-white/8 bg-black/20 p-4 text-sm text-zinc-300">
+          <div className="mt-6 rounded-xl border border-[--tf-border-soft] bg-[--tf-surface] p-4 text-sm text-[--tf-text-1]">
             <label className="flex items-start gap-3">
               <input
                 type="checkbox"
-                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10"
+                className="mt-0.5 h-4 w-4 rounded border-[--tf-border] bg-[--tf-surface-2]"
                 checked={privacyAccepted}
                 onChange={(event) =>
                   setPrivacyAccepted(event.currentTarget.checked)
@@ -84,7 +84,7 @@ export default function PrivacyConsentPage() {
                 I agree to TeamFore&apos;s{" "}
                 <Link
                   href="/privacy"
-                  className="text-violet-300 hover:text-violet-200"
+                  className="text-[--tf-iris] hover:opacity-80"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -93,7 +93,7 @@ export default function PrivacyConsentPage() {
                 and{" "}
                 <Link
                   href="/terms"
-                  className="text-violet-300 hover:text-violet-200"
+                  className="text-[--tf-iris] hover:opacity-80"
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -105,12 +105,12 @@ export default function PrivacyConsentPage() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-[--tf-text-3]">
               You will only need to do this once.
             </p>
             <Button
               type="button"
-              className="bg-linear-to-b from-violet-400 to-violet-600 text-white shadow-[0_14px_30px_-14px_rgba(124,58,237,0.75)] hover:shadow-[0_14px_30px_-14px_rgba(124,58,237,0.9)]"
+              className="bg-linear-to-b from-[oklch(0.72_0.17_285)] to-[oklch(0.55_0.18_295)] text-white shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.75)] hover:shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.9)]"
               onClick={() => {
                 void handleContinue();
               }}

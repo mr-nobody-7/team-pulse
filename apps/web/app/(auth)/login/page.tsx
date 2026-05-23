@@ -76,14 +76,14 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0f0c17]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#14111d] via-[#0f0c17] to-[#0a0813] px-4">
+    <div className="min-h-screen bg-background px-4">
       <div className="flex min-h-screen flex-col items-center justify-center">
         {/* Brand section */}
         <div className="mb-12 text-center">
@@ -95,18 +95,20 @@ export default function LoginPage() {
               height={32}
               className="h-8 w-8"
             />
-            <span className="font-display text-xl tracking-tight text-white">
+            <span className="font-display text-xl tracking-tight text-foreground">
               TeamFore
             </span>
           </Link>
-          <p className="text-sm text-zinc-400">Workforce Control Surface</p>
+          <p className="text-sm text-[--tf-text-3]">
+            Workforce Control Surface
+          </p>
         </div>
 
         {/* Form card */}
-        <div className="w-full max-w-sm rounded-2xl border border-white/8 bg-linear-to-b from-[#252033] to-[#1a1725] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
+        <div className="w-full max-w-sm rounded-2xl border border-[--tf-border] bg-[--tf-surface-2] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
           <div className="mb-8 space-y-1">
-            <h1 className="text-2xl font-bold text-white">Sign in</h1>
-            <p className="text-sm text-zinc-400">
+            <h1 className="text-2xl font-bold text-foreground">Sign in</h1>
+            <p className="text-sm text-[--tf-text-2]">
               Access your workspace and manage your team
             </p>
           </div>
@@ -118,7 +120,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-semibold text-zinc-300">
+                    <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                       Email
                     </FormLabel>
                     <FormControl>
@@ -126,7 +128,7 @@ export default function LoginPage() {
                         type="email"
                         placeholder="you@company.com"
                         autoComplete="email"
-                        className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                        className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                         {...field}
                       />
                     </FormControl>
@@ -140,7 +142,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-semibold text-zinc-300">
+                    <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                       Password
                     </FormLabel>
                     <FormControl>
@@ -148,7 +150,7 @@ export default function LoginPage() {
                         type="password"
                         placeholder="••••••••"
                         autoComplete="current-password"
-                        className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                        className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                         {...field}
                       />
                     </FormControl>
@@ -159,7 +161,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-linear-to-b from-violet-400 to-violet-600 text-white shadow-[0_14px_30px_-14px_rgba(124,58,237,0.75)] hover:shadow-[0_14px_30px_-14px_rgba(124,58,237,0.9)] transition-all hover:-translate-y-px"
+                className="w-full bg-linear-to-b from-[oklch(0.72_0.17_285)] to-[oklch(0.55_0.18_295)] text-white shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.75)] hover:shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.9)] transition-all hover:-translate-y-px"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing in…" : "Sign in"}
@@ -167,17 +169,19 @@ export default function LoginPage() {
 
               <div className="relative py-3">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-white/10" />
+                  <span className="w-full border-t border-[--tf-border-soft]" />
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="bg-transparent px-2 text-zinc-500">Or</span>
+                  <span className="bg-[--tf-surface-2] px-2 text-[--tf-text-3]">
+                    Or
+                  </span>
                 </div>
               </div>
 
               <Button
                 type="button"
                 variant="outline"
-                className="w-full border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10 hover:text-white disabled:border-white/10 disabled:bg-white/5 disabled:text-zinc-500 disabled:opacity-100"
+                className="w-full border-[--tf-border] bg-[--tf-surface] text-foreground hover:bg-[--tf-surface-2] hover:text-foreground disabled:opacity-60"
                 onClick={handleGoogleSignIn}
               >
                 Continue with Google
@@ -185,28 +189,28 @@ export default function LoginPage() {
             </form>
           </Form>
 
-          <p className="mt-6 text-center text-sm text-zinc-400">
+          <p className="mt-6 text-center text-sm text-[--tf-text-2]">
             New workspace?{" "}
             <Link
               href="/register"
-              className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
+              className="text-[--tf-iris] hover:opacity-80 transition-opacity font-medium"
             >
               Create account
             </Link>
           </p>
 
           {/* Footer links */}
-          <div className="mt-8 border-t border-white/8 pt-6 flex gap-4 justify-center text-xs text-zinc-500">
+          <div className="mt-8 border-t border-[--tf-border-soft] pt-6 flex gap-4 justify-center text-xs text-[--tf-text-3]">
             <Link
               href="/privacy"
-              className="hover:text-zinc-300 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Privacy
             </Link>
             <span>•</span>
             <Link
               href="/terms"
-              className="hover:text-zinc-300 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Terms
             </Link>

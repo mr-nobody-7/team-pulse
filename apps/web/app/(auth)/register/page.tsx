@@ -154,7 +154,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#14111d] via-[#0f0c17] to-[#0a0813] px-4">
+    <div className="min-h-screen bg-background px-4">
       <div className="flex min-h-screen flex-col items-center justify-center">
         {/* Brand section */}
         <div className="mb-12 text-center">
@@ -166,18 +166,18 @@ export default function RegisterPage() {
               height={32}
               className="h-8 w-8"
             />
-            <span className="font-display text-xl tracking-tight text-white">
+            <span className="font-display text-xl tracking-tight text-foreground">
               TeamFore
             </span>
           </Link>
-          <p className="text-sm text-zinc-400">Create your workspace</p>
+          <p className="text-sm text-[--tf-text-3]">Create your workspace</p>
         </div>
 
         {/* Form card */}
-        <div className="w-full max-w-sm rounded-2xl border border-white/8 bg-linear-to-b from-[#252033] to-[#1a1725] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
+        <div className="w-full max-w-sm rounded-2xl border border-[--tf-border] bg-[--tf-surface-2] p-8 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
           <div className="mb-8 space-y-1">
-            <h1 className="text-2xl font-bold text-white">Get started</h1>
-            <p className="text-sm text-zinc-400">
+            <h1 className="text-2xl font-bold text-foreground">Get started</h1>
+            <p className="text-sm text-[--tf-text-2]">
               Set up your workspace in 3 easy steps
             </p>
           </div>
@@ -186,13 +186,13 @@ export default function RegisterPage() {
             <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
               {/* Progress bar */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-zinc-400">
+                <div className="flex items-center justify-between text-xs text-[--tf-text-3]">
                   <span>Step {step} of 3</span>
                   <span>{Math.round((step / 3) * 100)}%</span>
                 </div>
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[--tf-surface-3]">
                   <div
-                    className="h-full bg-linear-to-r from-violet-400 to-violet-600 transition-all duration-300"
+                    className="h-full bg-linear-to-r from-[oklch(0.72_0.17_285)] to-[oklch(0.55_0.18_295)] transition-all duration-300"
                     style={{ width: `${(step / 3) * 100}%` }}
                   />
                 </div>
@@ -206,13 +206,13 @@ export default function RegisterPage() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-semibold text-zinc-300">
+                        <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                           Your name
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Jane Doe"
-                            className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                            className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                             {...field}
                           />
                         </FormControl>
@@ -226,14 +226,14 @@ export default function RegisterPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-semibold text-zinc-300">
+                        <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                           Email
                         </FormLabel>
                         <FormControl>
                           <Input
                             type="email"
                             placeholder="you@company.com"
-                            className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                            className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                             {...field}
                           />
                         </FormControl>
@@ -247,14 +247,14 @@ export default function RegisterPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs font-semibold text-zinc-300">
+                        <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                           Password
                         </FormLabel>
                         <FormControl>
                           <Input
                             type="password"
                             placeholder="••••••••"
-                            className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                            className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                             {...field}
                           />
                         </FormControl>
@@ -272,17 +272,17 @@ export default function RegisterPage() {
                   name="workspaceName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-semibold text-zinc-300">
+                      <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                         Workspace name
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Acme Inc"
-                          className="border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                          className="border-[--tf-border] bg-[--tf-surface] text-foreground placeholder:text-[--tf-text-3]"
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription className="text-xs text-zinc-500">
+                      <FormDescription className="text-xs text-[--tf-text-3]">
                         This is your team's space. You can invite others after
                         setup.
                       </FormDescription>
@@ -299,20 +299,20 @@ export default function RegisterPage() {
                   name="leaveTypes"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-xs font-semibold text-zinc-300">
+                      <FormLabel className="text-xs font-semibold text-[--tf-text-1]">
                         Leave types
                       </FormLabel>
-                      <div className="space-y-3 rounded-lg border border-white/8 bg-white/5 p-4">
+                      <div className="space-y-3 rounded-lg border border-[--tf-border-soft] bg-[--tf-surface] p-4">
                         {LEAVE_TYPE_OPTIONS.map((option) => {
                           const checked = leaveTypes.includes(option.value);
                           return (
                             <label
                               key={option.value}
-                              className="flex cursor-pointer items-center gap-3 text-sm text-zinc-300 hover:text-white transition-colors"
+                              className="flex cursor-pointer items-center gap-3 text-sm text-[--tf-text-1] hover:text-foreground transition-colors"
                             >
                               <input
                                 type="checkbox"
-                                className="h-4 w-4 rounded border-white/20 bg-white/10 checked:bg-violet-500 checked:border-violet-500"
+                                className="h-4 w-4 rounded border-[--tf-border] bg-[--tf-surface-2] checked:bg-[--tf-iris] checked:border-[--tf-iris]"
                                 checked={checked}
                                 onChange={(event) => {
                                   if (event.target.checked) {
@@ -347,7 +347,7 @@ export default function RegisterPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10 hover:text-white disabled:border-white/10 disabled:bg-white/5 disabled:text-zinc-500 disabled:opacity-100"
+                  className="border-[--tf-border] bg-[--tf-surface] text-foreground hover:bg-[--tf-surface-2] disabled:opacity-60"
                   onClick={handleBack}
                   disabled={step === 1 || isSubmitting}
                 >
@@ -357,7 +357,7 @@ export default function RegisterPage() {
                 {step < 3 ? (
                   <Button
                     type="button"
-                    className="flex-1 bg-linear-to-b from-violet-400 to-violet-600 text-white shadow-[0_14px_30px_-14px_rgba(124,58,237,0.75)] hover:shadow-[0_14px_30px_-14px_rgba(124,58,237,0.9)] transition-all hover:-translate-y-px"
+                    className="flex-1 bg-linear-to-b from-[oklch(0.72_0.17_285)] to-[oklch(0.55_0.18_295)] text-white shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.75)] hover:shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.9)] transition-all hover:-translate-y-px"
                     onClick={handleNext}
                     disabled={isSubmitting}
                   >
@@ -366,7 +366,7 @@ export default function RegisterPage() {
                 ) : (
                   <Button
                     type="submit"
-                    className="flex-1 bg-linear-to-b from-violet-400 to-violet-600 text-white shadow-[0_14px_30px_-14px_rgba(124,58,237,0.75)] hover:shadow-[0_14px_30px_-14px_rgba(124,58,237,0.9)] transition-all hover:-translate-y-px"
+                    className="flex-1 bg-linear-to-b from-[oklch(0.72_0.17_285)] to-[oklch(0.55_0.18_295)] text-white shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.75)] hover:shadow-[0_14px_30px_-14px_oklch(0.55_0.18_295_/_0.9)] transition-all hover:-translate-y-px"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Finishing..." : "Finish"}
@@ -378,12 +378,12 @@ export default function RegisterPage() {
                 control={form.control}
                 name="privacyAccepted"
                 render={({ field }) => (
-                  <FormItem className="rounded-lg border border-white/8 bg-white/5 p-4">
-                    <label className="flex items-start gap-3 text-sm text-zinc-300">
+                  <FormItem className="rounded-lg border border-[--tf-border-soft] bg-[--tf-surface] p-4">
+                    <label className="flex items-start gap-3 text-sm text-[--tf-text-1]">
                       <FormControl>
                         <input
                           type="checkbox"
-                          className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10"
+                          className="mt-0.5 h-4 w-4 rounded border-[--tf-border] bg-[--tf-surface-2]"
                           checked={field.value}
                           onChange={(event) =>
                             field.onChange(event.currentTarget.checked)
@@ -394,7 +394,7 @@ export default function RegisterPage() {
                         I agree to TeamFore&apos;s{" "}
                         <Link
                           href="/privacy"
-                          className="text-violet-300 hover:text-violet-200"
+                          className="text-[--tf-iris] hover:opacity-80"
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -403,7 +403,7 @@ export default function RegisterPage() {
                         and{" "}
                         <Link
                           href="/terms"
-                          className="text-violet-300 hover:text-violet-200"
+                          className="text-[--tf-iris] hover:opacity-80"
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -412,7 +412,7 @@ export default function RegisterPage() {
                         .
                       </span>
                     </label>
-                    <FormDescription className="text-xs text-zinc-500">
+                    <FormDescription className="text-xs text-[--tf-text-3]">
                       Required to create a workspace or continue with Google.
                     </FormDescription>
                     <FormMessage />
@@ -424,17 +424,19 @@ export default function RegisterPage() {
 
           <div className="relative my-6 py-2">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-white/10" />
+              <span className="w-full border-t border-[--tf-border-soft]" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-transparent px-2 text-zinc-500">Or</span>
+              <span className="bg-[--tf-surface-2] px-2 text-[--tf-text-3]">
+                Or
+              </span>
             </div>
           </div>
 
           <Button
             type="button"
             variant="outline"
-            className="w-full border-white/10 bg-white/5 text-zinc-100 hover:bg-white/10 hover:text-white disabled:border-white/10 disabled:bg-white/5 disabled:text-zinc-500 disabled:opacity-100"
+            className="w-full border-[--tf-border] bg-[--tf-surface] text-foreground hover:bg-[--tf-surface-2] disabled:opacity-60"
             onClick={() => {
               void handleGoogleSignIn();
             }}
@@ -443,28 +445,28 @@ export default function RegisterPage() {
             Continue with Google
           </Button>
 
-          <p className="mt-6 text-center text-sm text-zinc-400">
+          <p className="mt-6 text-center text-sm text-[--tf-text-2]">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
+              className="text-[--tf-iris] hover:opacity-80 transition-opacity font-medium"
             >
               Sign in
             </Link>
           </p>
 
           {/* Footer links */}
-          <div className="mt-8 border-t border-white/8 pt-6 flex gap-4 justify-center text-xs text-zinc-500">
+          <div className="mt-8 border-t border-[--tf-border-soft] pt-6 flex gap-4 justify-center text-xs text-[--tf-text-3]">
             <Link
               href="/privacy"
-              className="hover:text-zinc-300 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Privacy
             </Link>
             <span>•</span>
             <Link
               href="/terms"
-              className="hover:text-zinc-300 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Terms
             </Link>

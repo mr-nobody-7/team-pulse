@@ -55,8 +55,8 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="product-theme relative flex min-h-screen bg-background text-foreground">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(168,85,247,0.14),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.1),transparent_35%)]" />
+    <div className="relative flex min-h-screen bg-background text-foreground">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(0.55_0.18_295_/_0.12),transparent_45%),radial-gradient(circle_at_bottom_right,oklch(0.72_0.13_195_/_0.08),transparent_35%)]" />
       <Sidebar
         userRole={role as UserRole | undefined}
         userName={user?.name}
@@ -74,7 +74,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
         />
       )}
 
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col md:pl-72">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col md:pl-60">
         <Navbar
           userName={user?.name}
           userEmail={user?.email}

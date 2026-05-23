@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BarChart3,
+  BarChart2,
   CalendarDays,
   CalendarRange,
   CheckSquare,
@@ -9,7 +9,7 @@ import {
   Logs,
   PlusCircle,
   Settings,
-  ShieldCheck,
+  Shield,
   UserCog,
   Users,
   X,
@@ -27,78 +27,98 @@ interface NavItem {
   roles: UserRole[];
 }
 
-const navItems: NavItem[] = [
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+}
+
+const navGroups: NavGroup[] = [
   {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
+    label: "Team",
+    items: [
+      {
+        href: "/dashboard",
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
+      },
+      {
+        href: "/calendar",
+        label: "Team Calendar",
+        icon: CalendarRange,
+        roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
+      },
+      {
+        href: "/reports",
+        label: "Reports",
+        icon: BarChart2,
+        roles: ["MANAGER", "ADMIN", "OWNER"],
+      },
+    ],
   },
   {
-    href: "/calendar",
-    label: "Calendar",
-    icon: CalendarRange,
-    roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
+    label: "My Leave",
+    items: [
+      {
+        href: "/leaves",
+        label: "My Leaves",
+        icon: CalendarDays,
+        roles: ["USER"],
+      },
+      {
+        href: "/leaves",
+        label: "Team Leaves",
+        icon: Users,
+        roles: ["MANAGER"],
+      },
+      {
+        href: "/leaves",
+        label: "All Leaves",
+        icon: CalendarDays,
+        roles: ["ADMIN", "OWNER"],
+      },
+      {
+        href: "/leaves/apply",
+        label: "Apply Leave",
+        icon: PlusCircle,
+        roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
+      },
+      {
+        href: "/leaves/approvals",
+        label: "Approvals",
+        icon: CheckSquare,
+        roles: ["MANAGER", "ADMIN", "OWNER"],
+      },
+    ],
   },
   {
-    href: "/leaves",
-    label: "My Leaves",
-    icon: CalendarDays,
-    roles: ["USER"],
-  },
-  {
-    href: "/leaves",
-    label: "Team Leaves",
-    icon: Users,
-    roles: ["MANAGER"],
-  },
-  {
-    href: "/leaves",
-    label: "All Leaves",
-    icon: CalendarDays,
-    roles: ["ADMIN", "OWNER"],
-  },
-  {
-    href: "/leaves/apply",
-    label: "Apply Leave",
-    icon: PlusCircle,
-    roles: ["USER", "MANAGER", "ADMIN", "OWNER"],
-  },
-  {
-    href: "/leaves/approvals",
-    label: "Approvals",
-    icon: CheckSquare,
-    roles: ["MANAGER", "ADMIN", "OWNER"],
-  },
-  {
-    href: "/reports",
-    label: "Reports",
-    icon: BarChart3,
-    roles: ["MANAGER", "ADMIN", "OWNER"],
-  },
-  {
-    href: "/teams",
-    label: "Teams",
-    icon: ShieldCheck,
-    roles: ["ADMIN", "OWNER"],
-  },
-  {
-    href: "/users",
-    label: "Users",
-    icon: UserCog,
-    roles: ["ADMIN", "OWNER"],
-  },
-  {
-    href: "/settings",
-    label: "Settings",
-    icon: Settings,
-    roles: ["ADMIN", "OWNER"],
-  },
-  {
-    href: "/audit-logs",
-    label: "Audit Logs",
-    icon: Logs,
-    roles: ["ADMIN", "OWNER"],
+    label: "Admin",
+    items: [
+      {
+        href: "/teams",
+        label: "Teams",
+        icon: Shield,
+        roles: ["ADMIN", "OWNER"],
+      },
+      {
+        href: "/users",
+        label: "Users",
+        icon: UserCog,
+        roles: ["ADMIN", "OWNER"],
+      },
+      {
+        href: "/settings",
+        label: "Settings",
+        icon: Settings,
+        roles: ["ADMIN", "OWNER"],
+      },
+      {
+        href: "/audit-logs",
+        label: "Audit Logs",
+        icon: Logs,
+        roles: ["ADMIN", "OWNER"],
+      },
+    ],
   },
 ];
 
@@ -110,6 +130,16 @@ interface SidebarProps {
   onMobileClose?: () => void;
 }
 
+function getInitials(name?: string): string {
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 export function Sidebar({
   userRole,
   userName,
@@ -119,92 +149,125 @@ export function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
 
-  const filtered = navItems.filter(
-    (item) => !userRole || item.roles.includes(userRole),
-  );
-
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-sidebar-border/70 bg-sidebar/95 backdrop-blur-xl transition-transform duration-200 ease-out md:z-40",
+        "fixed inset-y-0 left-0 z-50 flex w-60 flex-col transition-transform duration-200 ease-out md:z-40",
+        "border-r border-[--tf-border-soft] bg-[--tf-surface]",
         isMobileOpen ? "translate-x-0" : "-translate-x-full",
         "md:translate-x-0",
       )}
     >
-      {/* Logo */}
-      <div className="flex h-18 items-center gap-3 border-b border-sidebar-border/70 px-6">
+      {/* ── Logo ──────────────────────────────────────────── */}
+      <div className="flex h-[52px] shrink-0 items-center gap-2.5 border-b border-[--tf-border-soft] px-5">
         <Image
           src="/brand/mark-64.svg"
-          alt="TeamFore mark"
-          width={40}
-          height={40}
-          className="h-10 w-10"
+          alt="TeamFore"
+          width={28}
+          height={28}
+          className="shrink-0"
           priority
         />
-        <div>
-          <span className="font-display text-xl tracking-tight">TeamFore</span>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            Operations OS
-          </p>
-        </div>
+        <span
+          className="text-[14px] font-semibold text-foreground"
+          style={{ letterSpacing: "-0.01em" }}
+        >
+          TeamFore
+        </span>
+
         {onMobileClose && (
           <button
             type="button"
             aria-label="Close navigation"
             onClick={onMobileClose}
-            className="ml-auto flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground md:hidden"
+            className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-[--tf-text-3] transition-colors hover:bg-[--tf-surface-2] hover:text-foreground md:hidden"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-5">
-        <p className="mb-3 px-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground/90">
-          Workspace
-        </p>
-        <ul className="space-y-1.5">
-          {filtered.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/dashboard" &&
-                pathname.startsWith(`${item.href}/`));
-            return (
-              <li key={`${item.href}-${item.label}`}>
-                <Link
-                  href={item.href}
-                  onClick={onMobileClose}
-                  className={cn(
-                    "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
-                    isActive
-                      ? "bg-linear-to-r from-primary/30 to-primary/10 text-foreground shadow-lg shadow-black/15 ring-1 ring-primary/20"
-                      : "text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  )}
-                >
-                  <item.icon
+      {/* ── Navigation ────────────────────────────────────── */}
+      <nav className="flex-1 overflow-y-auto py-2">
+        {navGroups.map((group) => {
+          const visibleItems = group.items.filter(
+            (item) => !userRole || item.roles.includes(userRole),
+          );
+          if (visibleItems.length === 0) return null;
+
+          return (
+            <div key={group.label} className="mb-1">
+              <p
+                className="px-5 pb-1.5 pt-3 text-[10px] font-normal tracking-[0.16em] uppercase text-[--tf-text-3]"
+                style={{ fontFamily: "var(--tf-font-mono)" }}
+              >
+                {group.label}
+              </p>
+              {visibleItems.map((item) => {
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/dashboard" &&
+                    pathname.startsWith(`${item.href}/`));
+
+                return (
+                  <Link
+                    key={`${item.href}-${item.label}`}
+                    href={item.href}
+                    onClick={onMobileClose}
                     className={cn(
-                      "h-4 w-4 shrink-0 transition-transform group-hover:scale-105",
-                      isActive ? "text-primary" : "text-muted-foreground",
+                      "relative mx-2 flex h-9 items-center gap-[11px] rounded-lg px-2.5 text-[13.5px] transition-all duration-100",
+                      isActive
+                        ? "bg-[--tf-iris-bg] text-foreground"
+                        : "text-[--tf-text-2] hover:bg-[--tf-surface-2] hover:text-foreground",
                     )}
-                  />
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                  >
+                    {/* Active left bar */}
+                    {isActive && (
+                      <span
+                        className="absolute inset-y-2 left-0 w-[2.5px] rounded-full bg-[--tf-iris]"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <item.icon
+                      className={cn(
+                        "h-4 w-4 shrink-0 transition-colors",
+                        isActive ? "text-foreground" : "text-[--tf-text-3]",
+                      )}
+                      strokeWidth={1.7}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
       </nav>
 
-      {/* User info at bottom */}
+      {/* ── User footer ───────────────────────────────────── */}
       {userName && (
-        <div className="border-t border-sidebar-border/70 p-4">
-          <p className="truncate text-sm font-semibold">{userName}</p>
-          {userEmail && (
-            <p className="truncate text-xs text-muted-foreground/90">
-              {userEmail}
-            </p>
-          )}
+        <div className="shrink-0 border-t border-[--tf-border-soft] px-5 py-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[11.5px] font-semibold text-white"
+              style={{
+                background:
+                  "linear-gradient(160deg, oklch(0.70 0.17 285), oklch(0.55 0.18 300))",
+              }}
+            >
+              {getInitials(userName)}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-[13px] font-medium text-foreground">
+                {userName}
+              </p>
+              {userEmail && (
+                <p className="truncate text-[11.5px] text-[--tf-text-3]">
+                  {userEmail}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </aside>

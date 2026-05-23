@@ -1,11 +1,8 @@
 "use client";
 
-import { LogOut, Menu, User } from "lucide-react";
+import { LogOut, Menu, Settings, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,65 +47,82 @@ export function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/70 bg-background/85 px-6 backdrop-blur-xl supports-backdrop-filter:bg-background/65">
-      {/* Left slot — page title / breadcrumbs added per-page via portal */}
+    <header
+      className="sticky top-0 z-30 flex h-[52px] shrink-0 items-center justify-between px-6"
+      style={{
+        background: "oklch(0.17 0.014 280 / 0.85)",
+        backdropFilter: "blur(14px)",
+        borderBottom: "1px solid var(--tf-border-soft)",
+      }}
+    >
+      {/* Left — mobile menu trigger */}
       <div className="flex items-center gap-3">
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
           aria-label="Open sidebar"
           onClick={onMenuClick}
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-[--tf-text-3] transition-colors hover:bg-[--tf-surface-2] hover:text-foreground md:hidden"
         >
-          <Menu className="h-5 w-5" />
-        </Button>
-        <div className="hidden sm:block">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-            TeamFore Console
-          </p>
-          <p className="font-display text-lg leading-none text-foreground">
-            Workforce Control Surface
-          </p>
-        </div>
+          <Menu className="h-4 w-4" strokeWidth={1.7} />
+        </button>
       </div>
 
+      {/* Right — user menu */}
       <div className="ml-auto flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="relative h-9 w-9 rounded-full border border-border/60 bg-card/80 p-0"
+            <button
+              type="button"
               aria-label="User menu"
+              className="flex h-8 w-8 items-center justify-center rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--tf-iris]"
+              style={{
+                background:
+                  "linear-gradient(160deg, oklch(0.70 0.17 285), oklch(0.55 0.18 300))",
+              }}
             >
-              <Avatar className="h-9 w-9">
-                <AvatarFallback className="bg-linear-to-br from-primary to-cyan-400 text-sm text-primary-foreground">
-                  {getInitials(userName)}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
+              <span className="text-[11px] font-semibold text-white">
+                {getInitials(userName)}
+              </span>
+            </button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent
+            align="end"
+            className="w-56"
+            style={{
+              background: "var(--tf-surface)",
+              border: "1px solid var(--tf-border)",
+            }}
+          >
             <DropdownMenuLabel>
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{userName}</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {userEmail}
+              <div className="flex flex-col gap-0.5">
+                <p className="text-[13px] font-medium text-foreground">
+                  {userName}
                 </p>
+                <p className="text-[12px] text-[--tf-text-3]">{userEmail}</p>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/settings/profile")}>
-              <User className="mr-2 h-4 w-4" />
+            <DropdownMenuSeparator className="bg-[--tf-border-soft]" />
+            <DropdownMenuItem
+              onClick={() => router.push("/settings/profile")}
+              className="gap-2.5 text-[13px] text-[--tf-text-2] focus:bg-[--tf-surface-2] focus:text-foreground"
+            >
+              <User className="h-3.5 w-3.5" strokeWidth={1.7} />
               Profile
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => router.push("/settings")}
+              className="gap-2.5 text-[13px] text-[--tf-text-2] focus:bg-[--tf-surface-2] focus:text-foreground"
+            >
+              <Settings className="h-3.5 w-3.5" strokeWidth={1.7} />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-[--tf-border-soft]" />
             <DropdownMenuItem
               onClick={handleLogout}
-              className="text-destructive focus:text-destructive"
+              className="gap-2.5 text-[13px] text-[--tf-coral] focus:bg-[--tf-coral-bg] focus:text-[--tf-coral]"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="h-3.5 w-3.5" strokeWidth={1.7} />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

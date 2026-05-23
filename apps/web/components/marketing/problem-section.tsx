@@ -28,16 +28,16 @@ export function ProblemSection() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="mb-14 grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-end lg:gap-16">
           <div>
-            <p className="font-mono text-[11px] tracking-[0.18em] text-zinc-500 uppercase">
+            <p className="font-mono text-[11px] tracking-[0.18em] text-[--tf-text-3] uppercase">
               The problem
             </p>
-            <h2 className="mt-4 font-display text-5xl leading-[0.95] tracking-tight text-zinc-100 md:text-6xl">
+            <h2 className="mt-4 font-display text-5xl leading-[0.95] tracking-tight text-foreground md:text-6xl">
               Leave should not
               <br />
-              need a <em className="text-violet-300">spreadsheet</em>.
+              need a <em className="text-[--tf-iris]">spreadsheet</em>.
             </h2>
           </div>
-          <p className="max-w-3xl text-lg leading-relaxed text-zinc-400">
+          <p className="max-w-3xl text-lg leading-relaxed text-[--tf-text-2]">
             Most dev teams manage availability with tools that were never built
             for it: chats, scattered email threads, and manager memory. By
             Monday standup, no one is fully sure who is around.
@@ -48,18 +48,18 @@ export function ProblemSection() {
           {problems.map((problem) => (
             <article
               key={problem.id}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-b from-[#1f1b2b] to-[#161320] p-7"
+              className="relative overflow-hidden rounded-2xl border border-[--tf-border] bg-linear-to-b from-[--tf-surface-2] to-[--tf-surface] p-7"
             >
-              <span className="absolute right-6 top-5 font-mono text-[11px] tracking-[0.14em] text-zinc-600 uppercase">
+              <span className="absolute right-6 top-5 font-mono text-[11px] tracking-[0.14em] text-[--tf-text-3] uppercase">
                 {problem.id}
               </span>
 
-              <p className="max-w-[18ch] font-display text-3xl leading-[1.15] text-zinc-100">
+              <p className="max-w-[18ch] font-display text-3xl leading-[1.15] text-foreground">
                 {problem.quote}
               </p>
 
-              <p className="mt-5 border-t border-white/10 pt-4 text-sm leading-relaxed text-zinc-400">
-                <b className="font-medium text-zinc-100">{problem.why}</b>{" "}
+              <p className="mt-5 border-t border-[--tf-border-soft] pt-4 text-sm leading-relaxed text-[--tf-text-2]">
+                <b className="font-medium text-foreground">{problem.why}</b>{" "}
                 {problem.detail}
               </p>
             </article>

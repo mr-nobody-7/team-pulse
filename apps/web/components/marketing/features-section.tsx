@@ -48,22 +48,22 @@ function Card({
 }) {
   return (
     <article
-      className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#1f1b2b] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 sm:p-7 ${className ?? ""}`}
+      className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border border-[--tf-border] bg-[--tf-surface-2] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[--tf-border-soft] sm:p-7 ${className ?? ""}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="font-mono text-[10px] tracking-[0.16em] text-violet-300 uppercase">
+        <p className="font-mono text-[10px] tracking-[0.16em] text-[--tf-iris] uppercase">
           {tag}
         </p>
         {badge ? (
-          <span className="rounded-full border border-white/12 bg-white/5 px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] text-zinc-400 uppercase">
+          <span className="rounded-full border border-[--tf-border] bg-[--tf-surface] px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] text-[--tf-text-3] uppercase">
             {badge}
           </span>
         ) : null}
       </div>
-      <h3 className="mt-3 font-display text-3xl leading-[1.05] tracking-tight text-zinc-100 sm:text-4xl">
+      <h3 className="mt-3 font-display text-3xl leading-[1.05] tracking-tight text-foreground sm:text-4xl">
         {title}
       </h3>
-      <p className="mt-3 text-sm leading-relaxed text-zinc-400">{body}</p>
+      <p className="mt-3 text-sm leading-relaxed text-[--tf-text-2]">{body}</p>
       {children ? <div className="mt-auto pt-6">{children}</div> : null}
     </article>
   );
@@ -75,16 +75,16 @@ export function FeaturesSection() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="mb-10 grid gap-6 sm:mb-14 sm:gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-end lg:gap-16">
           <div>
-            <p className="font-mono text-[11px] tracking-[0.18em] text-zinc-500 uppercase">
+            <p className="font-mono text-[11px] tracking-[0.18em] text-[--tf-text-3] uppercase">
               What&apos;s inside
             </p>
-            <h2 className="mt-4 font-display text-4xl leading-[0.95] tracking-tight text-zinc-100 sm:text-5xl md:text-6xl">
+            <h2 className="mt-4 font-display text-4xl leading-[0.95] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Everything your team
               <br />
-              needs. <em className="text-violet-300">Nothing</em> it does not.
+              needs. <em className="text-[--tf-iris]">Nothing</em> it does not.
             </h2>
           </div>
-          <p className="max-w-3xl text-lg leading-relaxed text-zinc-400">
+          <p className="max-w-3xl text-lg leading-relaxed text-[--tf-text-2]">
             Built for dev teams that want to coordinate availability without
             ceremony. Eight features, each earning its place.
           </p>
@@ -104,19 +104,19 @@ export function FeaturesSection() {
                     key={cell.id}
                     className={
                       cell.tone === "l4"
-                        ? "h-4 rounded-sm bg-violet-400"
+                        ? "h-4 rounded-sm bg-[--tf-iris]"
                         : cell.tone === "l3"
-                          ? "h-4 rounded-sm bg-violet-500/85"
+                          ? "h-4 rounded-sm bg-[oklch(0.66_0.17_285_/_0.85)]"
                           : cell.tone === "l2"
-                            ? "h-4 rounded-sm bg-violet-500/65"
+                            ? "h-4 rounded-sm bg-[oklch(0.66_0.17_285_/_0.60)]"
                             : cell.tone === "l1"
-                              ? "h-4 rounded-sm bg-violet-500/40"
-                              : "h-4 rounded-sm bg-zinc-800"
+                              ? "h-4 rounded-sm bg-[oklch(0.66_0.17_285_/_0.35)]"
+                              : "h-4 rounded-sm bg-[--tf-surface-3]"
                     }
                   />
                 ))}
               </div>
-              <div className="mt-2 flex justify-between font-mono text-[10px] tracking-widest text-zinc-500 uppercase">
+              <div className="mt-2 flex justify-between font-mono text-[10px] tracking-widest text-[--tf-text-3] uppercase">
                 <span>Week 19</span>
                 <span>Week 20</span>
                 <span>Week 21</span>
@@ -131,15 +131,15 @@ export function FeaturesSection() {
             body="Managers approve in-app, while Slack and email keep everyone informed with a complete event history."
           >
             <div className="flex flex-wrap items-center gap-1.5 text-xs">
-              <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-emerald-300">
+              <span className="rounded-full border border-[--tf-mint-border] bg-[--tf-mint-bg] px-3 py-1 text-[--tf-mint]">
                 Submitted
               </span>
-              <span className="text-zinc-500">-&gt;</span>
-              <span className="rounded-full border border-violet-500/45 bg-violet-500/20 px-3 py-1 text-zinc-100">
+              <span className="text-[--tf-text-3]">-&gt;</span>
+              <span className="rounded-full border border-[--tf-iris-border] bg-[--tf-iris-bg] px-3 py-1 text-foreground">
                 In review
               </span>
-              <span className="text-zinc-500">-&gt;</span>
-              <span className="rounded-full border border-white/12 px-3 py-1 text-zinc-400">
+              <span className="text-[--tf-text-3]">-&gt;</span>
+              <span className="rounded-full border border-[--tf-border] px-3 py-1 text-[--tf-text-2]">
                 Approved
               </span>
             </div>
@@ -151,23 +151,33 @@ export function FeaturesSection() {
             title="Daily availability, no questions asked."
             body="See who is available, remote, or off without posting another morning Slack question."
           >
-            <div className="space-y-2 text-sm text-zinc-300">
+            <div className="space-y-2 text-sm text-[--tf-text-1]">
               {[
                 {
                   n: "PS",
                   name: "Priya",
                   status: "Available",
-                  c: "text-emerald-300",
+                  c: "text-[--tf-mint]",
                 },
-                { n: "AK", name: "Arjun", status: "Remote", c: "text-sky-300" },
-                { n: "MR", name: "Meera", status: "Sick", c: "text-rose-300" },
+                {
+                  n: "AK",
+                  name: "Arjun",
+                  status: "Remote",
+                  c: "text-[--tf-sky]",
+                },
+                {
+                  n: "MR",
+                  name: "Meera",
+                  status: "Sick",
+                  c: "text-[--tf-rose]",
+                },
               ].map((row) => (
                 <div
                   key={row.n}
-                  className="flex items-center justify-between border-t border-white/10 pt-2 first:border-none first:pt-0"
+                  className="flex items-center justify-between border-t border-[--tf-border-soft] pt-2 first:border-none first:pt-0"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="grid h-6 w-6 place-items-center rounded-full bg-zinc-700 text-[10px] font-semibold text-white">
+                    <span className="grid h-6 w-6 place-items-center rounded-full bg-[--tf-surface-3] text-[10px] font-semibold text-foreground">
                       {row.n}
                     </span>
                     {row.name}
@@ -196,15 +206,15 @@ export function FeaturesSection() {
               ].map(([role, level, desc]) => (
                 <div
                   key={role}
-                  className="rounded-xl border border-white/10 bg-[#161320] p-2.5"
+                  className="rounded-xl border border-[--tf-border-soft] bg-[--tf-surface] p-2.5"
                 >
-                  <p className="font-mono text-[10px] tracking-[0.14em] text-violet-300 uppercase">
+                  <p className="font-mono text-[10px] tracking-[0.14em] text-[--tf-iris] uppercase">
                     {role}
                   </p>
-                  <p className="mt-1 font-display text-2xl text-zinc-100">
+                  <p className="mt-1 font-display text-2xl text-foreground">
                     {level}
                   </p>
-                  <p className="text-[11px] text-zinc-500">{desc}</p>
+                  <p className="text-[11px] text-[--tf-text-3]">{desc}</p>
                 </div>
               ))}
             </div>
@@ -216,12 +226,12 @@ export function FeaturesSection() {
             title="Sick. Casual. WFH."
             body="Configure leave categories that match your policy, language, and reporting needs."
           >
-            <div className="flex flex-wrap gap-2 text-xs text-zinc-400">
+            <div className="flex flex-wrap gap-2 text-xs text-[--tf-text-2]">
               {["Casual", "Sick", "Earned", "Comp Off", "WFH", "+ Custom"].map(
                 (chip) => (
                   <span
                     key={chip}
-                    className="rounded-full border border-white/10 bg-[#161320] px-3 py-1"
+                    className="rounded-full border border-[--tf-border-soft] bg-[--tf-surface] px-3 py-1"
                   >
                     {chip}
                   </span>
@@ -237,10 +247,10 @@ export function FeaturesSection() {
             body="Send leave updates, daily digests, and quick status lookups without losing the thread."
           >
             <div className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full border border-violet-500/40 bg-violet-500/15 px-3 py-1 text-violet-300">
+              <span className="rounded-full border border-[--tf-iris-border] bg-[--tf-iris-bg] px-3 py-1 text-[--tf-iris]">
                 /whos-out
               </span>
-              <span className="rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-emerald-300">
+              <span className="rounded-full border border-[--tf-mint-border] bg-[--tf-mint-bg] px-3 py-1 text-[--tf-mint]">
                 /my-leaves
               </span>
             </div>
@@ -254,17 +264,21 @@ export function FeaturesSection() {
             body="Track leave behavior, workload, and approvals in one reporting view."
           >
             <div className="grid grid-cols-2 gap-2.5">
-              <div className="rounded-xl border border-white/10 bg-[#161320] p-3">
-                <p className="font-mono text-[10px] tracking-[0.14em] text-zinc-500 uppercase">
+              <div className="rounded-xl border border-[--tf-border-soft] bg-[--tf-surface] p-3">
+                <p className="font-mono text-[10px] tracking-[0.14em] text-[--tf-text-3] uppercase">
                   Avg days / qtr
                 </p>
-                <p className="mt-1 font-display text-4xl text-zinc-100">4.2</p>
+                <p className="mt-1 font-display text-4xl text-foreground">
+                  4.2
+                </p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-[#161320] p-3">
-                <p className="font-mono text-[10px] tracking-[0.14em] text-zinc-500 uppercase">
+              <div className="rounded-xl border border-[--tf-border-soft] bg-[--tf-surface] p-3">
+                <p className="font-mono text-[10px] tracking-[0.14em] text-[--tf-text-3] uppercase">
                   Approval SLA
                 </p>
-                <p className="mt-1 font-display text-4xl text-zinc-100">3.6h</p>
+                <p className="mt-1 font-display text-4xl text-foreground">
+                  3.6h
+                </p>
               </div>
             </div>
           </Card>
@@ -275,7 +289,7 @@ export function FeaturesSection() {
             title="Every action, recorded honestly."
             body="Authentication, user changes, leave events, and policy edits in one immutable trail."
           >
-            <div className="space-y-1 font-mono text-[10px] tracking-[0.08em] text-zinc-500">
+            <div className="space-y-1 font-mono text-[10px] tracking-[0.08em] text-[--tf-text-3]">
               <p>10 May 11:20 - login - 43.204.x</p>
               <p>09 May 18:02 - approved - MR-219</p>
               <p>08 May 09:47 - settings - ...</p>

@@ -37,16 +37,16 @@ export function FaqSection() {
       <div className="mx-auto w-full max-w-7xl">
         <div className="mb-10 grid gap-6 sm:mb-14 sm:gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-end lg:gap-16">
           <div>
-            <p className="font-mono text-[11px] tracking-[0.18em] text-zinc-500 uppercase">
+            <p className="font-mono text-[11px] tracking-[0.18em] text-[--tf-text-3] uppercase">
               Questions, answered
             </p>
-            <h2 className="mt-4 font-display text-4xl leading-[0.95] tracking-tight text-zinc-100 sm:text-5xl md:text-6xl">
+            <h2 className="mt-4 font-display text-4xl leading-[0.95] tracking-tight text-foreground sm:text-5xl md:text-6xl">
               What you might
               <br />
               be wondering.
             </h2>
           </div>
-          <p className="max-w-3xl text-lg leading-relaxed text-zinc-400">
+          <p className="max-w-3xl text-lg leading-relaxed text-[--tf-text-2]">
             Short answers, no marketing-speak. If something is missing, a real
             human will reply.
           </p>
@@ -57,12 +57,12 @@ export function FaqSection() {
             <details
               key={faq.question}
               open={index === 0}
-              className="rounded-2xl border border-white/10 bg-[#1f1b2b] px-5 py-4.5 transition-colors duration-300 open:bg-[#252135] sm:px-6 sm:py-5"
+              className="rounded-2xl border border-[--tf-border] bg-[--tf-surface-2] px-5 py-4.5 transition-colors duration-300 open:bg-[--tf-surface-3] sm:px-6 sm:py-5"
             >
-              <summary className="cursor-pointer list-none text-base font-medium text-zinc-100 [&::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer list-none text-base font-medium text-foreground [&::-webkit-details-marker]:hidden">
                 {faq.question}
               </summary>
-              <p className="mt-4 border-t border-white/10 pt-4 text-sm leading-relaxed text-zinc-400">
+              <p className="mt-4 border-t border-[--tf-border-soft] pt-4 text-sm leading-relaxed text-[--tf-text-2]">
                 {faq.answer}
               </p>
             </details>

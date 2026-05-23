@@ -167,7 +167,7 @@ export default function DashboardPage() {
   return (
     <PageContainer className="space-y-6 md:space-y-8">
       <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-card/75 p-5 shadow-xl shadow-black/10 md:p-7">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(168,85,247,0.2),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(56,189,248,0.12),transparent_35%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,oklch(0.55_0.18_295_/_0.20),transparent_45%),radial-gradient(circle_at_bottom_left,oklch(0.78_0.13_230_/_0.12),transparent_35%)]" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-mono text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
@@ -235,21 +235,21 @@ export default function DashboardPage() {
                 value: summary?.todayLeaves ?? 0,
                 sub: `${summary?.totalUsers ?? 0} users in workspace`,
                 icon: CalendarCheck2,
-                tone: "from-rose-500/22",
+                tone: "from-[--tf-coral]/20",
               },
               {
                 label: "Pending Approvals",
                 value: summary?.pendingApprovals ?? 0,
                 sub: "Requests waiting on your action",
                 icon: ClipboardList,
-                tone: "from-amber-500/22",
+                tone: "from-[--tf-amber]/20",
               },
               {
                 label: "This Week Capacity",
                 value: `${avgCapacity}%`,
                 sub: `${summary?.availabilityScopeLabel ?? "Team"} availability avg`,
                 icon: Users,
-                tone: "from-emerald-500/22",
+                tone: "from-[--tf-mint]/20",
               },
               {
                 label: "Sprint Risk",
@@ -258,10 +258,10 @@ export default function DashboardPage() {
                 icon: AlertTriangle,
                 tone:
                   sprintRisk === "Low"
-                    ? "from-emerald-500/18"
+                    ? "from-[--tf-mint]/18"
                     : sprintRisk === "Med"
-                      ? "from-amber-500/18"
-                      : "from-rose-500/18",
+                      ? "from-[--tf-amber]/18"
+                      : "from-[--tf-coral]/18",
               },
             ]
           : [
@@ -270,21 +270,21 @@ export default function DashboardPage() {
                 value: summary?.totalUsers ?? 0,
                 sub: "Active users in scope",
                 icon: Users,
-                tone: "from-primary/22",
+                tone: "from-[--tf-iris]/20",
               },
               {
                 label: "Leaves Today",
                 value: summary?.todayLeaves ?? 0,
                 sub: "People currently on leave",
                 icon: CalendarCheck2,
-                tone: "from-rose-500/22",
+                tone: "from-[--tf-coral]/20",
               },
               {
                 label: "Upcoming Leaves",
                 value: upcomingLeaves.length,
                 sub: "Starting in next 7 days",
                 icon: CalendarDays,
-                tone: "from-sky-500/22",
+                tone: "from-[--tf-sky]/20",
               },
             ]
         ).map((stat) => (
@@ -343,11 +343,11 @@ export default function DashboardPage() {
                     key={day.date}
                     className={`rounded-xl border p-3 ${
                       day.tone === "full"
-                        ? "border-emerald-500/25 bg-emerald-500/7"
+                        ? "border-[--tf-mint-border] bg-[--tf-mint-bg]"
                         : day.tone === "med"
-                          ? "border-amber-500/25 bg-amber-500/7"
-                          : "border-rose-500/25 bg-rose-500/7"
-                    } ${day.date === todayDateKey ? "ring-1 ring-primary/40" : ""}`}
+                          ? "border-[--tf-amber-border] bg-[--tf-amber-bg]"
+                          : "border-[--tf-coral-border] bg-[--tf-coral-bg]"
+                    } ${day.date === todayDateKey ? "ring-1 ring-[--tf-iris-border]" : ""}`}
                   >
                     <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                       {day.label} · {day.fullDate}
@@ -417,7 +417,7 @@ export default function DashboardPage() {
                                 {format(parseISO(leave.endDate), "MMM d")}
                               </span>
                               {leave.capacityWarning && (
-                                <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-amber-700 dark:text-amber-300">
+                                <span className="mt-0.5 inline-flex items-center gap-1 text-xs text-[--tf-amber]">
                                   <AlertTriangle className="h-3.5 w-3.5" />
                                   {leave.capacityWarning.message}
                                 </span>
@@ -559,12 +559,12 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <div className="rounded-lg border border-border/70 bg-[#1a1d21] p-3 text-zinc-200">
-              <p className="font-semibold text-sky-400">TeamFore App</p>
-              <p className="mt-1 text-xs text-zinc-400">
+            <div className="rounded-lg border border-[--tf-border] bg-[--tf-surface-2] p-3 text-foreground">
+              <p className="font-semibold text-[--tf-sky]">TeamFore App</p>
+              <p className="mt-1 text-xs text-[--tf-text-3]">
                 Good morning. Here&apos;s your standup digest.
               </p>
-              <div className="mt-2 rounded border-l-2 border-primary bg-zinc-800/70 p-2 text-xs">
+              <div className="mt-2 rounded border-l-2 border-[--tf-iris] bg-[--tf-surface-3] p-2 text-xs">
                 <p>
                   Available:{" "}
                   {summary?.totalUsers ?? 0 - (summary?.todayLeaves ?? 0)}

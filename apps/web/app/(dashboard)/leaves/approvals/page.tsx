@@ -374,13 +374,13 @@ export default function ApprovalsPage() {
                   <MessageSquareText className="h-4 w-4 text-muted-foreground" />
                   Approve from Slack
                 </p>
-                <div className="rounded-xl border border-border/70 bg-[#1a1d21] p-3 text-zinc-200">
-                  <p className="font-semibold text-sky-400">TeamFore App</p>
-                  <p className="mt-1 text-xs text-zinc-400">
+                <div className="rounded-xl border border-[--tf-border] bg-[--tf-surface-2] p-3 text-foreground">
+                  <p className="font-semibold text-[--tf-sky]">TeamFore App</p>
+                  <p className="mt-1 text-xs text-[--tf-text-3]">
                     Pending request with capacity context appears instantly in
                     DM.
                   </p>
-                  <div className="mt-2 rounded border-l-2 border-primary bg-zinc-800/70 p-2 text-xs">
+                  <div className="mt-2 rounded border-l-2 border-[--tf-iris] bg-[--tf-surface-3] p-2 text-xs">
                     <p>Inline approve/reject buttons</p>
                     <p>Conflict warning before approval</p>
                     <p>Deep link back to detailed request</p>

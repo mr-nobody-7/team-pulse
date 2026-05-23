@@ -56,7 +56,7 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed bottom-16 left-0 right-0 z-40 mx-auto max-w-sm px-4 sm:bottom-4 sm:left-auto sm:right-4 sm:mx-0 sm:max-w-xs">
-      <div className="flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900 p-3 shadow-lg">
+      <div className="flex items-center gap-3 rounded-xl border border-[--tf-border] bg-[--tf-surface-2] p-3 shadow-lg">
         <Image
           src="/mark-192.svg"
           alt="TeamFore"
@@ -66,7 +66,7 @@ export function InstallPrompt() {
         />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-white">Install TeamFore</p>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-[--tf-text-3]">
             Add to homescreen for quick access
           </p>
         </div>
@@ -74,7 +74,7 @@ export function InstallPrompt() {
           <button
             type="button"
             onClick={handleInstall}
-            className="rounded-lg bg-[#0F6E56] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#0d5e48] transition-colors"
+            className="rounded-lg bg-[--tf-iris] px-3 py-1.5 text-xs font-medium text-white hover:opacity-90 transition-opacity"
           >
             Install
           </button>
@@ -82,7 +82,7 @@ export function InstallPrompt() {
             type="button"
             aria-label="Dismiss install prompt"
             onClick={handleDismiss}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white transition-colors"
+            className="rounded-lg p-1.5 text-[--tf-text-3] hover:bg-[--tf-surface-3] hover:text-foreground transition-colors"
           >
             ✕
           </button>

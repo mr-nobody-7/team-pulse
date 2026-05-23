@@ -10,13 +10,13 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="bg-linear-to-b from-[#14111d] via-[#0f0c17] to-[#0a0813] text-white min-h-screen">
+    <div className="bg-background text-foreground min-h-screen">
       <MarketingNav />
       <main className="mx-auto w-full max-w-3xl px-6 pb-24 pt-28">
         {/* Back button */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm text-[--tf-text-2] hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to home
@@ -25,9 +25,11 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           Privacy Policy
         </h1>
-        <p className="mt-3 text-sm text-zinc-400">Last updated: May 19, 2026</p>
+        <p className="mt-3 text-sm text-[--tf-text-2]">
+          Last updated: May 19, 2026
+        </p>
 
-        <div className="mt-10 space-y-10 text-sm leading-relaxed text-zinc-300">
+        <div className="mt-10 space-y-10 text-sm leading-relaxed text-[--tf-text-1]">
           <section>
             <h2 className="mb-3 text-base font-semibold text-white">
               1. Who we are
@@ -57,7 +59,7 @@ export default function PrivacyPage() {
                 href="https://developers.google.com/terms/api-services-user-data-policy"
                 target="_blank"
                 rel="noreferrer"
-                className="text-white underline underline-offset-2 hover:text-zinc-300"
+                className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
               >
                 Google API Services User Data Policy
               </a>
@@ -224,7 +226,7 @@ export default function PrivacyPage() {
                     contact us at{" "}
                     <a
                       href="mailto:support@teamfore.com"
-                      className="text-white underline underline-offset-2 hover:text-zinc-300"
+                      className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
                     >
                       support@teamfore.com
                     </a>
@@ -233,7 +235,7 @@ export default function PrivacyPage() {
                       href="https://myaccount.google.com/permissions"
                       target="_blank"
                       rel="noreferrer"
-                      className="text-white underline underline-offset-2 hover:text-zinc-300"
+                      className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
                     >
                       myaccount.google.com/permissions
                     </a>
@@ -391,7 +393,7 @@ export default function PrivacyPage() {
                   href="https://myaccount.google.com/permissions"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-white underline underline-offset-2 hover:text-zinc-300"
+                  className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
                 >
                   myaccount.google.com/permissions
                 </a>
@@ -433,7 +435,7 @@ export default function PrivacyPage() {
               For any privacy-related questions or data requests, contact us at:{" "}
               <a
                 href="mailto:vivekanandagodi@gmail.com"
-                className="text-white underline underline-offset-2 hover:text-zinc-300"
+                className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
               >
                 vivekanandagodi@gmail.com
               </a>

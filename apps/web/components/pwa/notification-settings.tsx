@@ -42,8 +42,8 @@ export function NotificationSettings() {
         <span
           className={`rounded-full px-2 py-0.5 text-xs font-medium ${
             isSubscribed
-              ? "bg-emerald-500/15 text-emerald-400"
-              : "bg-zinc-700/50 text-zinc-400"
+              ? "bg-[--tf-mint-bg] text-[--tf-mint]"
+              : "bg-[--tf-surface-3] text-[--tf-text-3]"
           }`}
         >
           {isSubscribed ? "On" : "Off"}
@@ -53,7 +53,7 @@ export function NotificationSettings() {
           disabled={isLoading}
           onClick={isSubscribed ? unsubscribe : subscribe}
           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-            isSubscribed ? "bg-[#0F6E56]" : "bg-zinc-700"
+            isSubscribed ? "bg-[--tf-iris]" : "bg-[--tf-surface-3]"
           }`}
           role="switch"
           aria-checked={isSubscribed}

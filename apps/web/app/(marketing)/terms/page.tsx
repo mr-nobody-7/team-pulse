@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="bg-linear-to-b from-[#14111d] via-[#0f0c17] to-[#0a0813] text-white min-h-screen">
+    <div className="bg-background text-foreground min-h-screen">
       <MarketingNav />
       <main className="mx-auto w-full max-w-3xl px-6 pb-24 pt-28">
         {/* Back button */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm text-[--tf-text-2] hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to home
@@ -26,11 +26,11 @@ export default function TermsPage() {
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           Terms of Service
         </h1>
-        <p className="mt-3 text-sm text-zinc-400">
+        <p className="mt-3 text-sm text-[--tf-text-2]">
           Last updated: April 27, 2026
         </p>
 
-        <div className="mt-10 space-y-10 text-sm leading-relaxed text-zinc-300">
+        <div className="mt-10 space-y-10 text-sm leading-relaxed text-[--tf-text-1]">
           <section>
             <h2 className="mb-3 text-base font-semibold text-white">
               1. Acceptance of terms
@@ -129,7 +129,7 @@ export default function TermsPage() {
               Your use of the Service is also governed by our{" "}
               <a
                 href="/privacy"
-                className="text-white underline underline-offset-2 hover:text-zinc-300"
+                className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
               >
                 Privacy Policy
               </a>
@@ -221,7 +221,7 @@ export default function TermsPage() {
               For any questions about these Terms, contact us at:{" "}
               <a
                 href="mailto:vivekanandagodi@gmail.com"
-                className="text-white underline underline-offset-2 hover:text-zinc-300"
+                className="text-foreground underline underline-offset-2 hover:text-[--tf-text-1]"
               >
                 vivekanandagodi@gmail.com
               </a>

@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc && pnpm sentry:sourcemaps",
+    "build": "prisma generate && tsc && ([ -n \"$SENTRY_AUTH_TOKEN\" ] && pnpm sentry:sourcemaps || true)",
     "build:render": "pnpm install --frozen-lockfile && pnpm exec prisma migrate deploy && pnpm run build",
     "start": "node dist/server.js",
     "seed": "tsx prisma/seed.ts",

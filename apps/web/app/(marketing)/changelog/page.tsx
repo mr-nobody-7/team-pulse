@@ -36,7 +36,7 @@ export default function ChangelogPage() {
         </p>
 
         <div className="mt-8 space-y-6">
-          <article className="rounded-2xl border border-white/8 bg-linear-to-b from-[#252033] to-[#1a1725] p-6 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
+          <article className="rounded-2xl border border-[--tf-border-soft] bg-linear-to-b from-[--tf-surface-2] to-[--tf-surface] p-6 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9)]">
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center rounded-full border border-[--tf-border-soft] bg-[--tf-surface-2] px-3 py-1 text-xs font-medium text-[--tf-text-1]">
                 April 2026

@@ -9,10 +9,10 @@ import type { LeaveRequest, PublicHoliday } from "@/types/api";
 import type { CapacityHeatmapCell } from "./capacity-heatmap";
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
-  VACATION: "bg-blue-500",
-  SICK: "bg-red-500",
-  PERSONAL: "bg-purple-500",
-  CASUAL: "bg-amber-500",
+  VACATION: "bg-[--tf-sky]",
+  SICK: "bg-[--tf-coral]",
+  PERSONAL: "bg-[--tf-rose]",
+  CASUAL: "bg-[--tf-amber]",
 };
 
 interface CalendarDayProps {
@@ -134,7 +134,7 @@ export function CalendarDay({
                   key={leave.id}
                   className={cn(
                     "truncate rounded px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-white",
-                    LEAVE_TYPE_COLOR[leave.type] ?? "bg-gray-500",
+                    LEAVE_TYPE_COLOR[leave.type] ?? "bg-[--tf-surface-3]",
                   )}
                 >
                   {leave.user.name.split(" ")[0]}

@@ -25,10 +25,10 @@ interface LeaveDetailsPanelProps {
 }
 
 const LEAVE_TYPE_COLOR: Record<string, string> = {
-  VACATION: "bg-blue-500",
-  SICK: "bg-red-500",
-  PERSONAL: "bg-purple-500",
-  CASUAL: "bg-amber-500",
+  VACATION: "bg-[--tf-sky]",
+  SICK: "bg-[--tf-coral]",
+  PERSONAL: "bg-[--tf-rose]",
+  CASUAL: "bg-[--tf-amber]",
 };
 
 const SESSION_LABEL: Record<string, string> = {
@@ -67,7 +67,7 @@ function LeaveCard({ leave, day }: { leave: LeaveRequest; day: Date }) {
         <AvatarFallback
           className={cn(
             "text-xs font-semibold text-white",
-            LEAVE_TYPE_COLOR[leave.type] ?? "bg-gray-500",
+            LEAVE_TYPE_COLOR[leave.type] ?? "bg-[--tf-surface-3]",
           )}
         >
           {getInitials(leave.user.name)}

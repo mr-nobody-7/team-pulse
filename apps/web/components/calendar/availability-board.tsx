@@ -43,10 +43,9 @@ const WORKLOAD_LABEL: Record<WorkloadLevel, string> = {
 };
 
 const WORKLOAD_BADGE_CLASS: Record<WorkloadLevel, string> = {
-  LIGHT:
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
-  NORMAL: "bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300",
-  HEAVY: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
+  LIGHT: "bg-[--tf-mint-bg] text-[--tf-mint]",
+  NORMAL: "bg-[--tf-surface-3] text-[--tf-text-2]",
+  HEAVY: "bg-[--tf-coral-bg] text-[--tf-coral]",
 };
 
 interface AvailabilityBoardProps {

@@ -68,6 +68,9 @@
   --tf-r-2xl: 24px;
   --tf-r-full: 9999px;
 
+  /* ── Text alias (--tf-text-1 = primary text, alias for --tf-text) ── */
+  --tf-text-1: var(--tf-text);
+
   /* ── Fonts (resolved by Next.js at runtime) ───────────────── */
   --tf-font-ui: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --tf-font-mono: var(--font-geist-mono), ui-monospace, monospace;

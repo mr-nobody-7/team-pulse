@@ -26,13 +26,11 @@ const STATUS_LABEL: Record<AvailabilityStatus, string> = {
 };
 
 const STATUS_BADGE_CLASS: Record<AvailabilityStatus, string> = {
-  AVAILABLE:
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
-  ON_LEAVE: "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300",
-  WORKING_REMOTELY:
-    "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  HALF_DAY: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-  BUSY: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300",
+  AVAILABLE: "bg-[--tf-mint-bg] text-[--tf-mint]",
+  ON_LEAVE: "bg-[--tf-coral-bg] text-[--tf-coral]",
+  WORKING_REMOTELY: "bg-[--tf-sky-bg] text-[--tf-sky]",
+  HALF_DAY: "bg-[--tf-amber-bg] text-[--tf-amber]",
+  BUSY: "bg-[--tf-amber-bg] text-[--tf-amber]",
   FOCUS_TIME: "bg-[--tf-iris-bg] text-[--tf-iris]",
 };
 

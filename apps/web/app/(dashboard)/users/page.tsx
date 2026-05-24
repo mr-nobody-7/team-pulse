@@ -220,7 +220,7 @@ export default function UsersPage() {
                 Invitees join with USER role by default
               </p>
             </div>
-            <Badge variant="default" className="bg-blue-600">
+            <Badge variant="default" className="bg-[--tf-iris]">
               FREE PLAN · 14 SEATS LEFT
             </Badge>
           </CardHeader>

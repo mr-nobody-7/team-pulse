@@ -66,21 +66,21 @@ function formatDays(value: number) {
 function getBalanceTone(availableRatio: number) {
   if (availableRatio > 0.5) {
     return {
-      textClassName: "text-emerald-700",
-      fillClassName: "bg-emerald-500",
+      textClassName: "text-[--tf-mint]",
+      fillClassName: "bg-[--tf-mint]",
     };
   }
 
   if (availableRatio >= 0.2) {
     return {
-      textClassName: "text-amber-700",
-      fillClassName: "bg-amber-500",
+      textClassName: "text-[--tf-amber]",
+      fillClassName: "bg-[--tf-amber]",
     };
   }
 
   return {
-    textClassName: "text-rose-700",
-    fillClassName: "bg-rose-500",
+    textClassName: "text-[--tf-coral]",
+    fillClassName: "bg-[--tf-coral]",
   };
 }
 
@@ -254,7 +254,7 @@ export default function LeavesPage() {
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Card className="border-emerald-500/25 bg-emerald-500/6">
+          <Card className="border-[--tf-mint-border] bg-[--tf-mint-bg]">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Approved
@@ -293,7 +293,7 @@ export default function LeavesPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border-rose-500/25 bg-rose-500/6">
+          <Card className="border-[--tf-coral-border] bg-[--tf-coral-bg]">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Rejected

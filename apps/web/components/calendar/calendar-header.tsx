@@ -46,11 +46,11 @@ export function CalendarHeader({
           {/* Leave type legend */}
           <div className="hidden items-center gap-3 xl:flex">
             {[
-              { label: "Vacation", color: "bg-blue-400" },
-              { label: "Sick", color: "bg-red-400" },
-              { label: "Personal", color: "bg-purple-400" },
-              { label: "Casual", color: "bg-amber-400" },
-              { label: "Holiday", color: "bg-sky-400" },
+              { label: "Vacation", color: "bg-[--tf-sky]" },
+              { label: "Sick", color: "bg-[--tf-coral]" },
+              { label: "Personal", color: "bg-[--tf-rose]" },
+              { label: "Casual", color: "bg-[--tf-amber]" },
+              { label: "Holiday", color: "bg-[--tf-iris]" },
             ].map(({ label, color }) => (
               <span
                 key={label}
@@ -65,9 +65,9 @@ export function CalendarHeader({
               <>
                 <span className="mx-1 h-4 w-px bg-border" />
                 {[
-                  { label: "Capacity full", color: "bg-emerald-400" },
-                  { label: "Capacity medium", color: "bg-amber-400" },
-                  { label: "Capacity low", color: "bg-red-400" },
+                  { label: "Capacity full", color: "bg-[--tf-mint]" },
+                  { label: "Capacity medium", color: "bg-[--tf-amber]" },
+                  { label: "Capacity low", color: "bg-[--tf-coral]" },
                 ].map(({ label, color }) => (
                   <span
                     key={label}

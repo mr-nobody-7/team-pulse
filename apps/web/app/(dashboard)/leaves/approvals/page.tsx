@@ -291,11 +291,11 @@ export default function ApprovalsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           {hasWarning ? (
-                            <Badge className="border-amber-500/50 bg-amber-500/10 text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-200">
+                            <Badge className="border-[--tf-amber-border] bg-[--tf-amber-bg] text-[--tf-amber]">
                               Conflict
                             </Badge>
                           ) : (
-                            <Badge className="border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:text-emerald-200">
+                            <Badge className="border-[--tf-mint-border] bg-[--tf-mint-bg] text-[--tf-mint]">
                               Safe
                             </Badge>
                           )}
@@ -310,7 +310,7 @@ export default function ApprovalsPage() {
                       )}
 
                       {leave.capacityWarning && (
-                        <div className="rounded-md border border-amber-300/70 bg-amber-50/70 p-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+                        <div className="rounded-md border border-[--tf-amber-border] bg-[--tf-amber-bg] p-2 text-xs text-[--tf-amber]">
                           <p className="flex items-start gap-1.5">
                             <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                             <span>{leave.capacityWarning.message}</span>
@@ -405,10 +405,10 @@ export default function ApprovalsPage() {
                           : 0;
                       const toneClass =
                         pct >= 80
-                          ? "bg-emerald-500"
+                          ? "bg-[--tf-mint]"
                           : pct >= 60
-                            ? "bg-amber-500"
-                            : "bg-rose-500";
+                            ? "bg-[--tf-amber]"
+                            : "bg-[--tf-coral]";
 
                       return (
                         <div

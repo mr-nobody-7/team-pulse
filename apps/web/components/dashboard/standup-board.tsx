@@ -79,8 +79,8 @@ export function StandupBoard({
           </div>
         ) : (
           <div className="grid gap-3 md:grid-cols-3">
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3.5">
-              <h3 className="mb-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <div className="rounded-xl border border-[--tf-mint-border] bg-[--tf-mint-bg] p-3.5">
+              <h3 className="mb-2 text-sm font-semibold text-[--tf-mint]">
                 Who&apos;s available today ({availableMembers.length})
               </h3>
               <MemberList
@@ -89,15 +89,15 @@ export function StandupBoard({
               />
             </div>
 
-            <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-3.5">
-              <h3 className="mb-2 text-sm font-semibold text-rose-700 dark:text-rose-300">
+            <div className="rounded-xl border border-[--tf-coral-border] bg-[--tf-coral-bg] p-3.5">
+              <h3 className="mb-2 text-sm font-semibold text-[--tf-coral]">
                 Who&apos;s off today ({offMembers.length})
               </h3>
               <MemberList names={offMembers} emptyLabel="No one off today" />
             </div>
 
-            <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-3.5">
-              <h3 className="mb-2 text-sm font-semibold text-blue-700 dark:text-blue-300">
+            <div className="rounded-xl border border-[--tf-sky-border] bg-[--tf-sky-bg] p-3.5">
+              <h3 className="mb-2 text-sm font-semibold text-[--tf-sky]">
                 Who&apos;s remote ({remoteMembers.length})
               </h3>
               <MemberList

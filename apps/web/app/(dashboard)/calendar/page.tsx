@@ -240,7 +240,7 @@ export default function CalendarPage() {
               <p className="mt-1 text-xs text-muted-foreground">This month</p>
             </CardContent>
           </Card>
-          <Card className="border-emerald-500/25 bg-emerald-500/5">
+          <Card className="border-[--tf-mint-border] bg-[--tf-mint-bg]">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Approved

@@ -594,7 +594,7 @@ export default function TeamSettingsPage() {
                         </span>
                       )}
                       {rowStatus.saved && (
-                        <span className="text-sm text-emerald-600">
+                        <span className="text-sm text-[--tf-mint]">
                           Saved ✓
                         </span>
                       )}

@@ -48,34 +48,34 @@ export function CalendarDay({
   // Density fallback for non-heatmap views
   const densityClass =
     leaves.length >= 5
-      ? "bg-red-50 dark:bg-red-950/20"
+      ? "bg-[--tf-coral-bg]"
       : leaves.length >= 3
-        ? "bg-amber-50 dark:bg-amber-950/20"
+        ? "bg-[--tf-amber-bg]"
         : leaves.length >= 1
-          ? "bg-green-50/60 dark:bg-green-950/20"
+          ? "bg-[--tf-mint-bg]"
           : "";
 
   const heatmapClass =
     showHeatmap && inMonth && capacity
       ? capacity.level === "LOW"
-        ? "bg-red-100 dark:bg-red-950/30"
+        ? "bg-[--tf-coral-bg]"
         : capacity.level === "MEDIUM"
-          ? "bg-amber-100 dark:bg-amber-950/30"
-          : "bg-emerald-100 dark:bg-emerald-950/30"
+          ? "bg-[--tf-amber-bg]"
+          : "bg-[--tf-mint-bg]"
       : "";
 
   const countBadgeClass =
     showHeatmap && capacity
       ? capacity.level === "LOW"
-        ? "bg-red-600 text-white"
+        ? "bg-[--tf-coral] text-white"
         : capacity.level === "MEDIUM"
-          ? "bg-amber-500 text-white"
-          : "bg-emerald-600 text-white"
+          ? "bg-[--tf-amber] text-white"
+          : "bg-[--tf-mint] text-white"
       : leaves.length >= 5
-        ? "bg-red-600 text-white"
+        ? "bg-[--tf-coral] text-white"
         : leaves.length >= 3
-          ? "bg-amber-500 text-white"
-          : "bg-green-600 text-white";
+          ? "bg-[--tf-amber] text-white"
+          : "bg-[--tf-mint] text-white";
 
   return (
     <Tooltip>

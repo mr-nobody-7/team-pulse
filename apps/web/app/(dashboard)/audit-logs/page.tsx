@@ -51,13 +51,11 @@ const ACTION_CATEGORY: Record<string, ActionCategory> = {
 };
 
 const CATEGORY_STYLES: Record<ActionCategory, string> = {
-  auth: "border-sky-500/50 bg-sky-500/10 text-sky-700 dark:border-sky-900/50 dark:bg-sky-950/20 dark:text-sky-200",
-  team: "border-iris-500/50 bg-iris-500/10 text-iris-700 dark:border-iris-900/50 dark:bg-iris-950/20 dark:text-iris-200",
-  leave:
-    "border-mint-500/50 bg-mint-500/10 text-mint-700 dark:border-mint-900/50 dark:bg-mint-950/20 dark:text-mint-200",
-  user: "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-200",
-  settings:
-    "border-rose-500/50 bg-rose-500/10 text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/20 dark:text-rose-200",
+  auth: "border-[--tf-sky-border] bg-[--tf-sky-bg] text-[--tf-sky]",
+  team: "border-[--tf-iris-border] bg-[--tf-iris-bg] text-[--tf-iris]",
+  leave: "border-[--tf-mint-border] bg-[--tf-mint-bg] text-[--tf-mint]",
+  user: "border-[--tf-amber-border] bg-[--tf-amber-bg] text-[--tf-amber]",
+  settings: "border-[--tf-rose-border] bg-[--tf-rose-bg] text-[--tf-rose]",
 };
 
 const FAILED_ACTIONS = new Set(["USER_LOGIN_FAILED"]);
@@ -100,11 +98,11 @@ const ACTIONS = [
 ] as const;
 
 const DOT_COLOR: Record<ActionCategory, string> = {
-  auth: "bg-sky-400",
-  team: "bg-iris-400",
-  leave: "bg-mint-400",
-  user: "bg-amber-400",
-  settings: "bg-rose-400",
+  auth: "bg-[--tf-sky]",
+  team: "bg-[--tf-iris]",
+  leave: "bg-[--tf-mint]",
+  user: "bg-[--tf-amber]",
+  settings: "bg-[--tf-rose]",
 };
 
 const PAGE_SIZE = 25;

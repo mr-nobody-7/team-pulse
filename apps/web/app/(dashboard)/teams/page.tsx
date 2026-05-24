@@ -193,7 +193,7 @@ export default function TeamsPage() {
                       <div className="text-xs font-mono text-muted-foreground">
                         Capacity
                       </div>
-                      <div className="mt-1 text-sm font-semibold text-emerald-600">
+                      <div className="mt-1 text-sm font-semibold text-[--tf-mint]">
                         88%
                       </div>
                     </div>

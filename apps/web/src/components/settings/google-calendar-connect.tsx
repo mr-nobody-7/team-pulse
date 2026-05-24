@@ -54,7 +54,7 @@ export function GoogleCalendarConnectCard() {
           <div className="space-y-3">
             <div className="flex items-center justify-between rounded-lg border px-3 py-2">
               <div className="text-sm">Calendar sync is enabled.</div>
-              <Badge className="bg-emerald-600 text-white">Connected</Badge>
+              <Badge className="bg-[--tf-mint] text-white">Connected</Badge>
             </div>
             <Button
               variant="destructive"

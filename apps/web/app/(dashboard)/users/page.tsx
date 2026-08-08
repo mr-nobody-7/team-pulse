@@ -206,8 +206,8 @@ export default function UsersPage() {
             Users · {data?.users.length || 0} active · 2 invited · 1 deactivated
           </div>
           <h1 className="font-serif text-3xl font-normal italic leading-tight tracking-tight">
-            Who's on the team.{" "}
-            <span className="not-italic text-blue-600">Who</span> can do what.
+            Who's on the team. <span className="not-italic text-iris">Who</span>{" "}
+            can do what.
           </h1>
         </div>
 

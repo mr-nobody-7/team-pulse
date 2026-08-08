@@ -143,8 +143,7 @@ export default function SettingsPage() {
             Settings · workspace · acme
           </div>
           <h1 className="font-serif text-3xl font-normal italic leading-tight tracking-tight">
-            Tune the rules.{" "}
-            <span className="not-italic text-blue-600">Once.</span>
+            Tune the rules. <span className="not-italic text-iris">Once.</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Leave types, accruals, integrations, and policies — workspace-wide.
@@ -248,7 +247,7 @@ export default function SettingsPage() {
                 <div className="flex items-center gap-4">
                   <div className="relative flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="absolute h-full bg-linear-to-r from-blue-500 to-blue-600"
+                      className="absolute h-full bg-linear-to-r from-iris to-iris"
                       style={{ width: "50%" }}
                     />
                   </div>

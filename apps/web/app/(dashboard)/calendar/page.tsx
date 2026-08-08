@@ -251,7 +251,7 @@ export default function CalendarPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border-amber-500/25 bg-amber-500/5">
+          <Card className="border-amber-border bg-amber-bg">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Pending
@@ -262,7 +262,7 @@ export default function CalendarPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border-sky-500/25 bg-sky-500/5">
+          <Card className="border-sky-border bg-sky-bg">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Public holidays
@@ -405,7 +405,7 @@ export default function CalendarPage() {
                           <Badge variant="outline">{leave.status}</Badge>
                         </div>
                         {leave.capacityWarning?.shouldWarn && (
-                          <p className="mt-2 flex items-start gap-1 text-xs text-amber-700 dark:text-amber-300">
+                          <p className="mt-2 flex items-start gap-1 text-xs text-amber">
                             <TriangleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                             {leave.capacityWarning.message}
                           </p>
@@ -423,7 +423,7 @@ export default function CalendarPage() {
                     {selectedHolidays.map((holiday) => (
                       <div
                         key={holiday.id}
-                        className="rounded-xl border border-sky-500/20 bg-sky-500/8 p-3"
+                        className="rounded-xl border border-sky-border bg-sky-bg p-3"
                       >
                         <p className="text-sm font-medium">{holiday.name}</p>
                         <p className="text-xs text-muted-foreground">

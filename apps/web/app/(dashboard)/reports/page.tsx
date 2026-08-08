@@ -176,8 +176,8 @@ export default function ReportsPage() {
               Reports · {quarter} · Acme
             </div>
             <h1 className="font-serif text-3xl font-normal italic leading-tight tracking-tight">
-              A quarter in{" "}
-              <span className="not-italic text-blue-600">three</span> charts.
+              A quarter in <span className="not-italic text-iris">three</span>{" "}
+              charts.
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Built for the monthly Eng Manager review — print this page or

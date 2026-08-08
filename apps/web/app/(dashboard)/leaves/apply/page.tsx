@@ -378,7 +378,7 @@ export default function ApplyLeavePage() {
                           available for {selectedBalance.leaveTypeLabel}
                         </p>
                       ) : (
-                        <p className="text-sm text-amber-700">
+                        <p className="text-sm text-amber">
                           No balance available for this leave type
                         </p>
                       )
@@ -432,7 +432,7 @@ export default function ApplyLeavePage() {
                   </p>
                 )}
                 {holidayConflicts.length > 0 && (
-                  <p className="mt-2 text-xs text-amber-700">
+                  <p className="mt-2 text-xs text-amber">
                     Note: Your leave includes {holidayConflicts.length} public
                     holiday(s):{" "}
                     {holidayConflicts.map((holiday) => holiday.name).join(", ")}

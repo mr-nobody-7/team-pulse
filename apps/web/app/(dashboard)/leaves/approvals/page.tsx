@@ -216,7 +216,7 @@ export default function ApprovalsPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-amber-500/25 bg-amber-500/6">
+            <Card className="border-amber-border bg-amber-bg">
               <CardContent className="p-4">
                 <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                   Conflict warnings
@@ -227,7 +227,7 @@ export default function ApprovalsPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-sky-500/25 bg-sky-500/6">
+            <Card className="border-sky-border bg-sky-bg">
               <CardContent className="p-4">
                 <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                   Days requested
@@ -274,7 +274,7 @@ export default function ApprovalsPage() {
                 return (
                   <Card
                     key={leave.id}
-                    className={`border-border/70 bg-card/70 ${hasWarning ? "border-amber-500/35 bg-amber-500/6" : ""}`}
+                    className={`border-border/70 bg-card/70 ${hasWarning ? "border-amber-border bg-amber-bg" : ""}`}
                   >
                     <CardContent className="space-y-3 p-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">

@@ -112,7 +112,7 @@ const PAGE_SIZE = 25;
 function ActionBadge({ action }: { action: string }) {
   const category = ACTION_CATEGORY[action] ?? "user";
   const style = FAILED_ACTIONS.has(action)
-    ? "border-coral-500/50 bg-coral-500/10 text-coral-700 dark:border-coral-900/50 dark:bg-coral-950/20 dark:text-coral-200"
+    ? "border-coral-border bg-coral-bg text-coral"
     : CATEGORY_STYLES[category];
   return (
     <span
@@ -146,7 +146,7 @@ function LogRow({ log }: { log: AuditLog }) {
   const [expanded, setExpanded] = useState(false);
   const category = ACTION_CATEGORY[log.action] ?? "user";
   const dotColor = FAILED_ACTIONS.has(log.action)
-    ? "bg-coral-400"
+    ? "bg-coral"
     : DOT_COLOR[category];
   const hasMetadata = log.metadata && Object.keys(log.metadata).length > 0;
   const hasExtra =
@@ -292,7 +292,7 @@ export default function AuditLogsPage() {
           </div>
           <h1 className="font-serif text-3xl font-normal italic leading-tight tracking-tight">
             Every action, kept{" "}
-            <span className="not-italic text-blue-600">honest.</span>
+            <span className="not-italic text-iris">honest.</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Authentication, leave, user, team, and settings events — searchable

@@ -137,10 +137,10 @@ export function LeaveDetailsPanel({
                     {selectedDay.holidays.map((holiday) => (
                       <div
                         key={holiday.id}
-                        className="rounded-lg border border-sky-300/70 bg-sky-50 px-3 py-2 dark:border-sky-900 dark:bg-sky-950/40"
+                        className="rounded-lg border border-sky-border bg-sky-bg px-3 py-2"
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-medium text-sky-800 dark:text-sky-300">
+                          <p className="text-sm font-medium text-sky">
                             {holiday.name}
                           </p>
                           <Badge variant="outline" className="text-[10px]">
@@ -148,7 +148,7 @@ export function LeaveDetailsPanel({
                           </Badge>
                         </div>
                         {holiday.region && (
-                          <p className="mt-1 text-xs text-sky-700/90 dark:text-sky-400">
+                          <p className="mt-1 text-xs text-sky">
                             Region: {holiday.region}
                           </p>
                         )}

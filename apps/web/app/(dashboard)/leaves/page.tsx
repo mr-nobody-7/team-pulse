@@ -268,7 +268,7 @@ export default function LeavesPage() {
               </p>
             </CardContent>
           </Card>
-          <Card className="border-amber-500/25 bg-amber-500/6">
+          <Card className="border-amber-border bg-amber-bg">
             <CardContent className="p-4">
               <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
                 Pending

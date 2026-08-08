@@ -104,7 +104,7 @@ export default function TeamsPage() {
             Teams · {teams.length} squads · {teams.length * 5} members
           </div>
           <h1 className="font-serif text-3xl font-normal italic leading-tight tracking-tight">
-            Six squads. <span className="not-italic text-blue-600">One</span>{" "}
+            Six squads. <span className="not-italic text-iris">One</span>{" "}
             sprint.
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -207,7 +207,7 @@ export default function TeamsPage() {
                       <div className="text-xs font-mono text-muted-foreground">
                         Pending
                       </div>
-                      <div className="mt-1 text-sm font-semibold text-amber-600">
+                      <div className="mt-1 text-sm font-semibold text-amber">
                         1
                       </div>
                     </div>

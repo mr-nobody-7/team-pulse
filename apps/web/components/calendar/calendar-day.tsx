@@ -153,7 +153,7 @@ export function CalendarDay({
               {holidays.slice(0, 2).map((holiday) => (
                 <div
                   key={holiday.id}
-                  className="truncate rounded border border-sky-300 bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300"
+                  className="truncate rounded border border-sky-border bg-sky-bg px-1.5 py-0.5 text-[10px] font-medium text-sky"
                 >
                   🎉 {holiday.name}
                 </div>

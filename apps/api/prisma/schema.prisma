@@ -167,6 +167,10 @@ model User {
   approvedLeaveRequests LeaveRequest[] @relation("Approver")
   pushSubscriptions     PushSubscription[]
   refreshTokens         RefreshToken[]
+
+  // Every workspace-scoped user list scanned this table before.
+  @@index([workspaceId])
+  @@index([teamId])
 }
 
 model RefreshToken {
@@ -181,8 +185,8 @@ model RefreshToken {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // No index on tokenHash: the field is already @unique, which creates one.
   @@index([userId])
-  @@index([tokenHash])
 }
 
 model LeaveRequest {
@@ -203,7 +207,13 @@ model LeaveRequest {
   googleCalendarEventId String?
   created_at   DateTime    @default(now())
 
-  @@index([teamId])
+  // Session-granularity overlap detection runs on every leave application and
+  // filters by userId plus a date range. Postgres does not index foreign keys
+  // automatically and Prisma does not add them, so that query was scanning.
+  @@index([userId, startDate, endDate])
+  // Approvals queue and team calendar.
+  @@index([teamId, status, startDate])
+  @@index([approverId])
   @@index([startDate])
   @@index([endDate])
   @@index([status])
@@ -223,10 +233,11 @@ model AuditLog {
   metadata      Json?       // flexible extra context (email, leaveType, etc.)
   createdAt     DateTime    @default(now())
 
+  // Audit log is always read workspace-scoped and newest-first; the composite
+  // serves that directly and replaces the two single-column indexes.
+  @@index([workspaceId, createdAt])
   @@index([userId])
-  @@index([workspaceId])
   @@index([action])
-  @@index([createdAt])
 }
 
 model WorkspaceLeaveType {

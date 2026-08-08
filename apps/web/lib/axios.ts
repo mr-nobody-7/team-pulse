@@ -12,7 +12,52 @@ const api = axios.create({
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
+  _csrfRetry?: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// CSRF
+//
+// The API protects every state-changing request with a double-submit token.
+// Fetch one lazily, cache it, and attach it to mutating requests. The token is
+// tied to a cookie the API sets, so a 403 means the pair went stale (new
+// deployment, cleared cookie) and is recoverable by fetching a fresh one.
+// ---------------------------------------------------------------------------
+
+const MUTATING_METHODS = new Set(["post", "put", "patch", "delete"]);
+
+let csrfToken: string | null = null;
+let csrfRequest: Promise<string> | null = null;
+
+async function fetchCsrfToken(): Promise<string> {
+  // De-duplicate concurrent fetches so a burst of mutations issues one request.
+  if (!csrfRequest) {
+    csrfRequest = api
+      .get<{ data: { csrfToken: string } }>("/auth/csrf-token")
+      .then((response) => {
+        csrfToken = response.data.data.csrfToken;
+        return csrfToken;
+      })
+      .finally(() => {
+        csrfRequest = null;
+      });
+  }
+
+  return csrfRequest;
+}
+
+api.interceptors.request.use(async (config) => {
+  const method = (config.method ?? "get").toLowerCase();
+
+  if (!MUTATING_METHODS.has(method)) {
+    return config;
+  }
+
+  const token = csrfToken ?? (await fetchCsrfToken());
+  config.headers.set("x-csrf-token", token);
+
+  return config;
+});
 
 function isPublicRoute(pathname: string): boolean {
   const exactPublicRoutes = new Set(["/", "/login", "/register", "/changelog"]);
@@ -42,11 +87,32 @@ const processQueue = (error?: unknown, token: string | null = null) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error);
+    }
+
+    const config = error.config as CustomAxiosRequestConfig | undefined;
+
+    // Stale CSRF token/cookie pair — fetch a fresh one and replay once.
     if (
-      !axios.isAxiosError(error) ||
-      error.response?.status !== 401 ||
-      typeof window === "undefined"
+      error.response?.status === 403 &&
+      (error.response.data as { code?: string } | undefined)?.code ===
+        "EBADCSRFTOKEN" &&
+      config &&
+      !config._csrfRetry
     ) {
+      config._csrfRetry = true;
+      csrfToken = null;
+
+      try {
+        await fetchCsrfToken();
+        return await api(config);
+      } catch {
+        return Promise.reject(error);
+      }
+    }
+
+    if (error.response?.status !== 401 || typeof window === "undefined") {
       return Promise.reject(error);
     }
 

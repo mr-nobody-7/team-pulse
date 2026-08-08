@@ -22,8 +22,9 @@ import {
 } from "../utils/validations.js";
 
 const router = Router();
-// CSRF token endpoint (must be authenticated)
-router.get("/csrf-token", authenticate, csrfTokenController);
+// CSRF token endpoint. Deliberately public: login/register are CSRF-protected,
+// so a client must be able to obtain a token before it has a session.
+router.get("/csrf-token", csrfTokenController);
 const GOOGLE_OAUTH_SCOPES = [
   "profile",
   "email",

@@ -1,8 +1,15 @@
 import type { Request, Response } from "express";
+import { generateCsrfToken } from "../middleware/csrf.js";
+import { sendSuccess } from "../utils/response.js";
 
-// Placeholder: in real use, generate token using the same logic as doubleCsrfProtection
+/**
+ * Issues a CSRF token and sets the matching cookie.
+ *
+ * This must stay unauthenticated: login and register are themselves
+ * state-changing requests that the CSRF middleware protects, so a client needs
+ * a token before it can authenticate.
+ */
 export function csrfTokenController(req: Request, res: Response) {
-  // The frontend should get the CSRF token from the cookie set by doubleCsrfProtection
-  // Here, just return a dummy value for demonstration
-  res.json({ success: true, data: { csrfToken: "dummy-token" } });
+  const csrfToken = generateCsrfToken(req, res, { overwrite: true });
+  return sendSuccess(res, { csrfToken }, "CSRF token issued");
 }

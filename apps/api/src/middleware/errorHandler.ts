@@ -10,6 +10,10 @@ const DATABASE_CONNECTIVITY_ERROR_CODES = new Set([
   "ETIMEDOUT",
 ]);
 
+function isCsrfError(err: Error): boolean {
+  return (err as { code?: unknown }).code === "EBADCSRFTOKEN";
+}
+
 function isDatabaseConnectivityError(err: Error): boolean {
   const maybeCode = (err as { code?: unknown }).code;
   if (typeof maybeCode === "string") {
@@ -29,6 +33,18 @@ export const errorHandler = (
     res.status(err.statusCode).json({
       success: false,
       message: err.message,
+    });
+    return;
+  }
+
+  // Thrown by the double-submit CSRF middleware. This is a client-side
+  // condition, not a server fault, so it must not fall through to the 500
+  // branch below.
+  if (isCsrfError(err)) {
+    res.status(403).json({
+      success: false,
+      message: "Invalid CSRF token",
+      code: "EBADCSRFTOKEN",
     });
     return;
   }

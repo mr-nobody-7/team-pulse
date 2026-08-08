@@ -1,5 +1,22 @@
-import rateLimit from "express-rate-limit";
 import type { Request } from "express";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+
+/**
+ * Bucket per authenticated user, falling back to client IP for anonymous
+ * requests.
+ *
+ * req.ip must go through ipKeyGenerator: express-rate-limit v8 throws
+ * ERR_ERL_KEY_GEN_IPV6 for raw IPs because an IPv6 client can trivially rotate
+ * within its /64 and evade a per-address bucket.
+ */
+function userOrIpKey(req: Request): string {
+  const userId = req.user?.userId;
+  if (userId) {
+    return `user:${userId}`;
+  }
+
+  return `ip:${ipKeyGenerator(req.ip ?? "unknown")}`;
+}
 
 // General API limiter to reduce abuse while keeping normal UX smooth.
 export const apiRateLimit = rateLimit({
@@ -35,7 +52,7 @@ export const sensitiveWriteRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req: Request) => (req.user as any)?.id || req.ip || 'unknown',
+  keyGenerator: userOrIpKey,
 });
 
 // Rate limiter for CSV/data exports
@@ -48,7 +65,7 @@ export const csvExportRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req: Request) => (req.user as any)?.id || req.ip || 'unknown',
+  keyGenerator: userOrIpKey,
 });
 
 // Rate limiter for feedback submissions
@@ -73,7 +90,7 @@ export const accountDeletionRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req: Request) => (req.user as any)?.userId || req.ip || 'unknown',
+  keyGenerator: userOrIpKey,
 });
 
 // Personal data export is intentionally restricted to one export per day.
@@ -86,5 +103,5 @@ export const personalDataExportRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req: Request) => (req.user as any)?.userId || req.ip || 'unknown',
+  keyGenerator: userOrIpKey,
 });

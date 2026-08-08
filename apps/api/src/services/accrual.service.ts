@@ -1,6 +1,7 @@
 import cron from "node-cron";
-import { prisma } from "../lib/db.js";
 import type { WorkspaceLeavePolicy } from "../generated/prisma/client.js";
+import { prisma } from "../lib/db.js";
+import { periodKeys, runScheduledJobOnce } from "../utils/scheduled-job.js";
 
 type AccrualPolicy = Pick<
   WorkspaceLeavePolicy,
@@ -281,13 +282,21 @@ export async function initializeUserBalances(
 
 export function startAccrualCronJobs(): void {
   cron.schedule("0 0 1 * *", () => {
-    void runMonthlyAccrual().catch((error: unknown) => {
+    void runScheduledJobOnce(
+      "monthly-accrual",
+      periodKeys.month(),
+      runMonthlyAccrual,
+    ).catch((error: unknown) => {
       console.error("Accrual cron failed", error);
     });
   });
 
   cron.schedule("0 0 1 1 *", () => {
-    void runCarryForward().catch((error: unknown) => {
+    void runScheduledJobOnce(
+      "carry-forward",
+      periodKeys.year(),
+      runCarryForward,
+    ).catch((error: unknown) => {
       console.error("Carry forward cron failed", error);
     });
   });

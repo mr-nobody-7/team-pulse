@@ -115,6 +115,17 @@ export type WorkspaceLeavePolicy = Prisma.WorkspaceLeavePolicyModel
  */
 export type UserLeaveBalance = Prisma.UserLeaveBalanceModel
 /**
+ * Model ScheduledJobRun
+ * Cross-replica coordination for scheduled jobs.
+ * 
+ * A job claims a (jobName, periodKey) pair before doing any work. The unique
+ * constraint means exactly one replica wins the claim, so scaling the API past
+ * one instance cannot double-accrue balances or double-send digests. A claim
+ * that completes is never re-run for the same period; a claim whose job throws
+ * is released so the next tick can retry.
+ */
+export type ScheduledJobRun = Prisma.ScheduledJobRunModel
+/**
  * Model PushSubscription
  * 
  */

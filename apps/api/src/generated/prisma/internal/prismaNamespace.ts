@@ -399,6 +399,7 @@ export const ModelName = {
   UserGoogleToken: 'UserGoogleToken',
   WorkspaceLeavePolicy: 'WorkspaceLeavePolicy',
   UserLeaveBalance: 'UserLeaveBalance',
+  ScheduledJobRun: 'ScheduledJobRun',
   PushSubscription: 'PushSubscription'
 } as const
 
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "workspace" | "slackInstallation" | "team" | "user" | "refreshToken" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "userWorkloadStatus" | "publicHoliday" | "feedbackEntry" | "userGoogleToken" | "workspaceLeavePolicy" | "userLeaveBalance" | "pushSubscription"
+    modelProps: "workspace" | "slackInstallation" | "team" | "user" | "refreshToken" | "leaveRequest" | "auditLog" | "workspaceLeaveType" | "userAvailabilityStatus" | "userWorkloadStatus" | "publicHoliday" | "feedbackEntry" | "userGoogleToken" | "workspaceLeavePolicy" | "userLeaveBalance" | "scheduledJobRun" | "pushSubscription"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1529,6 +1530,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ScheduledJobRun: {
+      payload: Prisma.$ScheduledJobRunPayload<ExtArgs>
+      fields: Prisma.ScheduledJobRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScheduledJobRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScheduledJobRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        findFirst: {
+          args: Prisma.ScheduledJobRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScheduledJobRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        findMany: {
+          args: Prisma.ScheduledJobRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        create: {
+          args: Prisma.ScheduledJobRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        createMany: {
+          args: Prisma.ScheduledJobRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScheduledJobRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        delete: {
+          args: Prisma.ScheduledJobRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        update: {
+          args: Prisma.ScheduledJobRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScheduledJobRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScheduledJobRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScheduledJobRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScheduledJobRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobRunPayload>
+        }
+        aggregate: {
+          args: Prisma.ScheduledJobRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduledJobRun>
+        }
+        groupBy: {
+          args: Prisma.ScheduledJobRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScheduledJobRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobRunCountAggregateOutputType> | number
+        }
+      }
+    }
     PushSubscription: {
       payload: Prisma.$PushSubscriptionPayload<ExtArgs>
       fields: Prisma.PushSubscriptionFieldRefs
@@ -1865,6 +1940,17 @@ export const UserLeaveBalanceScalarFieldEnum = {
 } as const
 
 export type UserLeaveBalanceScalarFieldEnum = (typeof UserLeaveBalanceScalarFieldEnum)[keyof typeof UserLeaveBalanceScalarFieldEnum]
+
+
+export const ScheduledJobRunScalarFieldEnum = {
+  id: 'id',
+  jobName: 'jobName',
+  periodKey: 'periodKey',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
 
 
 export const PushSubscriptionScalarFieldEnum = {
@@ -2226,6 +2312,7 @@ export type GlobalOmitConfig = {
   userGoogleToken?: Prisma.UserGoogleTokenOmit
   workspaceLeavePolicy?: Prisma.WorkspaceLeavePolicyOmit
   userLeaveBalance?: Prisma.UserLeaveBalanceOmit
+  scheduledJobRun?: Prisma.ScheduledJobRunOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
 }
 

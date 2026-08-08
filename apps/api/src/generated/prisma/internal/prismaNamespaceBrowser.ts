@@ -66,6 +66,7 @@ export const ModelName = {
   UserGoogleToken: 'UserGoogleToken',
   WorkspaceLeavePolicy: 'WorkspaceLeavePolicy',
   UserLeaveBalance: 'UserLeaveBalance',
+  ScheduledJobRun: 'ScheduledJobRun',
   PushSubscription: 'PushSubscription'
 } as const
 
@@ -308,6 +309,17 @@ export const UserLeaveBalanceScalarFieldEnum = {
 } as const
 
 export type UserLeaveBalanceScalarFieldEnum = (typeof UserLeaveBalanceScalarFieldEnum)[keyof typeof UserLeaveBalanceScalarFieldEnum]
+
+
+export const ScheduledJobRunScalarFieldEnum = {
+  id: 'id',
+  jobName: 'jobName',
+  periodKey: 'periodKey',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ScheduledJobRunScalarFieldEnum = (typeof ScheduledJobRunScalarFieldEnum)[keyof typeof ScheduledJobRunScalarFieldEnum]
 
 
 export const PushSubscriptionScalarFieldEnum = {

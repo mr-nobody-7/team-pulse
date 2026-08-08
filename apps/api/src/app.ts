@@ -5,19 +5,17 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import passport from "passport";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import * as Sentry from "@sentry/node";
 import { configureGoogleStrategy } from "./auth/strategies/google.strategy.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import { prisma } from "./lib/db.js";
 import { doubleCsrfProtection } from "./middleware/csrf.js";
-import {
-  apiRateLimit,
-  authRateLimit,
-  sensitiveWriteRateLimit,
-  csvExportRateLimit,
-  feedbackRateLimit,
-} from "./middleware/security.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+// sensitiveWriteRateLimit, csvExportRateLimit and feedbackRateLimit are applied
+// inside their own route files, not here.
+import { apiRateLimit, authRateLimit } from "./middleware/security.js";
 import { openApiSpec } from "./openapi.js";
+import { ForbiddenError } from "./utils/errors.js";
 import { auditRoutes } from "./routes/audit.routes.js";
 import { authRoutes } from "./routes/auth.routes.js";
 import { availabilityRoutes } from "./routes/availability.routes.js";
@@ -96,7 +94,9 @@ app.use(
         return;
       }
 
-      callback(new Error(`CORS blocked for origin: ${origin}`));
+      // ForbiddenError so this surfaces as a 403 rather than falling through to
+      // the generic 500 branch and paging Sentry for a routine rejection.
+      callback(new ForbiddenError(`CORS blocked for origin: ${origin}`));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -151,8 +151,30 @@ app.use("/workspaces", workspaceRoutes);
 app.use("/audit-logs", auditRoutes);
 app.use("/push", pushRoutes);
 
+// Liveness. No dependencies — answers "is this process up?" only.
 app.get("/health", (_req, res) => {
   res.json({ success: true, message: "API running 🚀" });
+});
+
+// Readiness. Point the platform health check at this one: /health stays green
+// while the database is unreachable, so a broken deploy would look healthy and
+// take traffic that 500s on every real request.
+app.get("/health/ready", async (_req, res) => {
+  const timeout = new Promise<never>((_resolve, reject) => {
+    setTimeout(() => reject(new Error("readiness check timed out")), 2000);
+  });
+
+  try {
+    await Promise.race([prisma.$queryRaw`SELECT 1`, timeout]);
+    res.json({ success: true, message: "Ready", data: { database: "up" } });
+  } catch (error) {
+    console.error("[Readiness] Database check failed", error);
+    res.status(503).json({
+      success: false,
+      message: "Not ready",
+      data: { database: "down" },
+    });
+  }
 });
 
  // Debug endpoint — development only
@@ -162,18 +184,22 @@ app.get("/health", (_req, res) => {
    });
  }
 
-// ── API Docs (development-friendly, not rate-limited) ──────────────────────
-app.get("/openapi.json", (_req, res) => {
-  res.json(openApiSpec);
-});
+// ── API Docs ───────────────────────────────────────────────────────────────
+// Non-production only. These are unauthenticated and not rate-limited, and
+// together they publish a complete map of every endpoint in the service.
+if (process.env.NODE_ENV !== "production") {
+  app.get("/openapi.json", (_req, res) => {
+    res.json(openApiSpec);
+  });
 
-app.use(
-  "/reference",
-  apiReference({
-    theme: "purple",
-    url: "/openapi.json",
-  }),
-);
+  app.use(
+    "/reference",
+    apiReference({
+      theme: "purple",
+      url: "/openapi.json",
+    }),
+  );
+}
 
 Sentry.setupExpressErrorHandler(app);
 app.use(errorHandler);

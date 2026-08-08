@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { prisma } from "../../lib/db.js";
+import { periodKeys, runScheduledJobOnce } from "../../utils/scheduled-job.js";
 import { slackService } from "./slack.service.js";
 
 function nowUtcHHmm(): string {
@@ -76,8 +77,16 @@ export async function runSlackDigestOnce(): Promise<void> {
 }
 
 export function startSlackDigestCron(): void {
+  // Ticks every minute by design: each workspace configures its own digest time
+  // and runSlackDigestOnce only sends to workspaces whose slackDigestTime
+  // matches the current UTC HH:mm. The per-minute claim keeps two replicas from
+  // both sending the same digest.
   cron.schedule("* * * * *", () => {
-    void runSlackDigestOnce().catch((error: unknown) => {
+    void runScheduledJobOnce(
+      "slack-digest",
+      periodKeys.minute(),
+      runSlackDigestOnce,
+    ).catch((error: unknown) => {
       console.error("Slack digest cron failed", error);
     });
   });

@@ -111,6 +111,8 @@ pnpm format
 
 - `DATABASE_URL`
 - `JWT_SECRET`
+- `CSRF_SECRET`
+- `ENCRYPTION_KEY` (64-char hex string)
 - `CLIENT_URL`
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
@@ -118,6 +120,11 @@ pnpm format
 - `BREVO_API_KEY`
 - `BREVO_SENDER_EMAIL`
 - `BREVO_SENDER_NAME`
+- `BREVO_REPLY_TO`
+
+`JWT_SECRET`, `BREVO_SENDER_EMAIL`, and `BREVO_REPLY_TO` are validated at module
+load — the API process exits on startup if they are missing in production.
+`ENCRYPTION_KEY` is validated on first use (Google/Slack token flows).
 
 ### API recommended/optional (`apps/api`)
 
@@ -170,6 +177,11 @@ Current hosted setup:
 
 - API: Railway (`https://backend-production-4678.up.railway.app`)
 - Web: Vercel (`https://teamfore.vercel.app`)
+
+Railway build/deploy config lives in `railway.json`. The build step only runs
+`prisma generate && tsc`; database migrations run at release time via
+`prisma migrate deploy` in the API `start` script, so `DATABASE_URL` must be
+available as a runtime variable, not only at build time.
 
 Deployment checklist:
 

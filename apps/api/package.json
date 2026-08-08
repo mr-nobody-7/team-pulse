@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "prisma generate && tsc && ([ -n \"$SENTRY_AUTH_TOKEN\" ] && pnpm sentry:sourcemaps || true)",
-    "build:render": "pnpm install --frozen-lockfile && pnpm exec prisma migrate deploy && pnpm run build",
-    "start": "node dist/server.js",
+    "build:render": "pnpm run build",
+    "migrate:deploy": "prisma migrate deploy",
+    "start": "prisma migrate deploy && node dist/server.js",
     "seed": "tsx prisma/seed.ts",
     "lint": "biome check .",
     "format": "biome format --write .",
@@ -52,6 +53,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.19.0",
+    "prisma": "^7.4.1",
     "web-push": "^3.6.7",
     "zod": "^4.3.6"
   },
@@ -69,7 +71,6 @@
     "@types/pg": "^8.16.0",
     "@types/web-push": "^3.6.4",
     "biome": "^0.3.3",
-    "prisma": "^7.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

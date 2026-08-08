@@ -15,7 +15,10 @@
     "format": "biome format --write .",
     "check": "biome check .",
     "typecheck": "tsc --noEmit",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org teamfore --project node ./dist && sentry-cli sourcemaps upload --org teamfore --project node ./dist"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org teamfore --project node ./dist && sentry-cli sourcemaps upload --org teamfore --project node ./dist",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -73,6 +76,7 @@
     "biome": "^0.3.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }

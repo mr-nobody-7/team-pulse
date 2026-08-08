@@ -49,16 +49,39 @@ type LeaveExportFilters = {
   teamId?: string | undefined;
 };
 
-function toStartSlot(date: Date, session: SessionValue): number {
+export function toStartSlot(date: Date, session: SessionValue): number {
   const day = Math.floor(date.getTime() / 86_400_000);
   // SECOND_HALF starts in the afternoon
   return session === "SECOND_HALF" ? day * 2 + 1 : day * 2;
 }
 
-function toEndSlot(date: Date, session: SessionValue): number {
+export function toEndSlot(date: Date, session: SessionValue): number {
   const day = Math.floor(date.getTime() / 86_400_000);
   // FIRST_HALF ends in the morning
   return session === "FIRST_HALF" ? day * 2 : day * 2 + 1;
+}
+
+export type LeavePeriod = {
+  startDate: Date;
+  startSession: SessionValue;
+  endDate: Date;
+  endSession: SessionValue;
+};
+
+/**
+ * True when two leave periods share any half-day slot.
+ *
+ * Exported so the session-granularity rules can be tested directly: this is the
+ * check that stops a user double-booking themselves, and a false negative here
+ * silently double-books while a false positive rejects a valid request.
+ */
+export function leavePeriodsOverlap(a: LeavePeriod, b: LeavePeriod): boolean {
+  const aStart = toStartSlot(a.startDate, a.startSession);
+  const aEnd = toEndSlot(a.endDate, a.endSession);
+  const bStart = toStartSlot(b.startDate, b.startSession);
+  const bEnd = toEndSlot(b.endDate, b.endSession);
+
+  return aStart <= bEnd && aEnd >= bStart;
 }
 
 const DEFAULT_TEAM_MIN_CAPACITY_WARNING_PERCENT = 50;
@@ -456,6 +479,7 @@ export const applyLeave = async (
       existing.endSession as SessionValue,
     );
 
+    // Same predicate as leavePeriodsOverlap, on slots already computed above.
     if (newStartSlot <= exEnd && newEndSlot >= exStart) {
       throw new ConflictError(
         `You already have a ${existing.status.toLowerCase()} leave request that overlaps with this period`,

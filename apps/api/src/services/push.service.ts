@@ -1,11 +1,30 @@
 import webpush from "web-push";
 import { prisma } from "../lib/db.js";
 
-webpush.setVapidDetails(
-  `mailto:${process.env.VAPID_CONTACT_EMAIL ?? ""}`,
-  process.env.VAPID_PUBLIC_KEY ?? "",
-  process.env.VAPID_PRIVATE_KEY ?? "",
+/**
+ * web-push validates the key pair eagerly and throws on a missing or malformed
+ * key. This module is reachable from app.ts, so calling it unguarded took the
+ * whole process down at import time whenever the VAPID vars were unset —
+ * push notifications are optional, so degrade instead of refusing to boot.
+ */
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+
+export const pushNotificationsEnabled = Boolean(
+  vapidPublicKey && vapidPrivateKey,
 );
+
+if (pushNotificationsEnabled) {
+  webpush.setVapidDetails(
+    `mailto:${process.env.VAPID_CONTACT_EMAIL ?? ""}`,
+    vapidPublicKey as string,
+    vapidPrivateKey as string,
+  );
+} else {
+  console.warn(
+    "[Push] VAPID_PUBLIC_KEY/VAPID_PRIVATE_KEY not set — push notifications disabled",
+  );
+}
 
 export async function saveSubscription(
   userId: string,
@@ -40,6 +59,8 @@ export async function sendPushToUser(
   userId: string,
   payload: { title: string; body: string; url: string; icon?: string },
 ) {
+  if (!pushNotificationsEnabled) return;
+
   const subscriptions = await prisma.pushSubscription.findMany({
     where: { userId },
   });
@@ -70,6 +91,8 @@ export async function sendPushToAll(
   workspaceId: string,
   payload: { title: string; body: string; url: string },
 ) {
+  if (!pushNotificationsEnabled) return;
+
   const users = await prisma.user.findMany({
     where: { workspaceId, isActive: true },
     select: { id: true },

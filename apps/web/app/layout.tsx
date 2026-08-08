@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { PosthogProvider } from "@/components/posthog-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
@@ -30,8 +30,17 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+// metadataBase makes every relative og/twitter image URL absolute. Without it
+// Next emits relative paths that crawlers cannot resolve, which is the most
+// common reason link previews render blank. Set NEXT_PUBLIC_SITE_URL on Vercel.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://teamfore.vercel.app";
+
+// --tf-bg resolved from oklch(0.12 0.011 280).
+const TF_BG = "#050509";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://teamfore.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "TeamFore — Know who's available before you plan the week",
     template: "%s — TeamFore",
@@ -49,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://teamfore.com",
+    url: "/",
     siteName: "TeamFore",
     title: "TeamFore — Know who's available before you plan the week",
     description: "Leave, capacity, and sprint readiness in one calm surface.",
@@ -75,8 +84,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  manifest: "/site.webmanifest",
-  themeColor: "#0f0e18",
+  // No `manifest` key: Next injects <link rel="manifest"> from app/manifest.ts.
+  // This previously pointed at /site.webmanifest, which does not exist in this
+  // repo — the manifest link was a 404 and the app was not installable.
   appleWebApp: {
     capable: true,
     title: "TeamFore",
@@ -84,12 +94,25 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon-32.svg", type: "image/svg+xml", sizes: "32x32" },
-      { url: "/favicon-16.svg", type: "image/svg+xml", sizes: "16x16" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
     ],
-    apple: [{ url: "/apple-touch-icon.svg", type: "image/svg+xml" }],
-    shortcut: ["/favicon-32.svg"],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: ["/favicon.ico"],
   },
+};
+
+// themeColor and colorScheme are not valid in `metadata` in Next 16 — the build
+// warns and drops the tag. They belong in a separate viewport export.
+export const viewport: Viewport = {
+  themeColor: TF_BG,
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+  // Standalone PWA needs this or the iOS status bar overlaps content.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

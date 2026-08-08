@@ -1,0 +1,11 @@
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TeamFore">
+  <defs>
+    <linearGradient id="tf-mark-sm" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9B8EF0"/>
+      <stop offset="1" stop-color="#6B52D6"/>
+    </linearGradient>
+  </defs>
+  <rect width="28" height="28" rx="8" fill="url(#tf-mark-sm)"/>
+  <rect x="0" y="0" width="28" height="1" rx="0.5" fill="#FFFFFF" fill-opacity="0.25"/>
+  <path d="M6 9h16M6 14h11M6 19h7" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+</svg>
